@@ -114,23 +114,23 @@ void invest_in_digital(City& playground){ //helps people transition to remote wo
     playground.replace_ages(other_young, other_adu, other_el);
 }
 
-void terrorize_with_media() //changes perception of the dangerousness of the virus 
+void terrorize_with_media(City& playground) //changes perception of the dangerousness of the virus 
 {
     Age other_young = playground.Young();
     other_young.morale += -1;
     Age other_adu = playground.Adults();
     other_adu.morale += -2;
     Age other_el = playground.Elders();
-    other_el +=-3;
+    other_el.morale +=-3;
     playground.modify_mob(-0.05, -0.1, -0.15, -0.03, -0.07, -0.1);
 }
-void tranquillize_with_media() //shouldn't be a good option
+void tranquillize_with_media(City& playground) //shouldn't be a good option
 {
     Age other_young = playground.Young();
     other_young.morale += 1;
     Age other_adu = playground.Adults();
     other_adu.morale += 1;
     Age other_el = playground.Elders();
-    other_el += 1;
+    other_el.morale += 1;
     playground.modify_mob(0.3, 0.1, 0.05, 0.06, 0.03, 0.05);
 }

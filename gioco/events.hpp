@@ -44,7 +44,7 @@ Age other_adu = playground.Adults();
 other_adu.morale += 2;
 Age other_el = playground.Elders();
 other_el.morale +=1;
-playground.replace_ages(other_young, other_adu, other_el),
+playground.replace_ages(other_young, other_adu, other_el);
 }
 
 void euerka(City & playground){
@@ -60,5 +60,5 @@ Age other_adu = playground.Adults();
 other_adu.morale += -2;
 Age other_el = playground.Elders();
 other_el.morale += -3;
-playground.replace_ages(other_young, other_adu, other_el)
+playground.replace_ages(other_young, other_adu, other_el);
 }
