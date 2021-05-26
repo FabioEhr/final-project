@@ -7,9 +7,9 @@
 
 void buy_masks(City& playground, int quantity){ //lowers mobility by the same ammount for all
 int cost =1;
-playground.mod_$(-cost*quantity);    
-double m_change =-0.0001*quantity; //change in mobility
-playground.modify_mob(m_change, m_change, m_change, m_change, m_change, m_change);
+playground.add_$(-cost*quantity);    
+double m_change =-0.0001*quantity; //change in mobility //maybe make it a change to beta or add it in evolve() calculation in other ways
+playground.add_mob(m_change, m_change, m_change, m_change, m_change, m_change);
 }
 
 void close_restaurants(City&playground){ //affects young and adults more (I guess?)
@@ -23,7 +23,7 @@ Age other_el = playground.Elders();
 other_el.morale +=-2;
 playground.replace_ages(other_young, other_adu, other_el),
 
-playground.modify_mob(-0.1, -0.1, -0.05, -0.05, -0.01, -0.01);
+playground.add_mob(-0.1, -0.1, -0.05, -0.05, -0.01, -0.01);
 }
 
 void close_theatres(City& playground) //different from close_restaurants, lesser economic impact but people are sadder. affects "mixed" encounters 
@@ -38,7 +38,7 @@ Age other_el = playground.Elders();
 other_el.morale +=-3;
 playground.replace_ages(other_young, other_adu, other_el),
 
-playground.modify_mob(-0.05, -0.05, -0.05, -0.1, -0.1, -0.1);
+playground.add_mob(-0.05, -0.05, -0.05, -0.1, -0.1, -0.1);
 }
 
 void close_schools(City& playground) //affects young greatly and adults(because they have to stay with their kids)
@@ -53,10 +53,10 @@ Age other_el = playground.Elders();
 
 playground.replace_ages(other_young, other_adu, other_el);
 
-playground.modify_mob(-0.6, 0., 0., 0., 0., 0.);
+playground.add_mob(-0.6, 0., 0., 0., 0.4, 0.); //increases ye mobility
 }
 
-void close_churches(City& playground) //grately affects elders and somewhat affects adults. Children are happier because they can sleep on Sundays
+void close_churches(City& playground) 
 {
     Age other_young = playground.Young();
     Age other_adu = playground.Adults();
@@ -66,21 +66,21 @@ void close_churches(City& playground) //grately affects elders and somewhat affe
 
     playground.replace_ages(other_young, other_adu, other_el);
 
-    playground.modify_mob(0., -0.05, -0.6, 0., 0., -0.03);
+    playground.add_mob(0., -0.05, -0.6, 0., 0., -0.03);
 }
 
-void curfew(City& playground)
+void curfew(City& playground, int hours)
 {
     Age other_young = playground.Young();
-    other_young.morale += -2;
+    other_young.morale += -1*hours;
     Age other_adu = playground.Adults();
-    other_adu.morale += -1;
+    other_adu.morale += -1*hours+1;
     Age other_el = playground.Elders();
     
 
     playground.replace_ages(other_young, other_adu, other_el);
 
-    playground.modify_mob( -0.2, -0.1, 0., 0., 0., 0.);
+    playground.add_mob( -0.1*hours, -0.1*hours, 0., 0., 0., 0.);
 
 }
 
@@ -91,19 +91,19 @@ void lockdown(City& playground){
     close_churches(playground);
 }
 
-
-void modernize_hospitals(City& playground) //reduces treasury, increases sanitary cap
+//OBSOLETE
+/*void modernize_hospitals(City& playground) //reduces treasury, increases sanitary cap
 {
- playground.mod_$(-5000);
- playground.mod_cap(500);   
-}
+ playground.add_$(-5000);
+ playground.add_cap(500);   
+}*/
 
 void invest_in_research(City& playground){
-    playground.mod_$(-5000);
-    playground.mod_know(5);
+    playground.add_$(-5000);
+    playground.add_know(5);
 }
 void invest_in_digital(City& playground){ //helps people transition to remote working
-    playground.mod_$(-5000);
+    playground.add_$(-5000);
     Age other_young = playground.Young();
     other_young.income +=1;
     Age other_adu = playground.Adults();
@@ -122,7 +122,7 @@ void terrorize_with_media(City& playground) //changes perception of the dangerou
     other_adu.morale += -2;
     Age other_el = playground.Elders();
     other_el.morale +=-3;
-    playground.modify_mob(-0.05, -0.1, -0.15, -0.03, -0.07, -0.1);
+    playground.add_mob(-0.05, -0.1, -0.15, -0.03, -0.07, -0.1);
 }
 void tranquillize_with_media(City& playground) //shouldn't be a good option
 {
@@ -132,5 +132,5 @@ void tranquillize_with_media(City& playground) //shouldn't be a good option
     other_adu.morale += 1;
     Age other_el = playground.Elders();
     other_el.morale += 1;
-    playground.modify_mob(0.3, 0.1, 0.05, 0.06, 0.03, 0.05);
+    playground.add_mob(0.3, 0.1, 0.05, 0.06, 0.03, 0.05);
 }

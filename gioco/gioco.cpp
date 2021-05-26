@@ -1,4 +1,5 @@
 #include "gioco.hpp"
+//CHANGED INITIALIZATION OF MANY VARIABLES (NON COMPILA)
 int main()
 {
   Virus covid = {0.5, 0., 0.};

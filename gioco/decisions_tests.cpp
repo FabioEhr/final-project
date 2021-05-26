@@ -2,7 +2,7 @@
 
 #include "doctest.h"
 #include "decisions.hpp"
-
+//CHANGED INITIALIZATION OF MANY VARIABLES (FAILS TESTS)
 TEST_CASE("Testing buy_masks") {
 Virus covid = {0.5, 0., 0.};
 

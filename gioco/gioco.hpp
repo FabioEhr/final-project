@@ -5,11 +5,16 @@
 #include <iostream>
 #include <vector>
 
+//TO DO LIST
+//Assert in evolve
+//number of beds currently doesn't do anything
+//move modernize in decisions
+
 struct Virus
 {
-  double b;
-  double g; //why g? credo sia gamma
-  double d;
+  double b; //contagiosità
+  double g; //recovery rate
+  double d; //mortalità
 };
 
 struct Transmatrix
@@ -49,11 +54,14 @@ struct Age
   double sus;
   double inf;
   double rec;
+  double hosp; //percentage of hospitalized
   double ded;
-  int income; //otherwise possible confusion with $() in class city (?)
+  
+  int income; 
   int morale;
-  double d_increase; //modifies death chance based on age
-  double osp_chance; //probability of being ospitalized
+  
+  double d_mod; //modifies death chance based on age
+  double hosp_chance; //probability of being hospitalized
 
   //made it a member function
   void invariant()
@@ -63,29 +71,55 @@ struct Age
   }
 };
 
+struct Hospitals{  
+  int patients;
+  int n_beds;
+  int level;
+  double r_chance_mod;
+  double d_chance_mod;
+    
+  /*modernise(int n_hospitals) {
+    //if con player_money >= n_hospitals*base_cost*current_level
+    //player_money -= quell'amount
+    //else cout "You don't have enough money to upgrade hospitals!"
+    
+  }
+    cured_and_dead(){
+      
+    }
+  
+  ampliate (int amount) {
+    //if player_money 
+  }*/
+
+};
+
+
 class City
 {
 
   int n; //total population? what is this used for?
 
-  double y_per; // percentage of young people
+double y_per; // percentage of young people
   Age y;
   double a_per; // percentage of adults
   Age a;
   double e_per; // percentage of elders
   Age e;
+  
+  
+
 
   Virus vir;
   Transmatrix mob;
 
   int treas;   //treasure
-  int know;    //knowledge
-  int san_cap; //cap sanitario
+  int know=0;  //knowledge
+  int hosp=0;  //ospedalizzati
+  Hospitals h; //cap sanitario
 
   void invariant()
   {
-    //pericoloso fare un assert con un uguale con un double
-    //===>assert(y_per + a_per + e_per == 1);<===
     assert(double_compare((y_per + a_per + e_per), 1));
   }
 
@@ -100,9 +134,8 @@ public:
        Virus virus,
        Transmatrix mobility,
        int treasury,
-       int knowledge,
-       int sanitary_cap)
-      : n{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treas{treasury}, know{knowledge}, san_cap{sanitary_cap}
+       Hospitals hosp)
+      : n{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treas{treasury}, h{hosp}
   {
   }
 
@@ -147,18 +180,18 @@ public:
   {
     return know;
   }
-  int cap()
+  Hospitals hospital()
   {
-    return san_cap;
+    return h;
   }
 
   //add functions
-  void mod_$(int amount)
+  void add_$(int amount)
   {
     treas += amount;
   }
 
-  void modify_mob(double yy, double aa, double ee, double ya, double ye, double ae)
+  void add_mob(double yy, double aa, double ee, double ya, double ye, double ae)
   {
     //modifying values
     mob.yy += yy;
@@ -194,12 +227,20 @@ public:
     }
   }
 
-  void mod_cap(int amount)
-  {
-    san_cap += amount;
+  void multiply_mob(double xyy = 1, double xaa = 1, double xee = 1, double xya = 1, double xye = 1, double xae = 1) { 
+    //add a condition (verbal or in the code) that forces factors to be >0
+    //modifying values
+    mob.yy = mob.yy*xyy;
+    mob.aa = mob.aa*xaa;
+    mob.ee = mob.ee*xee;
+    mob.ya = mob.ya*xya;
+    mob.ye = mob.ye*xye;
+    mob.ae = mob.ae*xae;
+    
   }
 
-  void mod_know(int amount)
+
+  void add_know(int amount)
   {
     know += amount;
   }
@@ -290,30 +331,60 @@ public:
 
     //virus.g + virus.d deve essere <=1. se = tutti gli infetti passano subito a rec o ded
     // se < gli infetti non arriveranno mai matematicamente a 0, se non per approssimazione (credo, correggetemi)
+    
+    //hospitalized
+    y.inf -= y.hosp_chance * current_young_inf;
+    y.hosp += y.hosp_chance * current_young_inf;
+
+    a.inf -= a.hosp_chance * current_adult_inf;
+    a.hosp += a.hosp_chance * current_adult_inf;
+
+    e.inf -= e.hosp_chance * current_elder_inf;
+    e.hosp += e.hosp_chance * current_elder_inf;
+
+  
+    double current_young_hosp = y.hosp; //saving the current percentages of hospitalized
+    double current_adult_hosp = a.hosp;
+    double current_elder_hosp = e.hosp;
+
+//if(n*(y.hosp+a.hosp+e.hosp)>=san_cap) {kill some}
+//implement in next_turn()
 
     //recoveries
     // ===>people infected just above will already recover the same day<===
     y.inf -= vir.g * current_young_inf;
-    y.rec += vir.g * current_young_inf;
+    y.hosp -= (vir.g+h.r_chance_mod)*current_young_hosp;
+    y.rec += (vir.g * current_young_inf + (vir.g+h.r_chance_mod)*current_young_hosp);
+    
 
     a.inf -= vir.g * current_adult_inf;
-    a.rec += vir.g * current_adult_inf;
+    a.hosp -= (vir.g+h.r_chance_mod)*current_adult_hosp;
+    a.rec += (vir.g * current_adult_inf + (vir.g+h.r_chance_mod)*current_adult_hosp);
 
     e.inf -= vir.g * current_elder_inf;
-    e.rec += vir.g * current_elder_inf;
+    e.hosp -= (vir.g+h.r_chance_mod)*current_elder_hosp;
+    e.rec += (vir.g * current_elder_inf+ (vir.g+h.r_chance_mod)*current_adult_hosp);
 
+   
     //deaths
     // ===>people infected just above will already die the same day<===
     //WARNING negative values
-    y.inf -= (vir.d+y.d_increase) * current_young_inf;
-    y.ded += (vir.d+y.d_increase) * current_young_inf;
+    assert(vir.d+y.d_mod > 0 && vir.d+y.d_mod <1);
+    y.inf -= (vir.d+y.d_mod) * current_young_inf;
+    y.hosp -= (vir.d+h.d_chance_mod)*current_young_hosp;
+    y.ded += ((vir.d+y.d_mod) * current_young_inf + (vir.d+h.d_chance_mod)*current_young_hosp);
 
-    a.inf -= (vir.d+a.d_increase) * current_adult_inf;
-    a.ded += (vir.d+a.d_increase) * current_adult_inf;
+    assert(vir.d+a.d_mod > 0 && vir.d+a.d_mod < 1);
+    a.inf -= (vir.d+a.d_mod) * current_adult_inf;
+    a.hosp -= (vir.d+h.d_chance_mod)*current_adult_hosp;
+    a.ded += ((vir.d+a.d_mod) * current_adult_inf + (vir.d+h.d_chance_mod)*current_adult_hosp);
 
-    e.inf -= (vir.d+e.d_increase) * current_elder_inf;
-    e.ded += (vir.d+e.d_increase) * current_elder_inf;
+   assert(vir.d+e.d_mod > 0 && vir.d+e.d_mod < 1);
+    e.inf -= (vir.d+e.d_mod) * current_elder_inf;
+    e.hosp -= (vir.d+h.d_chance_mod)*current_elder_hosp;
+    e.ded += ((vir.d+e.d_mod) * current_elder_inf + (vir.d+h.d_chance_mod)*current_elder_hosp);
 
+  h.patients= n*(y.hosp+a.hosp+e.hosp);
     invariant();
   }
 
