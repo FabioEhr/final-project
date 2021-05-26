@@ -14,10 +14,10 @@ playground.modify_mob(m_change, m_change, m_change, m_change, m_change, m_change
 
 void close_restaurants(City&playground){ //affects young and adults more (I guess?)
 Age other_young = playground.Young();
-other_young.$ += -3;
+other_young.income += -3;
 other_young.morale +=-3;
 Age other_adu = playground.Adults();
-other_adu.$ += -7;
+other_adu.income += -7;
 other_adu.morale +=-3;
 Age other_el = playground.Elders();
 other_el.morale +=-2;
@@ -29,10 +29,10 @@ playground.modify_mob(-0.1, -0.1, -0.05, -0.05, -0.01, -0.01);
 void close_theatres(City& playground) //different from close_restaurants, lesser economic impact but people are sadder. affects "mixed" encounters 
 {
     Age other_young = playground.Young();
-other_young.$ += -1;
+other_young.income += -1;
 other_young.morale +=-5;
 Age other_adu = playground.Adults();
-other_adu.$ += -3;
+other_adu.income += -3;
 other_adu.morale +=-4;
 Age other_el = playground.Elders();
 other_el.morale +=-3;
@@ -44,7 +44,7 @@ playground.modify_mob(-0.05, -0.05, -0.05, -0.1, -0.1, -0.1);
 void close_schools(City& playground) //affects young greatly and adults(because they have to stay with their kids)
 { 
 Age other_young = playground.Young();
-other_young.$ += -2; //economic effects on closing schools are long term 
+other_young.income += -2; //economic effects on closing schools are long term 
 other_young.morale +=-6;
 
 Age other_adu = playground.Adults();
@@ -105,9 +105,9 @@ void invest_in_research(City& playground){
 void invest_in_digital(City& playground){ //helps people transition to remote working
     playground.mod_$(-5000);
     Age other_young = playground.Young();
-    other_young.$ +=1;
+    other_young.income +=1;
     Age other_adu = playground.Adults();
-    other_adu.$ +=2;
+    other_adu.income +=2;
     Age other_el = playground.Elders();
     
 

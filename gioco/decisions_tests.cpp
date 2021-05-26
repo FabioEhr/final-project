@@ -31,8 +31,8 @@ Virus covid = {0.5, 0., 0.};
 close_restaurants(test);
 Transmatrix modified = {0.7, 0.5, 0.5-0.05, 0.3-0.05, 0.1-0.01, 0.3-0.01};
 CHECK(test.Mobility()== modified);
-CHECK(test.Young().$ == 12);
-CHECK(test.Adults().$ == 23);
+CHECK(test.Young().income == 12);
+CHECK(test.Adults().income == 23);
 CHECK(test.Young().morale == 7);
 CHECK(test.Adults().morale == 7);
 CHECK(test.Elders().morale == 8);  
@@ -50,7 +50,7 @@ Virus covid = {0.5, 0., 0.};
 close_schools(test);
 Transmatrix modified = {0.8-0.6, 0.6, 0.5, 0.3, 0.1, 0.3};
 CHECK(test.Mobility()== modified);
-CHECK(test.Young().$ == 15-2);
+CHECK(test.Young().income == 15-2);
 CHECK(test.Young().morale == 10-6);
 CHECK(test.Adults().morale == 10-1);
 
@@ -85,8 +85,8 @@ Virus covid = {0.5, 0., 0.};
 close_theatres(test);
 Transmatrix modified = {0.8-0.05, 0.6-0.05, 0.5-0.05, 0.3-0.1, 0.1-0.1, 0.3-0.1};
 CHECK(test.Mobility()== modified);
-CHECK(test.Young().$ == 15-1);
-CHECK(test.Adults().$ == 30-3);
+CHECK(test.Young().income == 15-1);
+CHECK(test.Adults().income == 30-3);
 CHECK(test.Young().morale == 10-5);
 CHECK(test.Adults().morale == 10-4);
 CHECK(test.Elders().morale == 10-3);  
@@ -135,7 +135,7 @@ Virus covid = {0.5, 0., 0.};
 invest_in_digital(test);
 
 CHECK(test.$() == 100000 -5000);
-CHECK(test.Young().$ == 15 +1 );  
-CHECK(test.Adults().$ == 30 +2 );  
+CHECK(test.Young().income == 15 +1 );  
+CHECK(test.Adults().income == 30 +2 );  
 
 }
