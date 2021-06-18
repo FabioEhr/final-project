@@ -9,7 +9,7 @@
 #include <iterator>
 #include <string>
 
-//note: i've implemented some data members as public because of lazyness, but they should be private with getter functions.
+//note: i've implemented some data members as public because of lazyness, but they should be private with getter functions or instead we can make the class a struct
 
 class Virus {
     
@@ -17,9 +17,9 @@ class Virus {
 
     double contagiousness; 
     double recovery_rate;
-    int incubation;
+    int incubation_time;
 
-    Virus (double m_cont = 0, double m_rec = 0, int m_incub = 1) : contagiousness{m_cont}, recovery_rate{m_rec}, incubation{m_incub} {}
+    Virus (double m_cont = 0, double m_rec = 0, int m_incub = 1) : contagiousness{m_cont}, recovery_rate{m_rec}, incubation_time{m_incub} {}
 };
 
 class Cell {
@@ -28,10 +28,9 @@ class Cell {
 
     int r; //possibly rewrite as private with getter functions
     int c;
-    int index;
     Cell (int m_cell_r = 1, int m_cell_c = 1) : r{m_cell_r}, c{m_cell_c} {};
     
-    bool operator< (Cell const& rhs) const {
+    bool operator< (Cell const& rhs) const { //needed for "set" operations
         if ((*this).r==rhs.r) {
             return (*this).c<rhs.c;
         } else {
@@ -46,14 +45,11 @@ class Cell {
             return (*this).r>rhs.r;
         };
     }
-};
 
-
-
-
-bool operator== (Cell const& lhs, Cell const& rhs) { //i moved it outside because as a member function it gave me problems, i don't know enough yet to solve them
-return ((lhs.r == rhs.r) && (lhs.c == rhs.c)) || lhs.index == rhs.index;
-};    
+    bool operator == (Cell const& rhs) const {
+        return ((*this).r==rhs.r && (*this).c==rhs.c);
+    }
+};   
 
 class Person {
     public:
@@ -69,25 +65,27 @@ class Person {
         return (condition >=0 && condition <=3 && incub_day >=0);
     }
 
-    void rndmove (int speed, int rndmove_width, int rndmove_height) {
+    void rndmove (int speed, int rndmove_width, int rndmove_height) { //fa muovere una persona in modo random data una velocità e i limiti di posizione
         
         //r+= a_randomnumber between -speed and +speed 
         //c+= a_randomnumber between -speed and +speed
         //could be reimplemented with pytagoras theorem to be more accurate, but then we would get numbers that are not ints 
         
         std::random_device r1;
-        std::default_random_engine generator1 {r1()};
+        //std::default_random_engine generator1 {r1()}; perchè togliendo questo funziona lo stesso? farsi spiegare da Lorenzo
         std::uniform_int_distribution<int> distr_r(-speed, speed);
         int walk_r = distr_r(r1);
         P_cell.r += walk_r;
 
-        std::random_device r2;
-        std::default_random_engine generator2 {r2()};
-        std::uniform_int_distribution<int> distr_c(-speed, speed);
-        int walk_c = distr_c(r2);
+        //std::random_device r2; 
+        //std::default_random_engine generator2 {r2()};
+        //std::uniform_int_distribution<int> distr_c(-speed, speed);
+        int walk_c = distr_r(r1);
         P_cell.c += walk_c;    
 
         //if r>rndmove_width r=rndmove_width, if r<1 r=1 and same for c -->Imposing boundaries (walls)
+        //questo fa sì che se le persone uscissero dai muri rimangano sui muri. potrebbe essere un bias del movimento (?)
+        //si potrebbe implementare invece un "rimbalzo", anche se forse a quel punto il bias sarebbe verso il centro (?)
 
         if (P_cell.r>rndmove_height) {
             P_cell.r = rndmove_height;
@@ -119,10 +117,10 @@ class Grid {
    
     public:
    
-    int width;
     int height;
+    int width;
 
-    int susceptible; //i've not used them besides initial values, could be implemented later for tracking evolution purely from a sir model standpoint
+    int susceptible;
     int infected;
     int recovered;
 
@@ -132,7 +130,7 @@ class Grid {
 
     int day = 0; //added if we want something to keep track of the days passed
 
-    Grid (int m_w = 1, int m_h = 1, int m_sus = 1, int m_inf = 0, int m_rec = 0) : width{m_w}, height{m_h}, susceptible{m_sus}, infected{m_inf}, recovered{m_rec} {
+    Grid (int m_h = 1, int m_w = 1, int m_sus = 1, int m_inf = 0, int m_rec = 0) : height{m_h}, width{m_w}, susceptible{m_sus}, infected{m_inf}, recovered{m_rec} {
         
         population = m_sus + m_inf + m_rec;
 
@@ -161,14 +159,14 @@ class Grid {
             // (people[i]).c = a_random_number between 1 and  width
 
         std::random_device grid_r1;
-        std::default_random_engine generator_grid1 {grid_r1()};
+        //std::default_random_engine generator_grid1 {grid_r1()};
         std::uniform_int_distribution<int> grid_r(1, height);
         (people[i]).P_cell.r = grid_r(grid_r1);
 
-        std::random_device grid_r2;
-        std::default_random_engine generator_grid2 {grid_r2()};
-        std::uniform_int_distribution<int> grid_c(1, width);
-        (people[i]).P_cell.c = grid_c(grid_r2);
+        //std::random_device grid_r2;
+        //std::default_random_engine generator_grid2 {grid_r2()};
+        //std::uniform_int_distribution<int> grid_c(1, width);
+        (people[i]).P_cell.c = grid_r(grid_r1);
         }
 
     }
@@ -186,18 +184,16 @@ class Grid {
         //need something that gives an unique position to each person (based on the cell, so row and column), and does the contamination for each position. 
         //^^actually i changed the approach, see below
 
-        //keeping a vector containing all the cells that are "contagious", that means they have at least one infected inside them
+        //keeping a set containing all the cells that are "contagious", that means they have at least one infected inside them
         std::set<class Cell> inf_cells;
-        //keeping a vector of pointers to infected people inside the people vector, needed later to calculate recoveries.       
+        //keeping a vector of pointers to infected people inside the people vector, needed later to calculate recoveries. is it really needed(?)       
 
         for (Person& inf_person : people) {
             
-            if(inf_person.condition==1) {
-                
-                // std::cout << "i found an inf person" << '\n'; //ok, it does 
+            if(inf_person.condition==1) {                 
 
-                //having a set instead of a vector would natively prevent inserting the same cell multiple times, improving efficiency
-                //i tried to do so but using myset.find() in the if at line 205 won't work: it'll result always true
+                //having a set instead of a vector natively prevents inserting the same cell multiple times
+                //and also has a binary search algorithm since it's sorted, improving efficiency by about 5.5 times
                 
                 inf_cells.insert(inf_person.P_cell);
 
@@ -205,22 +201,17 @@ class Grid {
 
         };
 
-        /*for (Cell const& c : inf_cells){
-            std::cout <<"( " << c.r << "," << c.c << ")\n";
-        } */
-
         int person_index = 1;
 
         if (inf_cells.begin() != inf_cells.end() ) {
 
             for (Person& sus_person : people) {
 
-            // with set i would have used(inf_cells.find(sus_person.P_cell) != inf_cells.end()) in the line below
-                if(sus_person.condition==0 && (inf_cells.find(sus_person.P_cell) != inf_cells.end() ) ) {
+                if(sus_person.condition==0 && (inf_cells.find(sus_person.P_cell) != inf_cells.end() ) ) { //find a sus person in an infected cell.
 
-            //if it finds it then sus_person.condition=1  based on a probability (random number between 0 and 1, if number<= virus contagiousness it gets infected)
+                    //if it finds it then sus_person.condition=1  based on a probability (random number between 0 and 1, if number<= virus contagiousness it gets infected)
                     std::random_device grid_evolve_r2;
-                    std::default_random_engine generator_grid_evolve2 {grid_evolve_r2()};
+                    //std::default_random_engine generator_grid_evolve2 {grid_evolve_r2()};
                     std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
 
                     if ((grid_evolve_distr2(grid_evolve_r2)) <= e_virus.contagiousness) {
@@ -229,7 +220,7 @@ class Grid {
                     --susceptible;
                     ++infected; //infected people and incubating count as "infected" in general
                 
-                    std::cout << "person " << person_index << " infected in cell (" << sus_person.P_cell.r << "," << sus_person.P_cell.c << ") \n";
+                    std::cout << "person " << person_index << " infected in cell (" << sus_person.P_cell.r << "," << sus_person.P_cell.c << ") \n"; //optional, it's for debugging purposes
 
                     };
                 };
@@ -239,21 +230,14 @@ class Grid {
 
         };
 
-        //possibly add a for that removes recovered people from the "people" vector, for efficiency reasons since they won't have any effects anymore as the model is for now
+        //possibly add a "for" that removes recovered people from the "people" vector, for efficiency reasons since they won't have any effects anymore as the model is for now
         //if we want to still track  only the number (and not the position) of recovered we could do so in the "recovered" data member
-
         
-        //add an if with question: "do you want to track infectuous cells?"  if yes it does that following for. problem: duplicate cells
-        //this is not needed if we use vector instead of set.
-        /*  for (Cell e_cell : inf_cells) {
-            e_cell.index = ((e_cell.r)-1)*width + e_cell.c; //calculating the index of each infected cell to be able to use the < operator
-            std::cout << '\n' << "cell index" << e_cell.index << '\n';
-        } */
     }
 
     void move_and_evolve (int mobility, int grid_speed, Virus mne_virus) {
         
-        for (int i=0; i<mobility; ++i) { //mobility x means in one day each person moves x times, so it can be infected up to x times
+        for (int i=0; i<mobility; ++i) { //mobility indicates how many times in a day each person moves, so it can be infected up to the same amount of times
             
             for (int j=0; j<population; ++j){ //making each person move
                 
@@ -266,13 +250,13 @@ class Grid {
         //infection can happen multiple times because of mobility but recovery isn't affected
         //the following for could be implemented inside a function called "inf_evolve" for better clarity of the code         
 
-        for (Person& inf_or_incub : people) {  //warning: this implementation makses so that people that have just been infected can already recover the same day
+        for (Person& inf_or_incub : people) {  //warning: this implementation makses so that people that have just become properly infected can already recover the same day, i "fixed" this with adding incubation
                 
-            //making infected people recover based on recovery_rate. could be implemented before the for at line 238 to make people recover in the morning
+            //making infected people recover based on recovery_rate. could be implemented before to make people recover in the morning
             //instead of the evening, reducing infections 
             if (inf_or_incub.condition==1){
                 std::random_device grid_evolve_r1;
-                std::default_random_engine generator_grid_evolve1 {grid_evolve_r1()};
+                //std::default_random_engine generator_grid_evolve1 {grid_evolve_r1()};
                 std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
 
                 if (grid_evolve_distr1(grid_evolve_r1) <= mne_virus.recovery_rate) {
@@ -285,7 +269,7 @@ class Grid {
 
             } else if (inf_or_incub.condition==3) { //implemented incubation so that the people that get infected can't infect other people right away, unless incubation=0 days
                 
-                if (inf_or_incub.incub_day < mne_virus.incubation) {
+                if (inf_or_incub.incub_day < mne_virus.incubation_time) {
 
                     ++inf_or_incub.incub_day;
 
