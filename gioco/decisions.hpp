@@ -110,6 +110,87 @@ void lockdown(City& playground)
     close_churches(playground);
 
 }
+//Open functions
+void open_restaurants(City& playground){
+     Age other_young = playground.Young();
+    other_young.income += 3;
+    other_young.morale += 4;
+
+    Age other_adu = playground.Adults();
+    other_adu.income += 7;
+    other_adu.morale += 4;
+
+    Age other_el = playground.Elders();
+    other_el.morale += 2;
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob(0.15, 0.15, 0.1, 0.07, 0.02, 0.02);
+
+}
+void open_theatres(City& playground)  
+{
+    
+    Age other_young = playground.Young();
+    other_young.income += 1;
+    other_young.morale += 7;
+
+    Age other_adu = playground.Adults();
+    other_adu.income += 3;
+    other_adu.morale += 4;
+
+    Age other_el = playground.Elders();
+    other_el.morale += 3;
+    playground.Set_ages(other_young, other_adu, other_el),    
+    playground.add_mob(0.07, 0.07, 0.07, 0.2, 0.2, 0.2);
+
+}
+void open_schools(City& playground) 
+{ 
+
+    Age other_young = playground.Young();
+    other_young.income += 1; //economic effects on closing schools are long term 
+    other_young.morale += 7;
+
+    Age other_adu = playground.Adults();
+    other_adu.morale +=2;
+
+    Age other_el = playground.Elders();
+
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob(0.65, 0., 0., 0., -0.4, 0.); //decreases ye mobility
+
+}
+void open_churches(City& playground) 
+{
+    
+    Age other_young = playground.Young();
+
+    Age other_adu = playground.Adults();
+    other_adu.morale +=1;
+
+    Age other_el = playground.Elders();
+    other_el.morale += 8;
+
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob(0., 0.07, 1., 0., 0., 0.05);
+
+}
+
+void lift_curfew(City& playground, int hours) //Potential problem: curfew(5 hours) then lift curfew(7 hours) makes no sense
+{
+
+    Age other_young = playground.Young();
+    other_young.morale += 2*hours-1;
+
+    Age other_adu = playground.Adults();
+    other_adu.morale += 2*hours-2;
+
+    Age other_el = playground.Elders();
+    
+
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob( 0.2*hours-0.1, 0.2*hours-2, 0., 0., 0., 0.);
+
+}
 
 //OBSOLETE
 /*void modernize_hospitals(City& playground) //reduces treasury, increases sanitary cap
@@ -173,24 +254,24 @@ void tranquillize_with_media(City& playground) //shouldn't be a good option
     playground.add_mob(0.3, 0.1, 0.05, 0.06, 0.03, 0.05);
 }
 
-void modernise_hospitals(City& playground) {
+void modernize_hospitals(City& playground) {
     
-    int upgrade_cost = (playground.GetRef_hospitals()).n_beds*(playground.hospital()).level*1000;
+    int upgrade_cost = (playground.Get_hospitals()).n_beds*(playground.Get_hospitals()).level*1000;
     
-    if (playground.GetRef_treasure()>=upgrade_cost) {
+    if (playground.$()>=upgrade_cost) {
     
         (playground.GetRef_hospitals()).level += 1; 
         playground.GetRef_treasure() -= upgrade_cost;
 
     } else {
         
-        std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/" << upgrade_cost << ") \n"; 
+        std::cout << "Not enough funds! (" << playground.$() << "/" << upgrade_cost << ") \n"; 
     }
 }
 
 void build_beds (City& playground, int amount) {
 
-    int build_cost = (playground.GetRef_hospitals()).level*amount*1000;
+    int build_cost = (playground.Get_hospitals()).level*amount*1000;
     
     if (playground.GetRef_treasure() >= build_cost) {
 

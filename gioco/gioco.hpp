@@ -1,14 +1,9 @@
 #ifndef GIOCO_HPP
 #define GIOCO_HPP
 #include <cassert>
-#include <cmath>
-#include <iostream>
-#include <vector>
 
 //TO DO LIST
 //Assert in evolve
-//number of beds currently doesn't do anything
-//move modernize in decisions
 //check positive in multiply mob
 struct Virus
 {
@@ -100,6 +95,14 @@ struct Hospitals
 
 };
 
+struct state_function{
+    bool restaurants;
+    bool theatres;
+    bool schools;
+    bool churches;
+    int curfew_hours;
+    bool vaccines;
+};
 
 class City
 {
@@ -124,6 +127,7 @@ class City
   
   Hospitals h; //cap sanitario
 
+state_function stat;
   void invariant()
   {
     assert(double_compare((y_per + a_per + e_per), 1));
@@ -141,8 +145,9 @@ public:
        Virus virus,
        Transmatrix mobility,
        int m_treasure,
-       Hospitals hosp)
-      : population{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treasure{m_treasure}, h{hosp}
+       Hospitals hosp,
+       state_function status)
+      : population{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treasure{m_treasure}, h{hosp}, stat{status}
   {
   }
 
@@ -163,19 +168,19 @@ public:
   {
     return e_per;
   }
-  Age Young()
+  Age const& Young()
   {
     return y;
   }
-  Age Adults()
+  Age const& Adults()
   {
     return a;
   }
-  Age Elders()
+  Age const& Elders()
   {
     return e;
   }
-  Transmatrix Mobility()
+  Transmatrix const& Mobility()
   {
     return mob;
   }
@@ -187,7 +192,7 @@ public:
   {
     return know;
   }
-  Hospitals hospital()
+  Hospitals const& Get_hospitals()
   {
     return h;
   }
@@ -410,7 +415,10 @@ public:
     e.hosp -= (vir.d+h.d_chance_mod)*current_elder_hosp;
     e.ded += ((vir.d+e.d_mod) * current_elder_inf + (vir.d+h.d_chance_mod)*current_elder_hosp);
 
-  //h.patients= population*(y.hosp+a.hosp+e.hosp);
+
+
+  h.patients= population*(y.hosp+a.hosp+e.hosp);
+
     invariant();
   }
 
