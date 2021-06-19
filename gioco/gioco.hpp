@@ -379,7 +379,7 @@ public:
 
     e.inf -= vir.g * current_elder_inf;
     e.hosp -= (vir.g+h.r_chance_mod)*current_elder_hosp;
-    e.rec += (vir.g * current_elder_inf+ (vir.g+h.r_chance_mod)*current_adult_hosp);
+    e.rec += (vir.g * current_elder_inf+ (vir.g+h.r_chance_mod)*current_elder_hosp);
 
    
     //deaths
