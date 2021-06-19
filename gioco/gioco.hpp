@@ -346,25 +346,28 @@ public:
     //hospitalized
 
     h.patients = population*(y_per*y.hosp+a_per*a.hosp+e_per*e.hosp);
-    int new_patients = h.patients + population*(y_per*y.hosp_chance * current_young_inf + a_per*a.hosp_chance * current_adult_inf + e_per*e.hosp_chance * current_elder_inf);
+    int new_patients = population*(y_per*y.hosp_chance * current_young_inf + a_per*a.hosp_chance * current_adult_inf + e_per*e.hosp_chance * current_elder_inf);
+    int total_patients = h.patients + new_patients;
+    double overflow = (total_patients - h.n_beds)/new_patients;
     
-    if (new_patients <= h.n_beds) {
+    /*if (overflow < 0) {
+      overflow = 0;
+    }*/
+    
+    overflow < 0 ? overflow = 0 : false;
 
-      y.inf -= y.hosp_chance * current_young_inf;
-      y.hosp += y.hosp_chance * current_young_inf;
+    y.inf -= y.hosp_chance * current_young_inf;
+    y.hosp += y.hosp_chance * current_young_inf*(1-overflow);
+    y.ded += y.hosp_chance * current_young_inf*overflow;
 
-      a.inf -= a.hosp_chance * current_adult_inf;
-      a.hosp += a.hosp_chance * current_adult_inf;
+    a.inf -= a.hosp_chance * current_adult_inf;
+    a.hosp += a.hosp_chance * current_adult_inf*(1-overflow);
+    a.ded += a.hosp_chance * current_adult_inf*overflow;
 
-      e.inf -= e.hosp_chance * current_elder_inf;
-      e.hosp += e.hosp_chance * current_elder_inf;
+    e.inf -= e.hosp_chance * current_elder_inf;
+    e.hosp += e.hosp_chance * current_elder_inf*(1-overflow);
+    e.ded += e.hosp_chance * current_elder_inf*overflow;
 
-    } else {
-      int free_beds = h.n_beds - h.patients;
-      y.hosp += free_beds*y_per/(population*y_per);
-      y.inf -= free_beds*y_per/(population*y_per);
-
-    }
   
     double current_young_hosp = y.hosp; //saving the current percentages of hospitalized
     double current_adult_hosp = a.hosp;
