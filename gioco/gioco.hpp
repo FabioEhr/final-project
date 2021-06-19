@@ -100,7 +100,7 @@ class City
 
   int n; //total population? what is this used for?
 
-double y_per; // percentage of young people
+  double y_per; // percentage of young people
   Age y;
   double a_per; // percentage of adults
   Age a;
@@ -113,7 +113,7 @@ double y_per; // percentage of young people
   Virus vir;
   Transmatrix mob;
 
-  int treas;   //treasure
+  int treasure;   //treasure
   int know=0;  //knowledge
   int hosp=0;  //ospedalizzati
   Hospitals h; //cap sanitario
@@ -133,9 +133,9 @@ public:
        Age elders,
        Virus virus,
        Transmatrix mobility,
-       int treasury,
+       int m_treasure,
        Hospitals hosp)
-      : n{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treas{treasury}, h{hosp}
+      : n{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treasure{m_treasure}, h{hosp}
   {
   }
 
@@ -174,7 +174,7 @@ public:
   }
   int $()
   {
-    return treas;
+    return treasure;
   }
   int knowledge()
   {
@@ -188,7 +188,7 @@ public:
   //add functions
   void add_$(int amount)
   {
-    treas += amount;
+    treasure += amount;
   }
 
   void add_mob(double yy, double aa, double ee, double ya, double ye, double ae)
@@ -246,7 +246,7 @@ public:
   }
 
   //replacing functions
-  void replace_ages(Age &other_young, Age &other_adult, Age &other_elder)
+  void Set_ages(Age &other_young, Age &other_adult, Age &other_elder)
   {
     y = other_young;
     a = other_adult;
@@ -256,6 +256,16 @@ public:
   void replace_mob(Transmatrix &replacer)
   {
     mob = replacer;
+  }
+
+  
+  //GetRef functions
+  Hospitals& GetRef_hospitals() {
+    return h;
+  }
+
+  int& GetRef_treasure () {
+    return treasure;
   }
 
   void evolve() //add virus and mobility as function parameters instead of implementing them as City data members (?)
