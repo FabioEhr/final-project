@@ -29,12 +29,15 @@ struct Transmatrix
 
 bool double_compare(double left, double right, double precision = 0.01)
 {
+
   if ((right - left) > -precision && (right - left) < precision)
   {
     return true;
   }
-  else
+  else {
     return false;
+  }
+
 }
 
 bool operator==(Transmatrix left, Transmatrix right) //what is this needed for?
@@ -69,9 +72,11 @@ struct Age
     //assert(ex.sus + ex.rec + ex.ded + ex.inf > 0.94 && ex.sus + ex.inf + ex.rec + ex.ded < 1.05);
     assert(double_compare(sus + rec + ded, 1, 0.05)); //just for elegance, the one above is probably more optimized
   }
+
 };
 
-struct Hospitals{  
+struct Hospitals
+{  
   //int patients;
   int n_beds;
   int level;
