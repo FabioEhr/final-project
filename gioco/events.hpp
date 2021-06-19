@@ -22,6 +22,7 @@ void mutate_deadliness(double ammount,Virus& plague, City& playground)//mutates 
     if(plague.d> 1.) {plague.d =1.;}
     playground.add_know(-3);
 }
+//void variante ricaduta
 
 void protests(City& playground) //they occur when morale is low
 {
