@@ -1,3 +1,5 @@
+#ifndef EVENTS_HPP
+#define EVENTS_HPP
 #include "gioco.hpp"
 //the idea is to implement a "next turn" function in main which
 //calls evolve, then generates rnd numbers based on parameters like
@@ -45,7 +47,7 @@ void illegal_parties(City & playground){
     other_adu.morale += 2;
     Age other_el = playground.Elders();
     other_el.morale +=1;
-    playground.replace_ages(other_young, other_adu, other_el);
+    playground.Set_ages(other_young, other_adu, other_el);
 }
 
 void eureka(City & playground){
@@ -61,5 +63,7 @@ void panic(City & playground)
     other_adu.morale += -2;
     Age other_el = playground.Elders();
     other_el.morale += -3;
-    playground.replace_ages(other_young, other_adu, other_el);
+    playground.Set_ages(other_young, other_adu, other_el);
 }
+
+#endif

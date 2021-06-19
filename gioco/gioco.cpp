@@ -11,7 +11,7 @@ int main()
 
   Transmatrix Mobility= {5, 6, 8, 4, 3, 2 };
   Hospitals SantOrsola= {0, 2000, 1, 0.2, -0.1};
-  state_function initial= {true, true, true, true, 0, false};
+  state_function initial= {true, true, true, true, 0, false, false};
   City Bologna= {10000, 0.4, Young, 0.35, Adults, 0.25, Elders, covid, Mobility, 100000, SantOrsola, initial};
   for(int i=0; i<20; i++){
     Bologna.evolve();

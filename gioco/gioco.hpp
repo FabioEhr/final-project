@@ -101,6 +101,7 @@ struct state_function{
     bool schools;
     bool churches;
     int curfew_hours;
+    bool perceived_danger;
     bool vaccines;
 };
 
@@ -196,6 +197,10 @@ public:
   {
     return h;
   }
+  state_function Get_status(){
+    return stat;
+  }
+  
 
   //add functions
   void add_$(int amount)
@@ -268,6 +273,9 @@ public:
   void replace_mob(Transmatrix &replacer)
   {
     mob = replacer;
+  }
+  void Set_status(state_function &replacer){
+    stat= replacer;
   }
 
   
@@ -419,7 +427,15 @@ public:
 
   h.patients= population*(y.hosp+a.hosp+e.hosp);
 
-    invariant();
+    
+    //income change (infected people don't work?)
+     int $_y= population*y_per*(y.sus+y.rec)*y.income;
+     int $_a= population*a_per*(a.sus+a.rec)*a.income;
+     int $_e=population*e_per*(e.sus+e.rec+e.inf)*e.income; //elders income value is negative so it makes sense (?) to include e.inf
+     int $_osp= h.patients*(-5); //should this be here?
+     int sum= $_y+$_a+$_e+$_osp;
+     treasure += sum;
+invariant();
   }
 
   double total_per_susceptibles()  //PROBLEM: if 2 inf, 6 sus, 2 dead returns 20% infected (in reality is 33%) 
