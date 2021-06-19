@@ -104,7 +104,7 @@ struct Hospitals
 class City
 {
 
-  int n; //total population? what is this used for?
+  int population; //total population
 
   double y_per; // percentage of young people
   Age y;
@@ -130,6 +130,7 @@ class City
   }
 
 public:
+
   City(int number,
        double percentage_young,
        Age young,
@@ -141,14 +142,14 @@ public:
        Transmatrix mobility,
        int m_treasure,
        Hospitals hosp)
-      : n{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treasure{m_treasure}, h{hosp}
+      : population{number}, y_per{percentage_young}, y{young}, a_per{percentage_adults}, a{adults}, e_per{percentage_elders}, e{elders}, vir{virus}, mob{mobility}, treasure{m_treasure}, h{hosp}
   {
   }
 
   //getter functions
   int N()
   {
-    return n;
+    return population;
   }
   double Y_per()
   {
@@ -277,10 +278,6 @@ public:
   void evolve() //add virus and mobility as function parameters instead of implementing them as City data members (?)
   {
 
-    /* B_yy B_ya B_ye
-		 B_ya B_aa B_ae
-		 B_ye B_ae B_ee
-		*/
     /*yy ya ye
 			ya aa ae
 			ye ae ye
@@ -333,11 +330,9 @@ public:
     }
 
     //infected to recovered && infected to dead.
-    //come faccio ad implementare in maniera deterministica la probabilità di morire o guarire in modo indipendente?
 
     //should i add the incubating part?
 
-    //should we make recovery/death rate different based on Age?
     //should we implement the sus to infected calculations in different betas for every Age?
     //or calculate and display "effective betas" afterwise?
 
@@ -349,21 +344,36 @@ public:
     // se < gli infetti non arriveranno mai matematicamente a 0, se non per approssimazione (credo, correggetemi)
     
     //hospitalized
+
+    h.patients = population*(y_per*y.hosp+a_per*a.hosp+e_per*e.hosp);
+    int new_patients = population*(y_per*y.hosp_chance * current_young_inf + a_per*a.hosp_chance * current_adult_inf + e_per*e.hosp_chance * current_elder_inf);
+    int total_patients = h.patients + new_patients;
+    double overflow = (total_patients - h.n_beds)/new_patients;
+    
+    /*if (overflow < 0) {
+      overflow = 0;
+    }*/
+    
+    overflow < 0 ? overflow = 0 : false;
+
     y.inf -= y.hosp_chance * current_young_inf;
-    y.hosp += y.hosp_chance * current_young_inf;
+    y.hosp += y.hosp_chance * current_young_inf*(1-overflow);
+    y.ded += y.hosp_chance * current_young_inf*overflow;
 
     a.inf -= a.hosp_chance * current_adult_inf;
-    a.hosp += a.hosp_chance * current_adult_inf;
+    a.hosp += a.hosp_chance * current_adult_inf*(1-overflow);
+    a.ded += a.hosp_chance * current_adult_inf*overflow;
 
     e.inf -= e.hosp_chance * current_elder_inf;
-    e.hosp += e.hosp_chance * current_elder_inf;
+    e.hosp += e.hosp_chance * current_elder_inf*(1-overflow);
+    e.ded += e.hosp_chance * current_elder_inf*overflow;
 
   
     double current_young_hosp = y.hosp; //saving the current percentages of hospitalized
     double current_adult_hosp = a.hosp;
     double current_elder_hosp = e.hosp;
 
-//if(n*(y.hosp+a.hosp+e.hosp)>=san_cap) {kill some}
+//if(population*(y.hosp+a.hosp+e.hosp)>=n_beds) {kill some}
 //implement in next_turn()
 
     //recoveries
@@ -400,7 +410,11 @@ public:
     e.hosp -= (vir.d+h.d_chance_mod)*current_elder_hosp;
     e.ded += ((vir.d+e.d_mod) * current_elder_inf + (vir.d+h.d_chance_mod)*current_elder_hosp);
 
+<<<<<<< HEAD
   h.patients= n*(y.hosp+a.hosp+e.hosp);
+=======
+  h.patients= population*(y.hosp+a.hosp+e.hosp);
+>>>>>>> 32d1f1014a93e2424425e8a3e2b5c87c60c69188
     invariant();
   }
 
