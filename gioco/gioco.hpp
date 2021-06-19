@@ -104,7 +104,7 @@ struct Hospitals
 class City
 {
 
-  int n; //total population? what is this used for?
+  int n; //total population
 
   double y_per; // percentage of young people
   Age y;
