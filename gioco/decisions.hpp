@@ -265,7 +265,7 @@ void modernize_hospitals(City& playground) {
 
     } else {
         
-        std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/" << upgrade_cost << ") \n"; 
+        std::cout << "Not enough funds! (" << playground.$() << "/" << upgrade_cost << ") \n"; 
     }
 }
 

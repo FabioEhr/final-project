@@ -1,4 +1,5 @@
 #include "gioco.hpp"
+#include<iostream>
 //CHANGED INITIALIZATION OF MANY VARIABLES (NON COMPILA)
 int main()
 {
@@ -9,10 +10,12 @@ int main()
   Age Elders= {0.99, 0.01, 0., 0., 0., -2, 10, 0.2, 0.25};
 
   Transmatrix Mobility= {5, 6, 8, 4, 3, 2 };
-  Hospitals SantOrsola= {2000, 1, 0.2, -0.1};
-  City Bologna= {10000, 0.4, Young, 0.35, Adults, 0.25, Elders, covid, Mobility, 100000, SantOrsola};
+  Hospitals SantOrsola= {0, 2000, 1, 0.2, -0.1};
+  state_function initial= {true, true, true, true, 0, false};
+  City Bologna= {10000, 0.4, Young, 0.35, Adults, 0.25, Elders, covid, Mobility, 100000, SantOrsola, initial};
   for(int i=0; i<20; i++){
     Bologna.evolve();
+    std::cout<< '\n';
   std::cout<< "Percentage of Young Susceptible :" << Bologna.Young().sus << " " << "Percentage of Young Infected :" << Bologna.Young().inf << " " << "Percentage of Young Recovered :" << Bologna.Young().rec  << '\n'; 
   std::cout<< "Percentage of Young Hospitalized :" << Bologna.Young().hosp << " "<< "Percentage of Young Dead :" << Bologna.Young().ded << '\n';
   std::cout<< "Sum of Young Percentages :" << Bologna.Young().sus+Bologna.Young().inf+Bologna.Young().rec+Bologna.Young().hosp+Bologna.Young().ded;
