@@ -8,7 +8,7 @@ int main()
   Age Adults= {0.99, 0.01, 0., 0., 0., 30, 10, 0., 0.1};
   Age Elders= {0.99, 0.01, 0., 0., 0., -2, 10, 0.2, 0.25};
 
-  Transmatrix Mobility= {0.8, 0.6, 0.5, 0.3, 0.1, 0.3 };
+  Transmatrix Mobility= {5, 6, 8, 4, 3, 2 };
   Hospitals SantOrsola= {2000, 1, 0.2, -0.1};
   City Bologna= {10000, 0.4, Young, 0.35, Adults, 0.25, Elders, covid, Mobility, 100000, SantOrsola};
   for(int i=0; i<20; i++){

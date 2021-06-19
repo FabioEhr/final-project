@@ -77,7 +77,7 @@ struct Age
 
 struct Hospitals
 {  
-  //int patients;
+  int patients;
   int n_beds;
   int level;
   double r_chance_mod;
@@ -162,19 +162,19 @@ public:
   {
     return e_per;
   }
-  Age Young()
+  Age const& Young()
   {
     return y;
   }
-  Age Adults()
+  Age const& Adults()
   {
     return a;
   }
-  Age Elders()
+  Age const& Elders()
   {
     return e;
   }
-  Transmatrix Mobility()
+  Transmatrix const& Mobility()
   {
     return mob;
   }
@@ -186,7 +186,7 @@ public:
   {
     return know;
   }
-  Hospitals hospital()
+  Hospitals const& Get_hospitals()
   {
     return h;
   }
@@ -400,7 +400,7 @@ public:
     e.hosp -= (vir.d+h.d_chance_mod)*current_elder_hosp;
     e.ded += ((vir.d+e.d_mod) * current_elder_inf + (vir.d+h.d_chance_mod)*current_elder_hosp);
 
-  //h.patients= n*(y.hosp+a.hosp+e.hosp);
+  h.patients= n*(y.hosp+a.hosp+e.hosp);
     invariant();
   }
 

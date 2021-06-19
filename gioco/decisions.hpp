@@ -110,6 +110,87 @@ void lockdown(City& playground)
     close_churches(playground);
 
 }
+//Open functions
+void open_restaurants(City& playground){
+     Age other_young = playground.Young();
+    other_young.income += 3;
+    other_young.morale += 4;
+
+    Age other_adu = playground.Adults();
+    other_adu.income += 7;
+    other_adu.morale += 4;
+
+    Age other_el = playground.Elders();
+    other_el.morale += 2;
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob(0.15, 0.15, 0.1, 0.07, 0.02, 0.02);
+
+}
+void open_theatres(City& playground)  
+{
+    
+    Age other_young = playground.Young();
+    other_young.income += 1;
+    other_young.morale += 7;
+
+    Age other_adu = playground.Adults();
+    other_adu.income += 3;
+    other_adu.morale += 4;
+
+    Age other_el = playground.Elders();
+    other_el.morale += 3;
+    playground.Set_ages(other_young, other_adu, other_el),    
+    playground.add_mob(0.07, 0.07, 0.07, 0.2, 0.2, 0.2);
+
+}
+void open_schools(City& playground) 
+{ 
+
+    Age other_young = playground.Young();
+    other_young.income += 1; //economic effects on closing schools are long term 
+    other_young.morale += 7;
+
+    Age other_adu = playground.Adults();
+    other_adu.morale +=2;
+
+    Age other_el = playground.Elders();
+
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob(0.65, 0., 0., 0., -0.4, 0.); //decreases ye mobility
+
+}
+void open_churches(City& playground) 
+{
+    
+    Age other_young = playground.Young();
+
+    Age other_adu = playground.Adults();
+    other_adu.morale +=1;
+
+    Age other_el = playground.Elders();
+    other_el.morale += 8;
+
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob(0., 0.07, 1., 0., 0., 0.05);
+
+}
+
+void lift_curfew(City& playground, int hours) //Potential problem: curfew(5 hours) then lift curfew(7 hours) makes no sense
+{
+
+    Age other_young = playground.Young();
+    other_young.morale += 2*hours-1;
+
+    Age other_adu = playground.Adults();
+    other_adu.morale += 2*hours-2;
+
+    Age other_el = playground.Elders();
+    
+
+    playground.Set_ages(other_young, other_adu, other_el);
+    playground.add_mob( 0.2*hours-0.1, 0.2*hours-2, 0., 0., 0., 0.);
+
+}
 
 //OBSOLETE
 /*void modernize_hospitals(City& playground) //reduces treasury, increases sanitary cap
