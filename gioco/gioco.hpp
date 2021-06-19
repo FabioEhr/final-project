@@ -1,5 +1,5 @@
-#ifndef PANDEMIC
-#define PANDEMIC
+#ifndef GIOCO_HPP
+#define GIOCO_HPP
 #include <cassert>
 #include <cmath>
 #include <iostream>
