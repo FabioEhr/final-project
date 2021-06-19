@@ -9,7 +9,7 @@
 //Assert in evolve
 //number of beds currently doesn't do anything
 //move modernize in decisions
-
+//check positive in multiply mob
 struct Virus
 {
   double b; //contagiosità
@@ -72,7 +72,7 @@ struct Age
 };
 
 struct Hospitals{  
-  int patients;
+  //int patients;
   int n_beds;
   int level;
   double r_chance_mod;
@@ -84,6 +84,7 @@ struct Hospitals{
     //else cout "You don't have enough money to upgrade hospitals!"
     
   }
+  build
     cured_and_dead(){
       
     }
@@ -115,7 +116,7 @@ class City
 
   int treasure;   //treasure
   int know=0;  //knowledge
-  int hosp=0;  //ospedalizzati
+  
   Hospitals h; //cap sanitario
 
   void invariant()
@@ -394,7 +395,7 @@ public:
     e.hosp -= (vir.d+h.d_chance_mod)*current_elder_hosp;
     e.ded += ((vir.d+e.d_mod) * current_elder_inf + (vir.d+h.d_chance_mod)*current_elder_hosp);
 
-  h.patients= n*(y.hosp+a.hosp+e.hosp);
+  //h.patients= n*(y.hosp+a.hosp+e.hosp);
     invariant();
   }
 
@@ -416,28 +417,5 @@ public:
   }
 };
 
-// Secondo me ci sono errori in evolve qua sotto
-
-/*void evolve(
-		Virus& germe, Age& young, Age& adult, Age& elder, Transmatrix& mobility)
-{
-	double B_yy = germe.b * mobility.yy *
-								young.inf;  // in cordinate fabio B*a__*age.I
-	double B_aa = germe.b * mobility.aa *
-								adult.inf;  // 6 perchè matrice simmetrica
-	double B_ee = germe.b * mobility.ee * elder.inf;
-	double B_ya = germe.b * mobility.ya * young.inf;
-	double B_ye = germe.b * mobility.ye * adult.inf;
-	double B_ae = germe.b * mobility.ae * elder.inf;
-	double del_sus_young = (B_yy + B_ya + B_ye - B_yy * B_ya - B_yy * B_ye -
-													B_ya * B_ye + B_yy * B_ya * B_ye) *
-												 young.sus;
-	double del_sus_adult = (B_aa + B_ya + B_ae - B_aa * B_ya - B_aa * B_ae -
-													B_ya * B_ae + B_aa * B_ya * B_ae) *
-												 adult.sus;
-	double del_sus_elder = (B_ye + B_ae + B_ee - B_ye * B_ae - B_ye * B_ee -
-													B_ae * B_ee + B_ye * B_ae * B_ee) *
-												 elder.sus;
-}*/
 
 #endif
