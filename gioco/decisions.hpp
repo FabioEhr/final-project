@@ -173,11 +173,11 @@ void tranquillize_with_media(City& playground) //shouldn't be a good option
     playground.add_mob(0.3, 0.1, 0.05, 0.06, 0.03, 0.05);
 }
 
-void modernise_hospitals(City& playground) {
+void modernize_hospitals(City& playground) {
     
-    int upgrade_cost = (playground.GetRef_hospitals()).n_beds*(playground.hospital()).level*1000;
+    int upgrade_cost = (playground.Get_hospitals()).n_beds*(playground.Get_hospitals()).level*1000;
     
-    if (playground.GetRef_treasure()>=upgrade_cost) {
+    if (playground.$()>=upgrade_cost) {
     
         (playground.GetRef_hospitals()).level += 1; 
         playground.GetRef_treasure() -= upgrade_cost;
@@ -190,7 +190,7 @@ void modernise_hospitals(City& playground) {
 
 void build_beds (City& playground, int amount) {
 
-    int build_cost = (playground.GetRef_hospitals()).level*amount*1000;
+    int build_cost = (playground.Get_hospitals()).level*amount*1000;
     
     if (playground.GetRef_treasure() >= build_cost) {
 
