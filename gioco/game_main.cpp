@@ -36,6 +36,7 @@ int main() {
     }//closes choices loop
     
      playground.evolve();
+     playground.next_treasury();
      continue;
     }// closes mother game loop
 }

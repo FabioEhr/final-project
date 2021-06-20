@@ -287,6 +287,16 @@ public:
   int& GetRef_treasure () {
     return treasure;
   }
+  void next_treasury(){
+//income change (infected people don't work?)
+     int $_y= population*y_per*(y.sus+y.rec)*y.income;
+     int $_a= population*a_per*(a.sus+a.rec)*a.income;
+     int $_e=population*e_per*(e.sus+e.rec+e.inf)*e.income; //elders income value is negative so it makes sense (?) to include e.inf
+     int $_osp= h.patients*(-5); //should this be here?
+     int sum= $_y+$_a+$_e+$_osp;
+     treasure += sum;
+}
+
 
   void evolve() //add virus and mobility as function parameters instead of implementing them as City data members (?)
   {
@@ -428,13 +438,7 @@ public:
   h.patients= population*(y.hosp+a.hosp+e.hosp);
 
     
-    //income change (infected people don't work?)
-     int $_y= population*y_per*(y.sus+y.rec)*y.income;
-     int $_a= population*a_per*(a.sus+a.rec)*a.income;
-     int $_e=population*e_per*(e.sus+e.rec+e.inf)*e.income; //elders income value is negative so it makes sense (?) to include e.inf
-     int $_osp= h.patients*(-5); //should this be here?
-     int sum= $_y+$_a+$_e+$_osp;
-     treasure += sum;
+    
 invariant();
   }
 
