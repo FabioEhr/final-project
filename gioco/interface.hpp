@@ -3,6 +3,7 @@
 #include"gioco.hpp"
 #include "decisions.hpp"
 #include<iostream>
+#include<string>
 
 
 void print_opt(City &playground){
@@ -143,6 +144,7 @@ void print_situation(City &playground){
   std::cout<< '\n';
     } 
 }
+
 
 
 #endif

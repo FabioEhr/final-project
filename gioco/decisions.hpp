@@ -2,18 +2,72 @@
 #define DECISIONS_HPP
 #include "gioco.hpp"
 #include <iostream>
+#include <string>
+
 //IMPORTANT: all values must be balanced
 //balanced functions will be marked with a comment
 //stating AB (already balanced)
 //when you change a value remember that DOCTEST
 //values must be changed as well 
+int char_to_int(char a){
+    switch(a){
+        case '0':
+        return 0;
+        break;
+        case '1':
+        return 1;
+        break;
+        case '2':
+        return 2;
+        break;
+        case '3':
+        return 3;
+        break;
+        case '4':
+        return 4;
+        break;
+        case '5':
+        return 5;
+        break;
+        case '6':
+        return 6;
+        break;
+        case '7':
+        return 7;
+        break;
+        case '8':
+        return 8;
+        break;
+        case '9':
+        return 9;
+        break;
+        default: return 0;      
+    }
+}
+int string_to_int(std::string &a){
+int j=a.size();
+int z=0;
+for(int i=0; i<j; ++i){
+int exponent= j-i-1;
+int pow=1;
+for(int m=0; m<exponent; ++m)
+{
+pow= pow*10;    
+}
+int e= char_to_int(a[i]) *pow;
+z += e;
+}
+return z;
+}
 
 void buy_masks(City& playground)
 { //lowers mobility by the same ammount for all
     int quantity;
+    std::string anti_bug;
     std::cout<< "How many masks would you like to buy? (Insert a natural number)" <<'\n';
-    std::cin>> quantity;
-    if (quantity<0) {quantity= quantity *(-1);}
+    std::cin>> anti_bug;
+    quantity= string_to_int(anti_bug);
+    //if (quantity<0) {quantity= quantity *(-1);} should be done by string_to int
     int cost =1;
     std::cout<< "The cost of investment is: "<< quantity*cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;
@@ -120,8 +174,10 @@ void curfew(City& playground)
 { 
     std::cout<< "By how many hours would you like to increase the curfew? (Insert a positive value)"<< '\n';
     int hours;
-    std::cin>> hours;
-    if (hours<0) {hours = hours *-1;}
+    std::string anti_bug;
+    std::cin>> anti_bug;
+    hours= string_to_int(anti_bug);
+    //if (hours<0) {hours = hours *-1;}
     state_function replacer =playground.Get_status();
     if(replacer.curfew_hours+hours>24) {
         hours = 24-replacer.curfew_hours;
@@ -239,8 +295,10 @@ void alleviate_curfew(City& playground) //Potential problem: curfew(5 hours) the
 {
     std::cout<< "By how many hours would you like to decrease the curfew? (Insert a positive value)"<< '\n';
     int hours;
-    std::cin>> hours;
-    if (hours<0) {hours = hours *-1;}
+    std::string anti_bug;
+    std::cin>> anti_bug;
+    hours= string_to_int(anti_bug);
+    //if (hours<0) {hours = hours *-1;}
     state_function replacer= playground.Get_status();
      if(replacer.curfew_hours-hours<0) {
         hours = replacer.curfew_hours;
@@ -389,9 +447,11 @@ else {std::cout<< "You did not proceed"<< '\n';}
 
 void build_beds (City& playground) {
 int amount;
+std::string anti_bug;
  std::cout<< "How many new hospital beds would you like to buy? (Insert a natural number)" <<'\n';
-    std::cin>> amount;
-    if (amount<0) {amount= amount *(-1);}
+    std::cin>> anti_bug;
+    amount=string_to_int(anti_bug);
+    //if (amount<0) {amount= amount *(-1);}
     int build_cost = (playground.Get_hospitals()).level*amount*1000;
 
     std::cout<< "The cost of investment is: "<< build_cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
@@ -415,12 +475,14 @@ std::cin>> decision;
 
 void vaccinate_young(City& playground){ 
     int price=1000;  
-    int vaccines=0;
+    int vaccines;
+    std::string anti_bug;
         int n_young= playground.Young().sus*playground.N()*playground.Y_per();
         std::cout<< "There are "<< n_young<<" Young people who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
-        std::cin>> vaccines;
+        std::cin>> anti_bug;
+        vaccines= string_to_int(anti_bug);
         if(vaccines>n_young) {vaccines=n_young;}
-        if (vaccines<0) {vaccines= -1*vaccines;}
+        //if (vaccines<0) {vaccines= -1*vaccines;}
         int cost= price*vaccines;
         std::cout<< "The cost of investment is: "<< cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;
@@ -444,12 +506,14 @@ else {
 
 void vaccinate_adults(City &playground){
     int price=1000;  
-    int vaccines=0;
+    int vaccines;
+    std::string anti_bug;
         int n_adults= playground.Adults().sus*playground.N()*playground.A_per();
         std::cout<< "There are "<< n_adults<<" Young people who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
-        std::cin>> vaccines;
+        std::cin>> anti_bug;
+        vaccines= string_to_int(anti_bug);
         if(vaccines>n_adults) {vaccines=n_adults;}
-        if (vaccines<0) {vaccines= -1*vaccines;}
+       // if (vaccines<0) {vaccines= -1*vaccines;}
         int cost= price*vaccines;
         std::cout<< "The cost of investment is: "<< cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;
@@ -473,12 +537,14 @@ else {
 }
 void vaccinate_elders(City &playground){
 int price=1000;  
-    int vaccines=0;
+    int vaccines;
+    std::string anti_bug;
         int n_elders= playground.Elders().sus*playground.N()*playground.E_per();
         std::cout<< "There are "<< n_elders<<" Young people who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
-        std::cin>> vaccines;
+        std::cin>> anti_bug;
+        vaccines=string_to_int(anti_bug);
         if(vaccines>n_elders) {vaccines=n_elders;}
-        if (vaccines<0) {vaccines= -1*vaccines;}
+        //if (vaccines<0) {vaccines= -1*vaccines;}
         int cost= price*vaccines;
         std::cout<< "The cost of investment is: "<< cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;

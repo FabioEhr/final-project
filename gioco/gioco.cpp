@@ -15,8 +15,9 @@ int main()
   City Bologna= {10000, 0.4, Young, 0.35, Adults, 0.25, Elders, covid, Mobility, 100000, SantOrsola, initial};
   for(int i=0; i<20; i++){
     Bologna.evolve();
+    Bologna.next_treasury();
     std::cout<< '\n';
-  std::cout<< "Percentage of Young Susceptible :" << Bologna.Young().sus << " " << "Percentage of Young Infected :" << Bologna.Young().inf << " " << "Percentage of Young Recovered :" << Bologna.Young().rec  << '\n'; 
+  /*std::cout<< "Percentage of Young Susceptible :" << Bologna.Young().sus << " " << "Percentage of Young Infected :" << Bologna.Young().inf << " " << "Percentage of Young Recovered :" << Bologna.Young().rec  << '\n'; 
   std::cout<< "Percentage of Young Hospitalized :" << Bologna.Young().hosp << " "<< "Percentage of Young Dead :" << Bologna.Young().ded << '\n';
   std::cout<< "Sum of Young Percentages :" << Bologna.Young().sus+Bologna.Young().inf+Bologna.Young().rec+Bologna.Young().hosp+Bologna.Young().ded;
   std::cout<< '\n';
@@ -27,7 +28,8 @@ int main()
   std::cout<< "Percentage of Elders Susceptible :" << Bologna.Elders().sus << " " << "Percentage of Elders Infected :" << Bologna.Elders().inf << " "<< "Percentage of Elders Recovered :" << Bologna.Elders().rec  <<'\n';
   std::cout<< "Percentage of Elders Hospitalized :" << Bologna.Elders().hosp << " "<< "Percentage of Elders Dead :" << Bologna.Elders().ded << '\n';
   std::cout<< "Sum of Elders Percentages :" << Bologna.Elders().sus+Bologna.Elders().inf+Bologna.Elders().rec+Bologna.Elders().hosp+Bologna.Elders().ded;
-  std::cout<< '\n';
+  std::cout<< '\n';*/
+  std::cout<<Bologna.$()<<'\n';
   }
   
 }
