@@ -1,9 +1,11 @@
-#ifndef INTERFACE
-#define INTERFACE
+#ifndef INTERFACE_HPP
+#define INTERFACE_HPP
 #include"gioco.hpp"
 #include "decisions.hpp"
 #include<iostream>
 #include<string>
+#include<random>
+
 
 
 void print_opt(City &playground){
@@ -94,18 +96,25 @@ switch(order){
     case 'z':
     if(current.vaccines) {vaccinate_young(playground);}
     break;
+    /*case '#': //hidden option for development
+    int n;
+    std::cin>> n; 
+    playground.evolve_n_times(n);
+    break;*/
 }
 }
-
-int turn_income(City &playground){ //shouldn't be here
+// next turn method is bugged for some reason
+int income(City &playground){
     int $_y= playground.N()*playground.Y_per()*(playground.Young().sus+playground.Young().rec)*playground.Young().income;
      int $_a= playground.N()*playground.A_per()*(playground.Adults().sus+playground.Adults().rec)*playground.Adults().income;
      int $_e=playground.N()*playground.E_per()*(playground.Elders().sus+playground.Elders().rec+playground.Elders().inf)*playground.Elders().income; //elders income value is negative so it makes sense (?) to include e.inf
      int $_osp= playground.Get_hospitals().patients*(-5); //should this be here?
      int sum= $_y+$_a+$_e+$_osp;
      return sum;
+     
+}
 
-  }
+
 
 void print_situation(City &playground){
     int n = playground.N();
@@ -120,7 +129,7 @@ void print_situation(City &playground){
     std::cout<< "Number of recovered :" << rec << '\n';
     std::cout<< "Number of pandemic related deaths :" << dead << '\n';
 
-    std::cout<< "Current treasury :" << playground.$() << "  Income per week :" << turn_income(playground)<< '\n';
+    std::cout<< "Current treasury :" << playground.$() << "  Income per week :" <<income(playground)<< '\n';
     char input;
     std::cout<< "If you want more detailed information press 'i', else press 'n'" << '\n';
     std::cin>> input;
@@ -145,8 +154,60 @@ void print_situation(City &playground){
     } 
 }
 
+std::string news_paper(){
+std::string b;
+std::string name;
+    std::random_device r1;
+        std::default_random_engine generator1 {r1()};
+        std::uniform_int_distribution<int> distr(0, 3);
+int a= distr(r1);
+if(a ==0) {b= "'Republic'";}
+if(a==1) {b= "'Sun 24 h'";}
+if(a==2) {b= "'The Print'";}    
+if(a==3) {b= "'The Messanger'";}
+return b;
+}
+std::string variant(){
+    std::string name;
+    std::random_device r1;
+        std::default_random_engine generator1 {r1()};
+        std::uniform_int_distribution<int> distr(0, 5);
+        int a = distr(r1);
+        if (a==0) {name = "'English Variant'";}
+        if(a==1) {name= "'Indian Varaint'";}
+        if(a==2) {name= "'African Variant'";}
+        if(a==3) {name= "'Spanish Variant'";}
+        if(a==4) {name= "'American Variant'";}
+        if(a==5) {name= "'Australian Variant'";} 
+        return name;
+}
+std::string groups(City &playground){
+    state_function alpha= playground.Get_status();
+    std::string a = "Groups of so called 'no masks' ";
+    if(!alpha.restaurants) {a += ", restaurateurs";}
+    if(!alpha.schools) {a += ", students";}
+    if(!alpha.theatres) {a += ", artists";}
+    if(!alpha.churches) {a += ", believers";}
+    return a;
+}
 
-
+void print_vir_opt(){
+    std::cout<< "Select a virus."<< '\n';
+    std::cout<< "Type 1 for Flu. Contagious but not extremly deadly." << '\n';
+    std::cout<< "Type 2 for Covid. Deadlier than the Flu and lower recovery rate."<< '\n';
+    std::cout<< "Type 3 for Black Death. Lowest recovery rate and highest letality."<< '\n';
+}
+void print_city_opt(){
+    std::cout<< "Select a City."<< '\n';
+    std::cout<< "Type 1 for Matera. Low but older population and low resources."<< '\n';
+    std::cout<< "Type 2 for Bologna. Average population and resources."<< '\n';
+    std::cout<< "Type 3 for Milano. Extremly high mobility, tons of resources"<< '\n'; 
+}
+void print_dev(City & playground){
+    std::cout<< "Cumulative Morale: " << playground.cumulative_morale() << " Average Morale "<< playground.cumulative_morale()/playground.N() << '\n'; 
+    std::cout<< "Young/Adult/Elder Morale " << playground.Young().morale <<  " / " << playground.Adults().morale <<  " / " << playground.Elders().morale << '\n';
+    std::cout<< "Young/Adult/Elder Income " << playground.Young().income <<  " / " << playground.Adults().income <<  " / " << playground.Elders().income << '\n';    
+}
 #endif
 
 

@@ -16,6 +16,7 @@ int main()
   for(int i=0; i<20; i++){
     Bologna.evolve();
     Bologna.next_treasury();
+
     std::cout<< '\n';
   /*std::cout<< "Percentage of Young Susceptible :" << Bologna.Young().sus << " " << "Percentage of Young Infected :" << Bologna.Young().inf << " " << "Percentage of Young Recovered :" << Bologna.Young().rec  << '\n'; 
   std::cout<< "Percentage of Young Hospitalized :" << Bologna.Young().hosp << " "<< "Percentage of Young Dead :" << Bologna.Young().ded << '\n';
@@ -29,7 +30,7 @@ int main()
   std::cout<< "Percentage of Elders Hospitalized :" << Bologna.Elders().hosp << " "<< "Percentage of Elders Dead :" << Bologna.Elders().ded << '\n';
   std::cout<< "Sum of Elders Percentages :" << Bologna.Elders().sus+Bologna.Elders().inf+Bologna.Elders().rec+Bologna.Elders().hosp+Bologna.Elders().ded;
   std::cout<< '\n';*/
-  std::cout<<Bologna.$()<<'\n';
+  std::cout<<Bologna.turn_income()<<'\n';
   }
   
 }

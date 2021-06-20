@@ -200,7 +200,9 @@ public:
   state_function Get_status(){
     return stat;
   }
-  
+  Virus Get_virus(){
+    return vir;
+  }
 
   //add functions
   void add_$(int amount)
@@ -278,7 +280,9 @@ public:
     stat= replacer;
   }
 
-  
+  void Set_virus(Virus &replacer){
+    vir=replacer;
+  }
   //GetRef functions
   Hospitals& GetRef_hospitals() {
     return h;
@@ -401,6 +405,7 @@ public:
 
     //recoveries
     // ===>people infected just above will already recover the same day<===
+    if(vir.g+ h.r_chance_mod >1.) {h.r_chance_mod = 1-vir.g;}
     y.inf -= vir.g * current_young_inf;
     y.hosp -= (vir.g+h.r_chance_mod)*current_young_hosp;
     y.rec += (vir.g * current_young_inf + (vir.g+h.r_chance_mod)*current_young_hosp);
@@ -418,16 +423,23 @@ public:
     //deaths
     // ===>people infected just above will already die the same day<===
     //WARNING negative values
+    if(vir.d+y.d_mod<0) {y.d_mod = -vir.d;}
+    if(vir.d+y.d_mod>1) {y.d_mod = 1-vir.d;}
+    if(vir.d+h.d_chance_mod<0) {h.d_chance_mod = -vir.d;}
     assert(vir.d+y.d_mod > 0 && vir.d+y.d_mod <1);
     y.inf -= (vir.d+y.d_mod) * current_young_inf;
     y.hosp -= (vir.d+h.d_chance_mod)*current_young_hosp;
     y.ded += ((vir.d+y.d_mod) * current_young_inf + (vir.d+h.d_chance_mod)*current_young_hosp);
 
+    if(vir.d+a.d_mod<0) {a.d_mod = -vir.d;}
+    if(vir.d+a.d_mod>1) {a.d_mod = 1-vir.d;}
     assert(vir.d+a.d_mod > 0 && vir.d+a.d_mod < 1);
     a.inf -= (vir.d+a.d_mod) * current_adult_inf;
     a.hosp -= (vir.d+h.d_chance_mod)*current_adult_hosp;
     a.ded += ((vir.d+a.d_mod) * current_adult_inf + (vir.d+h.d_chance_mod)*current_adult_hosp);
 
+    if(vir.d+e.d_mod<0) {e.d_mod = -vir.d;}
+    if(vir.d+e.d_mod>1) {e.d_mod = 1-vir.d;}
    assert(vir.d+e.d_mod > 0 && vir.d+e.d_mod < 1);
     e.inf -= (vir.d+e.d_mod) * current_elder_inf;
     e.hosp -= (vir.d+h.d_chance_mod)*current_elder_hosp;
@@ -441,6 +453,27 @@ public:
     
 invariant();
   }
+  void evolve_n_times(int n){
+
+for(int i=0; i<n; ++i)
+{
+  evolve();
+}
+  }
+  int turn_income(){
+    int $_y= population*y_per*(y.sus+y.rec)*y.income;
+     int $_a= population*a_per*(a.sus+a.rec)*a.income;
+     int $_e=population*e_per*(e.sus+e.rec+e.inf)*e.income; //elders income value is negative so it makes sense (?) to include e.inf
+     int $_osp= h.patients*(-5); //should this be here?
+     int sum= $_y+$_a+$_e+$_osp;
+     return sum;
+  }
+int cumulative_morale(){
+  int y_m = population*y_per*y.morale;
+  int a_m = population*a_per*a.morale;
+  int e_m = population*e_per*e.morale;
+  return y_m+a_m+e_m;
+}
 
   double total_per_susceptibles()  //PROBLEM: if 2 inf, 6 sus, 2 dead returns 20% infected (in reality is 33%) 
   {
@@ -458,7 +491,11 @@ invariant();
   {
     return (y.ded * y_per + a.ded * a_per + e.ded * e_per);
   }
+  double total_per_hosp(){
+    return (y.hosp*y_per+a.hosp*a_per+e.hosp*e_per);
+  }
 };
+
 
 
 #endif

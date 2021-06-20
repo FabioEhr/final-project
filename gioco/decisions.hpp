@@ -68,7 +68,7 @@ void buy_masks(City& playground)
     std::cin>> anti_bug;
     quantity= string_to_int(anti_bug);
     //if (quantity<0) {quantity= quantity *(-1);} should be done by string_to int
-    int cost =1;
+    int cost =2;
     std::cout<< "The cost of investment is: "<< quantity*cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;
 std::cin>> decision;
@@ -76,7 +76,7 @@ if (decision== 'y' || decision=='Y'){
     if (playground.$()>= cost*quantity){
     playground.add_$(-cost*quantity);    
     double m_change =-0.000001*quantity; //change in mobility //maybe make it a change to beta or add it in evolve() calculation in other ways 
-    playground.add_mob(m_change, m_change, m_change, m_change, m_change, m_change);
+    playground.add_mob(m_change, m_change, m_change, m_change/10, m_change/10, m_change/10);
     std::cout<< "Decision registered! You bought "<< quantity << " new masks." <<'\n';}
     else {std::cout << "Not enough funds! (" << playground.$() << "/" << cost*quantity << ") \n";}
 }
@@ -201,12 +201,12 @@ void curfew(City& playground)
 
 void lockdown(City& playground)
 {  
-
+std::cout<< "Decision registered! Lockdown will be enforced immediatly."<<'\n';
     close_restaurants(playground);
     close_theatres(playground);
     close_schools(playground);
     close_churches(playground);
-std::cout<< "Decision registered! Lockdown will be enforced immediatly."<<'\n';
+
 }
 //Open functions
 void open_restaurants(City& playground){
@@ -330,7 +330,7 @@ void alleviate_curfew(City& playground) //Potential problem: curfew(5 hours) the
 void invest_in_research(City& playground)
 {
 int cost=-500*playground.knowledge()-5000;
-std::cout<< "The cost of investment is: "<< cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
+std::cout<< "The cost of investment is: "<< -cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;
 std::cin>> decision;
 
@@ -341,7 +341,7 @@ if(playground.$()>cost){
     std::cout<< "Decision registered!"<<'\n';}
     else {
         
-        std::cout << "Not enough funds! (" << playground.$() << "/" << cost << ") \n"; 
+        std::cout << "Not enough funds! (" << playground.$() << "/" << -cost << ") \n"; 
     }
 }
 else {std::cout<< "You did not proceed"<< '\n';}
@@ -351,7 +351,7 @@ else {std::cout<< "You did not proceed"<< '\n';}
 void invest_in_digital(City& playground) { //helps people transition to remote working
 
 int cost= -5000;
-std::cout<< "The cost of investment is: "<< cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
+std::cout<< "The cost of investment is: "<< -cost<< " " << "Do you want to proceede? (y for yes, n for no)" <<'\n';
 char decision;
 std::cin>> decision;
 
@@ -369,12 +369,12 @@ if(playground.$()>cost){
     Age other_el = playground.Elders();
     
     playground.Set_ages(other_young, other_adu, other_el);
-    std::cout<< "Decision registered! You invested "<< cost<< " to modernize web related infrastructures."<<'\n';
+    std::cout<< "Decision registered! You invested "<< -cost<< " to modernize web related infrastructures."<<'\n';
 
 }
  else {
         
-        std::cout << "Not enough funds! (" << playground.$() << "/" << cost << ") \n"; 
+        std::cout << "Not enough funds! (" << playground.$() << "/" << -cost << ") \n"; 
     }
 }
 else {std::cout<< "You did not proceed"<< '\n';}
