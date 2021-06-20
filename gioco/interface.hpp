@@ -103,7 +103,7 @@ switch(order){
     break;*/
 }
 }
-// next turn method is bugged for some reason
+// next turn income method is bugged for some reason
 int income(City &playground){
     int $_y= playground.N()*playground.Y_per()*(playground.Young().sus+playground.Young().rec)*playground.Young().income;
      int $_a= playground.N()*playground.A_per()*(playground.Adults().sus+playground.Adults().rec)*playground.Adults().income;
@@ -207,6 +207,19 @@ void print_dev(City & playground){
     std::cout<< "Cumulative Morale: " << playground.cumulative_morale() << " Average Morale "<< playground.cumulative_morale()/playground.N() << '\n'; 
     std::cout<< "Young/Adult/Elder Morale " << playground.Young().morale <<  " / " << playground.Adults().morale <<  " / " << playground.Elders().morale << '\n';
     std::cout<< "Young/Adult/Elder Income " << playground.Young().income <<  " / " << playground.Adults().income <<  " / " << playground.Elders().income << '\n';    
+}
+
+void score(City &playground){
+    int n= playground.N();
+    int mor= playground.cumulative_morale();
+    int cash= playground.$();
+    int growth= income(playground);
+    int el_d= n*playground.Elders().ded;
+    int a_d= n*playground.Adults().ded;
+    int y_d= n*playground.Young().ded;
+    int know = playground.knowledge();
+    int score = mor + cash + growth -(el_d)*(el_d)*(el_d)- (a_d)*(a_d) -(y_d)*(y_d);
+    std::cout<< "Based on how you handeled the pandemic, your score is :" << score << '\n';
 }
 #endif
 

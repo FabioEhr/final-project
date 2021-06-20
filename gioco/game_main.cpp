@@ -35,7 +35,7 @@ if(choice_2 == '2') {playground= Bologna(vir); break;}
 if(choice_2 == '3') {playground = Milano(vir); break;}
 continue;
    }// end of city selection loop
-
+    int turns=0;
     while (true){ //mother game loop
     if(playground.knowledge()>=50) {
         state_function Pfizer = playground.Get_status();
@@ -60,7 +60,7 @@ int beds =playground.Get_hospitals().n_beds;
         
         std::cin >>input;
 
-
+        
         if (input == 'n' || input=='0') {break;}
         execute(playground, input);
            continue;
@@ -69,8 +69,17 @@ int beds =playground.Get_hospitals().n_beds;
      playground.evolve();
      playground.next_treasury();
      int omega = playground.N()*(playground.total_per_infected()+playground.total_per_susceptibles()+playground.total_per_hosp());
+     ++turns;
      if(omega ==0) {break;}
      continue;
     }// closes mother game loop
     //score function
+    std::cout<< "The pandemic has ended, as there are no more susceptible people and our hospitals are empty! "<<'\n';
+    int d_total=playground.total_per_dead()*playground.N();
+    int d_y=playground.Young().ded *playground.Y_per();
+    int d_a=playground.Adults().ded *playground.A_per();
+    int d_e=playground.Elders().ded *playground.E_per();
+    std::cout<< "Total deaths: " << d_total <<'\n';
+    std::cout<< "Number of Young/Adults/Elders who died: " <<  d_y << " / " << d_a << " / " << d_e <<'\n';
+    score(playground);  
 }
