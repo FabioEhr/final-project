@@ -16,7 +16,7 @@ City Bologna(Virus &new_virus){
 
   Transmatrix Mobility= {5, 6, 8, 4, 3, 2 };
   Hospitals SantOrsola= {0, 2000, 1, 0.2, -0.1};
-  state_function initial= {true, true, true, true, 0, false, false};
+  state_function initial= {true, true, true, true, 0, false, false}; //rest th, sch, churches, curfew, pefcieved dng, vaccines
  City bologna= {10000, 0.4, Young, 0.35, Adults, 0.25, Elders, new_virus, Mobility, 100000, SantOrsola, initial};
 return bologna;
 }

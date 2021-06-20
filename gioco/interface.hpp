@@ -35,9 +35,12 @@ void print_opt(City &playground){
     if(current.restaurants && current.theatres && current.schools && current.churches) {
         std::cout<< "Total Lockdown (Type l)" << '\n';
     }
-    if(current.vaccines) {std::cout<< "Rollout vaccines (Type v)" << '\n';}
+    if(current.vaccines) {std::cout<< "Vaccinate Elders (Type v)" << '\n';}
+    if(current.vaccines) {std::cout<< "Vaccinate Adults (Type x)" << '\n';}
+    if(current.vaccines) {std::cout<< "Vaccinate Young (Type z)" << '\n';}
 
 }
+
 
 void execute(City &playground, char order){
     state_function current= playground.Get_status();
@@ -82,7 +85,13 @@ switch(order){
     if(current.restaurants && current.theatres && current.schools && current.churches) {lockdown(playground);}
     break;
     case 'v':
-    if(current.vaccines) {vaccinate(playground);}
+    if(current.vaccines) {vaccinate_elders(playground);}
+    break;
+    case 'x':
+    if(current.vaccines) {vaccinate_adults(playground);}
+    break;
+    case 'z':
+    if(current.vaccines) {vaccinate_young(playground);}
     break;
 }
 }

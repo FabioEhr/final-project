@@ -21,8 +21,9 @@ std::cin>> decision;
 if (decision== 'y' || decision=='Y'){
     if (playground.$()>= cost*quantity){
     playground.add_$(-cost*quantity);    
-    double m_change =-0.0001*quantity; //change in mobility //maybe make it a change to beta or add it in evolve() calculation in other ways 
-    playground.add_mob(m_change, m_change, m_change, m_change, m_change, m_change);}
+    double m_change =-0.000001*quantity; //change in mobility //maybe make it a change to beta or add it in evolve() calculation in other ways 
+    playground.add_mob(m_change, m_change, m_change, m_change, m_change, m_change);
+    std::cout<< "Decision registered! You bought "<< quantity << " new masks." <<'\n';}
     else {std::cout << "Not enough funds! (" << playground.$() << "/" << cost*quantity << ") \n";}
 }
 else {std::cout<< "You did not proceed"<< '\n';}
@@ -48,6 +49,7 @@ void close_restaurants(City&playground)
     state_function replacer =playground.Get_status();
     replacer.restaurants = false;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Restaurants have been closed."<<'\n';
 }
 
 void close_theatres(City& playground) //different from close_restaurants, lesser economic impact but people are sadder. affects "mixed" encounters 
@@ -69,6 +71,7 @@ void close_theatres(City& playground) //different from close_restaurants, lesser
     state_function replacer =playground.Get_status();
     replacer.theatres = false;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Theatres have been closed."<<'\n';
 
 }
 
@@ -90,6 +93,7 @@ void close_schools(City& playground) //affects young greatly and adults(because 
     state_function replacer =playground.Get_status();
     replacer.schools = false;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Schools have been closed."<<'\n';
 }
 
 void close_churches(City& playground) 
@@ -109,6 +113,7 @@ void close_churches(City& playground)
      state_function replacer =playground.Get_status();
     replacer.churches = false;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Churches have been closed."<<'\n';
 }
 
 void curfew(City& playground)
@@ -135,6 +140,7 @@ void curfew(City& playground)
    
     replacer.curfew_hours += hours;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Curfew has been set to "<< replacer.curfew_hours<< " hours." <<'\n';
 }
 
 void lockdown(City& playground)
@@ -144,7 +150,7 @@ void lockdown(City& playground)
     close_theatres(playground);
     close_schools(playground);
     close_churches(playground);
-
+std::cout<< "Decision registered! Lockdown will be enforced immediatly."<<'\n';
 }
 //Open functions
 void open_restaurants(City& playground){
@@ -164,6 +170,7 @@ void open_restaurants(City& playground){
     state_function replacer =playground.Get_status();
     replacer.restaurants = true;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Restaurants have been reopend."<<'\n';
 
 }
 void open_theatres(City& playground)  
@@ -185,6 +192,7 @@ void open_theatres(City& playground)
     state_function replacer =playground.Get_status();
     replacer.theatres = true;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Theaters have been reopend."<<'\n';
 
 }
 void open_schools(City& playground) 
@@ -205,6 +213,7 @@ void open_schools(City& playground)
     state_function replacer =playground.Get_status();
     replacer.schools = true;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Schools have been reopend."<<'\n';
 }
 void open_churches(City& playground) 
 {
@@ -223,6 +232,7 @@ void open_churches(City& playground)
    state_function replacer =playground.Get_status();
     replacer.churches = true;
     playground.Set_status(replacer);
+    std::cout<< "Decision registered! Churches have been reopend."<<'\n';
 }
 
 void alleviate_curfew(City& playground) //Potential problem: curfew(5 hours) then lift curfew(7 hours) makes no sense
@@ -249,8 +259,7 @@ void alleviate_curfew(City& playground) //Potential problem: curfew(5 hours) the
     playground.add_mob( 0.2*hours-0.1, 0.2*hours-2, 0., 0., 0., 0.);
     replacer.curfew_hours -= hours;
     playground.Set_status(replacer);
-
-
+    std::cout<< "Decision registered! Curfew has been set to "<< replacer.curfew_hours<< " hours." <<'\n';
 }
 
 //OBSOLETE
@@ -270,7 +279,8 @@ std::cin>> decision;
 if (decision== 'y' || decision=='Y'){
 if(playground.$()>cost){
     playground.add_$(cost);
-    playground.add_know(5);}
+    playground.add_know(5);
+    std::cout<< "Decision registered!"<<'\n';}
     else {
         
         std::cout << "Not enough funds! (" << playground.$() << "/" << cost << ") \n"; 
@@ -301,6 +311,7 @@ if(playground.$()>cost){
     Age other_el = playground.Elders();
     
     playground.Set_ages(other_young, other_adu, other_el);
+    std::cout<< "Decision registered! You invested "<< cost<< " to modernize web related infrastructures."<<'\n';
 
 }
  else {
@@ -327,7 +338,7 @@ void terrorize_with_media(City& playground) //changes perception of the dangerou
     state_function replacer= playground.Get_status();
     replacer.perceived_danger = true;
     playground.Set_status(replacer);
-
+std::cout<< "Decision registered! Tommorow's newspapers will highlight the dangerousness of the virus."<<'\n';
 }
 
 void tranquillize_with_media(City& playground) //shouldn't be a good option
@@ -346,7 +357,7 @@ void tranquillize_with_media(City& playground) //shouldn't be a good option
     state_function replacer= playground.Get_status();
     replacer.perceived_danger = false;
     playground.Set_status(replacer);
-    
+    std::cout<< "Decision registered! Tomorrow's newspaper will undermine the dangerousness of the virus."<<'\n';
 }
 
 void modernize_hospitals(City& playground) {
@@ -365,6 +376,7 @@ if (decision== 'y' || decision=='Y'){
         (playground.GetRef_hospitals()).d_chance_mod += -(playground.GetRef_hospitals()).level/100;
         (playground.GetRef_hospitals()).r_chance_mod += (playground.GetRef_hospitals()).level/100;
         playground.GetRef_treasure() -= upgrade_cost;
+        std::cout<< "Decision registered! You invested "<< upgrade_cost << " in better hospital equipment." <<'\n';
 
     } else {
         
@@ -390,6 +402,7 @@ std::cin>> decision;
 
         (playground.GetRef_hospitals()).n_beds +=amount;        
         playground.GetRef_treasure() -= build_cost;
+        std::cout<< "Decision registered! You have incresed our hospitals capacity by "<< amount<< " beds."<<'\n';
 
     } else {
 
@@ -420,7 +433,8 @@ if (decision== 'y' || decision=='Y'){
 rep_y.sus -= vaccines/(playground.Y_per()*playground.N());
 rep_y.rec += vaccines/(playground.Y_per()*playground.N());
 playground.Set_ages(rep_y, rep_a, rep_e);
-playground.add_$(-cost);} 
+playground.add_$(-cost);
+std::cout<< "Decision registered! Nurses managed to vaccinate "<< vaccines << "Young people."<<'\n';} 
 else {
     std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/" <<cost << ") \n";
 }
@@ -448,7 +462,8 @@ if (decision== 'y' || decision=='Y'){
 rep_a.sus -= vaccines/(playground.A_per()*playground.N());
 rep_a.rec += vaccines/(playground.A_per()*playground.N());
 playground.Set_ages(rep_y, rep_a, rep_e);
-playground.add_$(-cost);} 
+playground.add_$(-cost);
+std::cout<< "Decision registered! Nurses managed to vaccinate "<< vaccines << " Adults." <<'\n';} 
 else {
     std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/" <<cost << ") \n";
 }
@@ -476,7 +491,8 @@ if (decision== 'y' || decision=='Y'){
 rep_e.sus -= vaccines/(playground.E_per()*playground.N());
 rep_e.rec += vaccines/(playground.E_per()*playground.N());
 playground.Set_ages(rep_y, rep_a, rep_e);
-playground.add_$(-cost);} 
+playground.add_$(-cost);
+std::cout<< "Decision registered! Nurses managed to vaccinate "<< vaccines << "Elders."<<'\n';} 
 else {
     std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/" <<cost << ") \n";
 }
@@ -484,20 +500,21 @@ else {
     else { std::cout<< "You did not proceed"<< '\n';}
 }
 
-void vaccinate(City &playground){
+/*void vaccinate(City &playground){
 char input;
 while(true){
     std::cout<<"Which age group will you vaccinate? Young (type y), Adults (type a) or Elders (type e)?"<<'\n';
     std::cin>> input;
     
-        if(input == 'y') {vaccinate_young(playground)} else 
+        if(input == 'y') {vaccinate_young(playground);} else 
         
-        if(input == 'a') {vaccinate_adults(playground)} else
+        if(input == 'a') {vaccinate_adults(playground);} else
                 
-        if(input == 'e') {vaccinate_elders(playground)} else
+        if(input == 'e') {vaccinate_elders(playground);} else
         {continue;}
 }
-}
+}*/
+
 
 
 
