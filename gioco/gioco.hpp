@@ -300,8 +300,105 @@ public:
      int sum= $_y+$_a+$_e+$_osp;
      treasure += sum;
 }
+double D_inf_y(){ //percentage delta inside of young 
+double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
+    double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf - mob.yy * y.inf * mob.ye * e.inf - mob.ya * a.inf * mob.ye * e.inf;
+    double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
+    double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
+    return D_y;
+}
+double D_inf_a(){
+  double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
+    double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf - mob.ya * y.inf * mob.ae * e.inf - mob.aa * a.inf * mob.ae * e.inf;
+    double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
+    double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
+return D_a;
+}
+double D_inf_e(){
+double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
+    double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf - mob.ye * y.inf * mob.ee * e.inf - mob.ae * a.inf * mob.ee * e.inf;
+    double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
+    double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
+    return D_e;
+}
 
+int next_turn_inf(){
+  //young
+double D_y = D_inf_y();
+//adults
+double D_a = D_inf_a();
+//elders
+double D_e = D_inf_e();
+return population*(y_per*D_y+a_per*D_a+e_per*D_e);
+}
+int next_turn_crit(){
+  double current_young_inf = y.inf + D_inf_y(); 
+    double current_adult_inf = a.inf +D_inf_a();
+    double current_elder_inf = e.inf+ D_inf_e();
+    int new_patients = population*(y_per*y.hosp_chance * current_young_inf + a_per*a.hosp_chance * current_adult_inf + e_per*e.hosp_chance * current_elder_inf);
+    return new_patients;
+}
+int next_turn_ovrfl(){
+  int new_patients= next_turn_crit();
+int delta = -h.n_beds+h.patients+new_patients;
+int result = 0;
+if(delta >0) {result=delta;}
+return result;
+}
+int next_turn_dismissed(){ //people leaving hospitals alive
+if(vir.g+ h.r_chance_mod >1.) {h.r_chance_mod = 1-vir.g;}
+    double current_young_inf = y.inf + D_inf_y(); 
+    double current_adult_inf = a.inf +D_inf_a();
+    double current_elder_inf = e.inf+ D_inf_e();
+      double overflow = (h.patients+next_turn_crit() - h.n_beds)/next_turn_crit();
+    
+    if (overflow < 0) {
+      overflow = 0;
+    }
+    double current_young_hosp = y.hosp +  y.hosp_chance * current_young_inf*(1-overflow); //saving the current percentages of hospitalized
+    double current_adult_hosp = a.hosp + a.hosp_chance * current_adult_inf*(1-overflow);
+    double current_elder_hosp = e.hosp + e.hosp_chance * current_elder_inf*(1-overflow);
+    double D_y_h=(vir.g+h.r_chance_mod)*current_young_hosp;
+    double D_a_h=(vir.g+h.r_chance_mod)*current_adult_hosp;
+    double D_e_h=(vir.g+h.r_chance_mod)*current_elder_hosp;
+    int result= population*(D_y_h*y_per+D_a_h*a_per+D_e_h*e_per);
+    return result;
+}
 
+int next_turn_deaths(){
+  
+    double current_young_inf = y.inf + D_inf_y(); 
+    double current_adult_inf = a.inf +D_inf_a();
+    double current_elder_inf = e.inf+ D_inf_e();
+     double current_young_hosp = y.hosp +  y.hosp_chance * current_young_inf; //saving the current percentages of hospitalized
+    double current_adult_hosp = a.hosp + a.hosp_chance * current_adult_inf;
+    double current_elder_hosp = e.hosp + e.hosp_chance * current_elder_inf;
+    if(vir.d+y.d_mod<0) {y.d_mod = -vir.d;}
+    if(vir.d+y.d_mod>1) {y.d_mod = 1-vir.d;}
+    if(vir.d+h.d_chance_mod<0) {h.d_chance_mod = -vir.d;}
+
+  double D_y_deaths =((vir.d+y.d_mod) * current_young_inf + (vir.d+h.d_chance_mod)*current_young_hosp);
+
+  if(vir.d+a.d_mod<0) {a.d_mod = -vir.d;}
+    if(vir.d+a.d_mod>1) {a.d_mod = 1-vir.d;}
+    double D_a_deaths = ((vir.d+a.d_mod) * current_adult_inf + (vir.d+h.d_chance_mod)*current_adult_hosp);
+ if(vir.d+e.d_mod<0) {e.d_mod = -vir.d;}
+    if(vir.d+e.d_mod>1) {e.d_mod = 1-vir.d;}
+    double D_e_deaths =((vir.d+e.d_mod) * current_elder_inf + (vir.d+h.d_chance_mod)*current_elder_hosp);
+
+int reaper = population*(D_y_deaths*y_per+D_a_deaths*a_per+D_e_deaths*e_per) + next_turn_ovrfl();
+return reaper;
+}
+int next_turn_rec(){
+  double current_young_inf = y.inf + D_inf_y(); 
+    double current_adult_inf = a.inf +D_inf_a();
+    double current_elder_inf = e.inf+ D_inf_e();
+  double D_y_re= vir.g * current_young_inf;
+  double D_a_re= vir.g*current_adult_inf;
+double D_e_re =vir.g * current_elder_inf;
+int miracle= population*(D_y_re*y_per+D_a_re*a_per+D_e_re*e_per)+ next_turn_dismissed();
+return miracle;
+}
   void evolve() //add virus and mobility as function parameters instead of implementing them as City data members (?)
   {
 
@@ -377,11 +474,11 @@ public:
     int total_patients = h.patients + new_patients;
     double overflow = (total_patients - h.n_beds)/new_patients;
     
-    /*if (overflow < 0) {
+    if (overflow < 0) {
       overflow = 0;
-    }*/
+    }
     
-    overflow < 0 ? overflow = 0 : false;
+    //overflow < 0 ? overflow = 0 : false;
 
     y.inf -= y.hosp_chance * current_young_inf;
     y.hosp += y.hosp_chance * current_young_inf*(1-overflow);
@@ -417,7 +514,7 @@ public:
 
     e.inf -= vir.g * current_elder_inf;
     e.hosp -= (vir.g+h.r_chance_mod)*current_elder_hosp;
-    e.rec += (vir.g * current_elder_inf+ (vir.g+h.r_chance_mod)*current_elder_hosp);
+    e.rec += vir.g * current_elder_inf+ (vir.g+h.r_chance_mod)*current_elder_hosp;
 
    
     //deaths

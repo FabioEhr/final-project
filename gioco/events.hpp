@@ -1,7 +1,7 @@
 #ifndef EVENTS_HPP
 #define EVENTS_HPP
 #include "gioco.hpp"
-#include<iostream>
+
 #include "interface.hpp"
 
 
@@ -55,7 +55,7 @@ void violent_protests(City& playground) //they occur when morale is low
     playground.add_mob(2, 1.4, 0.7, 1.1, 0.6, 0.55);
     playground.add_$(-5000);
     std::cout<< "On the local newspaper " << news_paper() << " there's an article titled 'Protests escalate in violent encounters with local Police'" << '\n';
-    std::cout<< "An extract from that article reads: '" << groups(playground) <<" were assaulted by the Police following various acts of vandalism.'" << '\n';
+    std::cout<< "An extract from that article reads: '" << groups(playground) <<" were Charged by the Police following various acts of vandalism.'" << '\n';
 }
 
 void illegal_parties(City & playground){

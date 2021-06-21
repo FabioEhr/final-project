@@ -1,8 +1,7 @@
-#include "decisions.hpp"
-#include "presets.hpp"
 #include "gioco.hpp"
-#include "events.hpp"
+#include "presets.hpp"
 #include "interface.hpp"
+#include "events.hpp"
 #include <string>
 #include <iostream> 
 #include <random>
@@ -23,7 +22,7 @@ int main() {
    std::cin>> choice;
 if(choice == '1') {vir= Flu(); break;}
 if(choice == '2') {vir= Covid(); break;}
-if(choice == '3') {vir = Black_death(); break;}
+if(choice == '3') {vir = Ebola(); break;}
 continue;   
    }//end of vir selection loop
    while(true){//city selection loop
@@ -36,22 +35,30 @@ if(choice_2 == '3') {playground = Milano(vir); break;}
 continue;
    }// end of city selection loop
     int turns=0;
+    int D_inf=0;
+int D_crit=0;
+int D_rec=0;
+int D_deaths=0;
+int D_dismmis=0;
+int D_ovrfl=0;
     while (true){ //mother game loop
     if(playground.knowledge()>=50) {
         state_function Pfizer = playground.Get_status();
         Pfizer.vaccines=true;
         playground.Set_status(Pfizer);
     }
-rnd_events(playground);
-int patients=playground.Get_hospitals().patients;
-int beds =playground.Get_hospitals().n_beds;
-        if(patients >= beds) {apocalypse_now(playground);}
-  /* std::cout<< "Press anything to continue."<<'\n';
-   char a = '1';
-   std::cin>> a;*/
-   print_dev(playground);
-    print_situation(playground);
+std::cout<< "Weeks since start of simulation: " << turns <<'\n';
 
+rnd_events(playground);
+
+        if(D_ovrfl > 0) {apocalypse_now(playground);}
+ 
+   
+   
+   
+    print_situation(playground, D_inf, D_crit, D_deaths, D_ovrfl, D_rec, D_dismmis, turns);
+   
+   print_dev(playground);
    
     char input;
     while (true) { //choices loop
@@ -65,7 +72,12 @@ int beds =playground.Get_hospitals().n_beds;
         execute(playground, input);
            continue;
     }//closes choices loop
-    
+    D_inf=playground.next_turn_inf();
+    D_crit=playground.next_turn_crit();
+    D_rec=playground.next_turn_rec();
+    D_deaths=playground.next_turn_deaths();
+    D_dismmis=playground.next_turn_dismissed();
+    D_ovrfl=playground.next_turn_ovrfl();
      playground.evolve();
      playground.next_treasury();
      int omega = playground.N()*(playground.total_per_infected()+playground.total_per_susceptibles()+playground.total_per_hosp());
