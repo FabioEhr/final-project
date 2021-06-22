@@ -124,7 +124,8 @@ void print_situation(City &playground, int D_inf, int D_crit, int D_deaths, int 
     int dead= n*playground.total_per_dead();
     int n_hospitalized =n*(playground.total_per_hosp());
     if(turns > 0){
-        std::cout<< "This week " << D_inf << " new infections were registered, " <<D_crit << " of which resulted in critical conditions." <<'\n';
+        std::cout<< "This week " << D_inf << " new infections were registered, " <<'\n';
+        std::cout<< "This week " << D_crit << " new people were in critical condition." << '\n';
         std::cout<< "This week " << D_deaths << " new virus-related deaths were registered, " << D_overflow << " of which were due to the lack of hospitals bed." << '\n';
        std::cout<< "This week " << D_rec << " people recovered from the virus, " << D_dism << " of which thanks to our medical staff." <<'\n';
     }

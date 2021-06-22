@@ -509,7 +509,7 @@ void vaccinate_adults(City &playground){
     int vaccines;
     std::string anti_bug;
         int n_adults= playground.Adults().sus*playground.N()*playground.A_per();
-        std::cout<< "There are "<< n_adults<<" Young people who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
+        std::cout<< "There are "<< n_adults<<" Adults who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
         std::cin>> anti_bug;
         vaccines= string_to_int(anti_bug);
         if(vaccines>n_adults) {vaccines=n_adults;}
@@ -540,7 +540,7 @@ int price=1000;
     int vaccines;
     std::string anti_bug;
         int n_elders= playground.Elders().sus*playground.N()*playground.E_per();
-        std::cout<< "There are "<< n_elders<<" Young people who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
+        std::cout<< "There are "<< n_elders<<" Elders who still need a vaccine. The cost is "<<price <<" per person. How many should we vaccinate?"<<'\n';
         std::cin>> anti_bug;
         vaccines=string_to_int(anti_bug);
         if(vaccines>n_elders) {vaccines=n_elders;}
