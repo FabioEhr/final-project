@@ -224,7 +224,7 @@ void score(City &playground){
     int a_d= n*playground.Adults().ded;
     int y_d= n*playground.Young().ded;
     int know = playground.knowledge();
-    int score = know + mor + cash + growth -(el_d)*(el_d)*(el_d)- (a_d)*(a_d) -(y_d)*(y_d);
+    int score = know + mor + cash + growth -(el_d)*(el_d)*(el_d)- (a_d)*(a_d) -(y_d)*(y_d); //elders deaths are weighted more because they are harder to protect
     std::cout<< "Based on how you handeled the pandemic, your score is :" << score << '\n';
 }
 #endif

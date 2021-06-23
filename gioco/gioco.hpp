@@ -209,8 +209,7 @@ public:
   }
 
   void multiply_mob(double xyy = 1, double xaa = 1, double xee = 1, double xya = 1, double xye = 1, double xae = 1) { 
-    //add a condition (verbal or in the code) that forces factors to be >0
-    //modifying values
+    
     mob.yy = mob.yy*xyy;
     mob.aa = mob.aa*xaa;
     mob.ee = mob.ee*xee;

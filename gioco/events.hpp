@@ -5,10 +5,7 @@
 #include "interface.hpp"
 
 
-//the idea is to implement a "next turn" function in main which
-//calls evolve, then generates rnd numbers based on parameters like
-//infected people and morale, and calls a random event  
-//it also needs to check if san_cap is at max, and update treasury based on each Age income
+
 void mutate_contagiousness(City& playground) //mutations occur when there are a lot of infected
 { 
     double amount=0.01;
@@ -55,7 +52,7 @@ void violent_protests(City& playground) //they occur when morale is low
     playground.add_mob(0.06, 0.08, 0.03, 0.03, 0., 0.03);
     playground.add_$(-5000);
     std::cout<< "On the local newspaper " << news_paper() << " there's an article titled 'Protests escalate in violent encounters with local Police'" << '\n';
-    std::cout<< "An extract from that article reads: '" << groups(playground) <<" were Charged by the Police following various acts of vandalism.'" << '\n';
+    std::cout<< "An extract from that article reads: '" << groups(playground) <<" were charged by the Police following various acts of vandalism.'" << '\n';
 }
 
 void illegal_parties(City & playground){
@@ -91,7 +88,7 @@ void panic(City & playground)
     std::cout<< "An extract from that article reads: 'People are stockpiling on food and essential goods, leaving supermarkets as empty as wastelands."<< '\n';
 }
 
-void apocalypse_now(City &playground){
+void no_beds(City &playground){
     Age other_young = playground.Young();
     other_young.morale += -6;
     Age other_adu = playground.Adults();
@@ -108,7 +105,7 @@ void rnd_events(City &playground)
  state_function current= playground.Get_status();   
     std::random_device r1;
         std::default_random_engine generator1 {r1()};
-        std::uniform_int_distribution<int> ntot(0, playground.N());       
+        std::uniform_int_distribution<int> ntot(0, playground.N()/2);       
         int lucky= ntot(r1);
         int unlucky =playground.total_per_infected()*playground.N();
        if(unlucky>lucky) {
@@ -117,6 +114,7 @@ void rnd_events(City &playground)
            if(which_one==0) {mutate_contagiousness(playground);}
            if(which_one==1) {mutate_recovery(playground);}
            if(which_one==2) {mutate_deadliness(playground);}
+           panic(playground);
        }
        if(playground.total_per_infected()<0.05){//punishes early closures
        double mor_ = playground.cumulative_morale()/playground.N(); //starts at 20

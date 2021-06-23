@@ -5,13 +5,6 @@
 #include <string>
 #include <iostream> 
 #include <random>
-
- /*Virus another= Covid();
-    City playground = Bologna(another);
-    std::random_device r1;
-        std::default_random_engine generator1 {r1()};
-        std::uniform_int_distribution<double> distr(0., 1.);
-        double a = distr_r(r1);*/
 int main() {
    std::cout<< "Welcome!"<< '\n';
    Virus vir=Covid();
@@ -35,12 +28,12 @@ if(choice_2 == '3') {playground = Milano(vir); break;}
 continue;
    }// end of city selection loop
     int turns=0;
-    int D_inf=0;
-int D_crit=0;
-int D_rec=0;
-int D_deaths=0;
-int D_dismmis=0;
-int D_ovrfl=0;
+    int D_inf=0; //aumento di contagi
+int D_crit=0; //aumento di casi critici
+int D_rec=0; //aumento di recoveries
+int D_deaths=0;// aumento di morti
+int D_dismmis=0;// aumento di persone guarite in ospedale
+int D_ovrfl=0;// aumento di persone a cui è negato l'accesso in ospedale
     while (true){ //mother game loop
     if(playground.knowledge()>=50) {
         state_function Pfizer = playground.Get_status();
@@ -49,13 +42,10 @@ int D_ovrfl=0;
     }
 std::cout<< "Weeks since start of simulation: " << turns <<'\n';
 
-rnd_events(playground);
+if (turns !=0) {rnd_events(playground);}
 
-        if(D_ovrfl > 0) {apocalypse_now(playground);}
- 
-   
-   
-   
+        if(D_ovrfl > 0) {no_beds(playground);}
+
     print_situation(playground, D_inf, D_crit, D_deaths, D_ovrfl, D_rec, D_dismmis, turns);
    
    print_dev(playground);
@@ -63,11 +53,7 @@ rnd_events(playground);
     char input;
     while (true) { //choices loop
         print_opt(playground);
-        
-        
         std::cin >>input;
-
-        
         if (input == 'n' ) {break;}
         execute(playground, input);
            continue;
@@ -79,18 +65,19 @@ rnd_events(playground);
     D_dismmis=playground.next_turn_dismissed();
     D_ovrfl=playground.next_turn_ovrfl();
      playground.evolve();
-     playground.next_treasury();
+     playground.next_treasury(); //updates treasury, infected people don't work
      int omega = playground.N()*(playground.total_per_infected()+playground.total_per_susceptibles()+playground.total_per_hosp());
      ++turns;
      if(omega ==0) {break;}
      continue;
     }// closes mother game loop
-    //score function
-    std::cout<< "The pandemic has ended, as there are no more susceptible people and our hospitals are empty! "<<'\n';
+    
+    std::cout<< "The pandemic has ended, as there are no more susceptible people and the hospitals are empty! "<<'\n';
     int d_total=playground.total_per_dead()*playground.N();
     int d_y=playground.Young().ded *playground.Y_per();
     int d_a=playground.Adults().ded *playground.A_per();
     int d_e=playground.Elders().ded *playground.E_per();
+    std::cout<< "The pandemic lasted: "<< turns << '\n';
     std::cout<< "Total deaths: " << d_total <<'\n';
     std::cout<< "Number of Young/Adults/Elders who died: " <<  d_y << " / " << d_a << " / " << d_e <<'\n';
     score(playground);  

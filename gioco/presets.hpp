@@ -11,7 +11,7 @@ Virus Flu(){
     return flu;
 }
 Virus Ebola(){
-    Virus ebola = {0.4, 0.01, 0.15};
+    Virus ebola = {0.4, 0.02, 0.15};
     return ebola;
 }
 //City presets
@@ -45,8 +45,7 @@ return milano;
 }
 
 City Matera(Virus &new_virus){
-      //beta gamma delta
-  
+      
   Age Young= {0.999, 0.001, 0., 0., 0., 7, 20, -0.05, 0.05}; //sus inf rec hosp dead income mor d_mod, hosp_chance
   Age Adults= {0.999, 0.001, 0., 0., 0., 18, 20, 0., 0.1};
   Age Elders= {1., 0.00, 0., 0., 0., -1, 20, 0.2, 0.25};
