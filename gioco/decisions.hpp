@@ -98,8 +98,8 @@ void close_restaurants(City&playground)
     other_el.morale +=-2;
    
     playground.Set_ages(other_young, other_adu, other_el);
-    playground.add_mob(-0.1, -0.1, -0.05, -0.05, -0.01, -0.01);
-
+    //playground.add_mob(-0.1, -0.1, -0.05, -0.05, -0.01, -0.01);
+   playground.multiply_mob(0.6,0.6, 0.8, 0.8, 0.85, 0.85 );
     state_function replacer =playground.Get_status();
     replacer.restaurants = false;
     playground.Set_status(replacer);
@@ -118,10 +118,10 @@ void close_theatres(City& playground) //different from close_restaurants, lesser
     other_adu.morale +=-4;
 
     Age other_el = playground.Elders();
-    other_el.morale +=-3;
+    other_el.morale +=-4;
     playground.Set_ages(other_young, other_adu, other_el),    
-    playground.add_mob(-0.05, -0.05, -0.05, -0.1, -0.1, -0.1);
-
+    //playground.add_mob(-0.05, -0.05, -0.05, -0.1, -0.1, -0.1);
+playground.multiply_mob(0.7,0.7, 0.7, 0.6, 0.6, 0.6 );
     state_function replacer =playground.Get_status();
     replacer.theatres = false;
     playground.Set_status(replacer);
@@ -142,8 +142,8 @@ void close_schools(City& playground) //affects young greatly and adults(because 
     Age other_el = playground.Elders();
 
     playground.Set_ages(other_young, other_adu, other_el);
-    playground.add_mob(-0.6, 0., 0., 0., 0.4, 0.); //increases ye mobility
-
+    //playground.add_mob(-0.6, 0., 0., 0., 0.4, 0.); //increases ye mobility
+playground.multiply_mob(0.6, 1., 1., 1., 1.2, 1. );
     state_function replacer =playground.Get_status();
     replacer.schools = false;
     playground.Set_status(replacer);
@@ -162,8 +162,8 @@ void close_churches(City& playground)
     other_el.morale += -6;
 
     playground.Set_ages(other_young, other_adu, other_el);
-    playground.add_mob(0., -0.05, -0.6, 0., 0., -0.03);
-
+    //playground.add_mob(0., -0.05, -0.6, 0., 0., -0.03);
+playground.multiply_mob(1.,0.85, 0.4, 1., 1., 0.6 );
      state_function replacer =playground.Get_status();
     replacer.churches = false;
     playground.Set_status(replacer);
@@ -219,10 +219,11 @@ void open_restaurants(City& playground){
     other_adu.morale += 4;
 
     Age other_el = playground.Elders();
-    other_el.morale += 2;
+    other_el.morale += 3;
     playground.Set_ages(other_young, other_adu, other_el);
-    playground.add_mob(0.15, 0.15, 0.1, 0.07, 0.02, 0.02);
-     
+    playground.add_mob(0.05, 0.05, 0.01, 0.01, 0.02, 0.02);
+     //close  playground.multiply_mob(0.6,0.6, 0.8, 0.8, 0.85, 0.85 );
+     playground.multiply_mob(1.66, 1.66, 1.25, 1.25,1.18, 1.18);
     state_function replacer =playground.Get_status();
     replacer.restaurants = true;
     playground.Set_status(replacer);
@@ -238,13 +239,14 @@ void open_theatres(City& playground)
 
     Age other_adu = playground.Adults();
     other_adu.income += 3;
-    other_adu.morale += 4;
+    other_adu.morale += 5;
 
     Age other_el = playground.Elders();
-    other_el.morale += 3;
+    other_el.morale += 5;
     playground.Set_ages(other_young, other_adu, other_el),    
     playground.add_mob(0.07, 0.07, 0.07, 0.2, 0.2, 0.2);
-
+//close playground.multiply_mob(0.7,0.7, 0.7, 0.6, 0.6, 0.6 );
+    playground.multiply_mob(1.43, 1.43, 1.43, 1.67, 1.67, 1.67);
     state_function replacer =playground.Get_status();
     replacer.theatres = true;
     playground.Set_status(replacer);
@@ -264,8 +266,9 @@ void open_schools(City& playground)
     Age other_el = playground.Elders();
 
     playground.Set_ages(other_young, other_adu, other_el);
-    playground.add_mob(0.65, 0., 0., 0., -0.4, 0.); //decreases ye mobility
-
+    playground.add_mob(0.65, 0., 0., 0., -0.2, 0.); //decreases ye mobility
+//close playground.multiply_mob(0.6, 1., 1., 1., 1.2, 1. );
+playground.multiply_mob(1.67, 1., 1., 1., 0.83, 1.);
     state_function replacer =playground.Get_status();
     replacer.schools = true;
     playground.Set_status(replacer);
@@ -284,7 +287,8 @@ void open_churches(City& playground)
 
     playground.Set_ages(other_young, other_adu, other_el);
     playground.add_mob(0., 0.07, 1., 0., 0., 0.05);
-
+//CLOSE playground.multiply_mob(1.,0.85, 0.4, 1., 1., 0.6 );
+playground.multiply_mob(1., 1.18, 2.5, 1., 1., 1.7);
    state_function replacer =playground.Get_status();
     replacer.churches = true;
     playground.Set_status(replacer);

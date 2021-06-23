@@ -22,7 +22,7 @@ struct Transmatrix
   double ae;
 };
 
-bool double_compare(double left, double right, double precision = 0.01)
+bool double_compare(double left, double right, double precision = 0.0001)
 {
 
   if ((right - left) > -precision && (right - left) < precision)
@@ -52,20 +52,20 @@ struct Age
   double sus;
   double inf;
   double rec;
-  double hosp; //percentage of hospitalized
+  double hosp; //percentage of people of the age group in critical conditions
   double ded;
   
   int income; 
   int morale;
   
   double d_mod; //modifies death chance based on age
-  double hosp_chance; //probability of being hospitalized
+  double hosp_chance; //probability of critical condition
 
   //made it a member function
   void invariant()
   {
     //assert(ex.sus + ex.rec + ex.ded + ex.inf > 0.94 && ex.sus + ex.inf + ex.rec + ex.ded < 1.05);
-    assert(double_compare(sus + rec + ded, 1, 0.05)); //just for elegance, the one above is probably more optimized
+    assert(double_compare(sus + rec + inf+ ded + hosp, 1, 0.05)); //just for elegance, the one above is probably more optimized
   }
 
 };
@@ -78,21 +78,7 @@ struct Hospitals
   double r_chance_mod;
   double d_chance_mod;
     
-  /*modernise(int n_hospitals) {
-    //if con player_money >= n_hospitals*base_cost*current_level
-    //player_money -= quell'amount
-    //else cout "You don't have enough money to upgrade hospitals!"
-    
-  }
-  build
-    cured_and_dead(){
-      
-    }
-  
-  ampliate (int amount) {
-    //if player_money 
-  }*/
-
+ 
 };
 
 struct state_function{
@@ -107,27 +93,18 @@ struct state_function{
 
 class City
 {
-
   int population; //total population
-
   double y_per; // percentage of young people
   Age y;
   double a_per; // percentage of adults
   Age a;
   double e_per; // percentage of elders
   Age e;
-  
-  
-
-
   Virus vir;
   Transmatrix mob;
-
   int treasure;   //treasure
   int know=0;  //knowledge
-  
   Hospitals h; //cap sanitario
-
 state_function stat;
   void invariant()
   {
@@ -209,6 +186,14 @@ public:
   {
     treasure += amount;
   }
+  void mob_fixer(){
+    if(mob.yy<0) {mob.yy=0;}
+    if(mob.aa<0) {mob.aa=0;}
+    if(mob.ee<0) {mob.ee=0;}
+    if(mob.ya<0) {mob.ya=0;}
+    if(mob.ye<0) {mob.ye=0;}
+    if(mob.ae<0) {mob.ae=0;}
+  }
 
   void add_mob(double yy, double aa, double ee, double ya, double ye, double ae)
   {
@@ -220,30 +205,7 @@ public:
     mob.ye += ye;
     mob.ae += ae;
     //enforcing boundaries
-    if (mob.yy < 0)
-    {
-      mob.yy = 0;
-    }
-    if (mob.aa < 0)
-    {
-      mob.aa = 0;
-    }
-    if (mob.ee < 0)
-    {
-      mob.ee = 0;
-    }
-    if (mob.ya < 0)
-    {
-      mob.ya = 0;
-    }
-    if (mob.ye < 0)
-    {
-      mob.ye = 0;
-    }
-    if (mob.ae < 0)
-    {
-      mob.ae = 0;
-    }
+    mob_fixer();
   }
 
   void multiply_mob(double xyy = 1, double xaa = 1, double xee = 1, double xya = 1, double xye = 1, double xae = 1) { 
@@ -305,6 +267,13 @@ double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
     double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf - mob.yy * y.inf * mob.ye * e.inf - mob.ya * a.inf * mob.ye * e.inf;
     double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
     double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
+     if (y.inf + D_y > 1)
+    {
+      D_y = 1-y.inf;
+    }
+    if(y.sus - D_y <0){
+      D_y=y.sus;
+    }
     return D_y;
 }
 double D_inf_a(){
@@ -312,6 +281,14 @@ double D_inf_a(){
     double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf - mob.ya * y.inf * mob.ae * e.inf - mob.aa * a.inf * mob.ae * e.inf;
     double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
     double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
+     if (a.inf + D_a > 1)
+    {
+      D_a = 1-a.inf;
+    }
+    if(a.sus - D_a <0){
+      D_a=a.sus;
+    }
+    
 return D_a;
 }
 double D_inf_e(){
@@ -319,6 +296,14 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf - mob.ye * y.inf * mob.ee * e.inf - mob.ae * a.inf * mob.ee * e.inf;
     double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
     double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
+     if (e.inf + D_e > 1)
+    {
+      D_e = 1-e.inf;
+    }
+    if(e.sus - D_e <0){
+      D_e=e.sus;
+    }
+    
     return D_e;
 }
 
@@ -423,7 +408,14 @@ return miracle;
     double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
     y.sus -= D_y;
     y.inf += D_y;
-
+    
+    if (y.inf > 1)
+    {
+      y.inf = 1;
+    }
+    if(y.sus <0){
+      y.sus=0;
+    }
     //adults part
     double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
     double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf - mob.ya * y.inf * mob.ae * e.inf - mob.aa * a.inf * mob.ae * e.inf;
@@ -431,6 +423,14 @@ return miracle;
     double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
     a.sus -= D_a;
     a.inf += D_a;
+    if (a.inf > 1)
+    {
+      a.inf = 1;
+    }
+    if (a.sus <0)
+    {
+      a.sus = 0;
+    }
 
     //elders part
     double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
@@ -440,17 +440,13 @@ return miracle;
     e.sus -= D_e;
     e.inf += D_e;
 
-    if (y.inf > 1)
-    {
-      y.inf = 1;
-    }
     if (a.inf > 1)
     {
       a.inf = 1;
     }
-    if (e.inf > 1)
+    if (e.sus < 0)
     {
-      e.inf = 1;
+      e.sus = 0;
     }
 
     //infected to recovered && infected to dead.
@@ -473,13 +469,11 @@ return miracle;
     int new_patients = population*(y_per*y.hosp_chance * current_young_inf + a_per*a.hosp_chance * current_adult_inf + e_per*e.hosp_chance * current_elder_inf);
     int total_patients = h.patients + new_patients;
     double overflow = (total_patients - h.n_beds)/new_patients;
-    
+
     if (overflow < 0) {
       overflow = 0;
     }
-    
-    //overflow < 0 ? overflow = 0 : false;
-
+    //overflow < 0 ? overflow = 0 : false; equivalente
     y.inf -= y.hosp_chance * current_young_inf;
     y.hosp += y.hosp_chance * current_young_inf*(1-overflow);
     y.ded += y.hosp_chance * current_young_inf*overflow;
@@ -549,6 +543,9 @@ return miracle;
     
     
 invariant();
+y.invariant();
+a.invariant();
+e.invariant();
   }
   void evolve_n_times(int n){
 

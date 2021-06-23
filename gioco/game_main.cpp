@@ -68,7 +68,7 @@ rnd_events(playground);
         std::cin >>input;
 
         
-        if (input == 'n' || input=='0') {break;}
+        if (input == 'n' ) {break;}
         execute(playground, input);
            continue;
     }//closes choices loop

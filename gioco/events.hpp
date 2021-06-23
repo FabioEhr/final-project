@@ -45,14 +45,14 @@ void mutate_deadliness(City& playground)
 
 void protests(City& playground) //they occur when morale is low
 {
-    playground.multiply_mob(1.5, 1.1, 0.8, 1.05, 0.7, 0.65);
+    playground.add_mob(0.04, 0.06, 0.01, 0.03, 0., 0.);
      std::cout<< "On the local newspaper " << news_paper() << " there's an article titled 'Protests against 'Health Dictatorship'" << '\n';
      std::cout<< "An extract from that article reads: '" << groups(playground) <<" gather in protests following recent closures.'" << '\n'; 
 }
 
 void violent_protests(City& playground) //they occur when morale is low
 {
-    playground.add_mob(2, 1.4, 0.7, 1.1, 0.6, 0.55);
+    playground.add_mob(0.06, 0.08, 0.03, 0.03, 0., 0.03);
     playground.add_$(-5000);
     std::cout<< "On the local newspaper " << news_paper() << " there's an article titled 'Protests escalate in violent encounters with local Police'" << '\n';
     std::cout<< "An extract from that article reads: '" << groups(playground) <<" were Charged by the Police following various acts of vandalism.'" << '\n';
@@ -122,12 +122,12 @@ void rnd_events(City &playground)
        double mor_ = playground.cumulative_morale()/playground.N(); //starts at 20
        if(mor_<0) {mor_=0;}
        
-       std::uniform_int_distribution<int> mrl(0, mor_); //if there are a lot of inf less protests
+       std::uniform_int_distribution<int> mrl(0, mor_+unlucky); //if there are a lot of inf less protests
        int event=mrl(r1);
        
-       if(event<5){
+       if(event<unlucky){
        if(!current.restaurants || !current.theatres|| !current.churches|| !current.schools) {
-           if(event<2) {violent_protests(playground);} else{protests(playground);}}
+           if(event<unlucky/3) {violent_protests(playground);} else{protests(playground);}}
        }//event<5 
        if(!current.perceived_danger){
        if(!current.restaurants || !current.theatres|| !current.churches|| !current.schools) 
@@ -139,6 +139,7 @@ void rnd_events(City &playground)
         int panicker =(playground.total_per_dead()+playground.total_per_hosp())*playground.N();
         if(current.perceived_danger && panicker>lucky) {panic(playground);}
         double e = playground.knowledge()+1;
+        if(e<0) {e=1.;}
         std::uniform_real_distribution<double> science(0., 1./e);
         double eureker= science(r1);
         if(eureker<0.009 ) {eureka(playground);} 
