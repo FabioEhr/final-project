@@ -467,7 +467,11 @@ return miracle;
     h.patients = population*(y_per*y.hosp+a_per*a.hosp+e_per*e.hosp);
     int new_patients = population*(y_per*y.hosp_chance * current_young_inf + a_per*a.hosp_chance * current_adult_inf + e_per*e.hosp_chance * current_elder_inf);
     int total_patients = h.patients + new_patients;
-    double overflow = (total_patients - h.n_beds)/new_patients;
+    double overflow=0;
+    if(new_patients!=0) {
+      overflow== (total_patients - h.n_beds)/new_patients;
+      }
+      
 
     if (overflow < 0) {
       overflow = 0;
