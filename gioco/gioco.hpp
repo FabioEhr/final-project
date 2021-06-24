@@ -294,6 +294,11 @@ class City
     int sum = $_y + $_a + $_e + $_osp;
     treasure += sum;
   }
+  void next_treasury_n_times(int n){
+    for(int i=0; i<n; ++i){
+      next_treasury();
+    }
+  }
   double D_inf_y()
   {  // percentage delta inside of young
     double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
@@ -383,8 +388,10 @@ class City
     double current_young_inf = y.inf + D_inf_y();
     double current_adult_inf = a.inf + D_inf_a();
     double current_elder_inf = e.inf + D_inf_e();
-    double overflow =
-        (h.patients + next_turn_crit() - h.n_beds) / next_turn_crit();
+    int crit= next_turn_crit();
+    double overflow=0;
+    if(crit != 0) { overflow =
+        (h.patients + next_turn_crit() - h.n_beds) / crit;}
 
     if (overflow < 0) {
       overflow = 0;
@@ -619,7 +626,8 @@ class City
     if (vir.d + h.d_chance_mod < 0) {
       h.d_chance_mod = -vir.d;
     }
-    assert(vir.d + y.d_mod > 0 && vir.d + y.d_mod < 1);
+    assert(vir.d + y.d_mod >= 0 );
+    assert(vir.d + y.d_mod <= 1);
     y.inf -= (vir.d + y.d_mod) * current_young_inf;
     y.hosp -= (vir.d + h.d_chance_mod) * current_young_hosp;
     y.ded += ((vir.d + y.d_mod) * current_young_inf +
@@ -631,7 +639,7 @@ class City
     if (vir.d + a.d_mod > 1) {
       a.d_mod = 1 - vir.d;
     }
-    assert(vir.d + a.d_mod > 0 && vir.d + a.d_mod < 1);
+    assert(vir.d + a.d_mod >= 0 && vir.d + a.d_mod <= 1);
     a.inf -= (vir.d + a.d_mod) * current_adult_inf;
     a.hosp -= (vir.d + h.d_chance_mod) * current_adult_hosp;
     a.ded += ((vir.d + a.d_mod) * current_adult_inf +
@@ -643,7 +651,7 @@ class City
     if (vir.d + e.d_mod > 1) {
       e.d_mod = 1 - vir.d;
     }
-    assert(vir.d + e.d_mod > 0 && vir.d + e.d_mod < 1);
+    assert(vir.d + e.d_mod >= 0 && vir.d + e.d_mod <= 1);
     e.inf -= (vir.d + e.d_mod) * current_elder_inf;
     e.hosp -= (vir.d + h.d_chance_mod) * current_elder_hosp;
     e.ded += ((vir.d + e.d_mod) * current_elder_inf +
