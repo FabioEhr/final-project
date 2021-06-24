@@ -159,14 +159,14 @@ class Grid {
             // (people[i]).c = a_random_number between 1 and  width
 
         std::random_device grid_r1;
-        //std::default_random_engine generator_grid1 {grid_r1()};
+        std::default_random_engine generator_grid1 {grid_r1()};
         std::uniform_int_distribution<int> grid_r(1, height);
-        (people[i]).P_cell.r = grid_r(grid_r1);
+        people[i].P_cell.r = grid_r(grid_r1);
 
-        //std::random_device grid_r2;
-        //std::default_random_engine generator_grid2 {grid_r2()};
-        //std::uniform_int_distribution<int> grid_c(1, width);
-        (people[i]).P_cell.c = grid_r(grid_r1);
+        std::random_device grid_r2;
+        std::default_random_engine generator_grid2 {grid_r2()};
+         std::uniform_int_distribution<int> grid_c(1, width);
+        people[i].P_cell.c = grid_c(grid_r2);
         }
 
     }
@@ -211,7 +211,7 @@ class Grid {
 
                     //if it finds it then sus_person.condition=1  based on a probability (random number between 0 and 1, if number<= virus contagiousness it gets infected)
                     std::random_device grid_evolve_r2;
-                    //std::default_random_engine generator_grid_evolve2 {grid_evolve_r2()};
+                    std::default_random_engine generator_grid_evolve2 {grid_evolve_r2()};
                     std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
 
                     if ((grid_evolve_distr2(grid_evolve_r2)) <= e_virus.contagiousness) {
@@ -220,7 +220,7 @@ class Grid {
                     --susceptible;
                     ++infected; //infected people and incubating count as "infected" in general
                 
-                    std::cout << "person " << person_index << " infected in cell (" << sus_person.P_cell.r << "," << sus_person.P_cell.c << ") \n"; //optional, it's for debugging purposes
+                    std::cout << "person " << person_index << " infected in cell (" << sus_person.P_cell.r << "," << sus_person.P_cell.c << ")" << '\n'; //optional, it's for debugging purposes
 
                     };
                 };
@@ -256,7 +256,7 @@ class Grid {
             //instead of the evening, reducing infections 
             if (inf_or_incub.condition==1){
                 std::random_device grid_evolve_r1;
-                //std::default_random_engine generator_grid_evolve1 {grid_evolve_r1()};
+                std::default_random_engine generator_grid_evolve1 {grid_evolve_r1()};
                 std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
 
                 if (grid_evolve_distr1(grid_evolve_r1) <= mne_virus.recovery_rate) {
