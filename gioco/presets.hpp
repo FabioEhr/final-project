@@ -5,7 +5,7 @@
 // Virus presets
 Virus Covid()
 {
-  Virus covid = {0.4, 0.05, 0.06, 0.06};  // beta gamma delta crit_chance
+  Virus covid = {0.4, 0.05, 0.08, 0.08};  // beta gamma delta crit_chance
   return covid;
 }
 Virus Flu()
@@ -75,7 +75,7 @@ City Milano(Virus& new_virus)
                20,
                -0.05,
                -0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance_mod
-  Age Adults = {0.999, 0.001, 0., 0., 0., 30, 20, 0., 0.};
+  Age Adults = {0.999, 0.001, 0., 0., 0., 25, 20, 0., 0.};
   Age Elders = {1., 0.00, 0., 0., 0., -4, 20, 0.1, 0.1};
 
   Transmatrix Mobility = {2, 1, 0.8, 0.8, 0.35, 0.55};
@@ -110,7 +110,7 @@ City Matera(Virus& new_virus)
                0.,
                0.,
                0.,
-               7,
+               9,
                20,
                -0.05,
                0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance_mod

@@ -82,7 +82,7 @@ void violent_protests(City& playground)  // they occur when morale is low
 
 void illegal_parties(City& playground)
 {
-  playground.add_mob(0.5, 0.3, 0., 0., 0.2, 0.2);
+  playground.add_mob(0.4, 0.2, 0., 0.1, 0.1, 0.0);
   Age other_young = playground.Young();
   other_young.morale += 2;
   Age other_adu = playground.Adults();
@@ -171,7 +171,7 @@ void rnd_events(City& playground)
     panic(playground);
   }
   if (playground.total_per_infected() < 0.05) {  // punishes early closures
-    double mor_ =
+    int mor_ =
         playground.cumulative_morale() / playground.N();  // starts at 20
     if (mor_ < 0) {
       mor_ = 0;

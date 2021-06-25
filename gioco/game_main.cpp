@@ -60,7 +60,8 @@ int main()
       state_function Pfizer = playground.Get_status();
       Pfizer.vaccines = true;
       playground.Set_status(Pfizer);
-    }
+      std::cout<< "The vaccine is ready for rollout!" <<'\n';
+    } 
     std::cout << "Weeks since start of simulation: " << turns << '\n';
 
     if (turns != 0) {
@@ -83,7 +84,7 @@ int main()
       if (input == 'n') {
         break;
       }
-      //Next option is for testing. To have a more significant test
+      //Next option is useful for testing. To have a more significant test
       //on high skips tests it's suggested to disable random events
       //since they may alter significantly the results 
       
@@ -96,7 +97,7 @@ int main()
         for(int i=0; i<n-1; ++i){
         playground.evolve();
         playground.next_treasury();
-        //rnd_events(playground); 
+        rnd_events(playground); 
         ++turns;
         D_ovrfl = playground.next_turn_ovrfl();
         if (D_ovrfl > 0) {

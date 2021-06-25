@@ -52,11 +52,11 @@ void close_restaurants(City& playground)
 {  // affects young and adults more (I guess?)
 
   Age other_young = playground.Young();
-  other_young.income += -3;
+  other_young.income += -5;
   other_young.morale += -3;
 
   Age other_adu = playground.Adults();
-  other_adu.income += -7;
+  other_adu.income += -10;
   other_adu.morale += -3;
 
   Age other_el = playground.Elders();
@@ -76,15 +76,15 @@ void close_theatres(City& playground)  // different from close_restaurants,
                                        // sadder. affects "mixed" encounters
 {
   Age other_young = playground.Young();
-  other_young.income += -1;
+  other_young.income += -2;
   other_young.morale += -5;
 
   Age other_adu = playground.Adults();
-  other_adu.income += -3;
+  other_adu.income += -5;
   other_adu.morale += -4;
 
   Age other_el = playground.Elders();
-  other_el.morale += -4;
+  other_el.morale += -5;
   playground.Set_ages(other_young, other_adu, other_el),
       // playground.add_mob(-0.05, -0.05, -0.05, -0.1, -0.1, -0.1);
       playground.multiply_mob(0.7, 0.7, 0.7, 0.6, 0.6, 0.6);
@@ -99,7 +99,7 @@ void close_schools(
                        // stay with their kids)
 {
   Age other_young = playground.Young();
-  other_young.income += -2;  // economic effects on closing schools are long
+  other_young.income += -1;  // economic effects on closing schools are long
                              // term
   other_young.morale += -6;
 
@@ -304,7 +304,9 @@ sanitary cap
 
 void invest_in_research(City& playground)
 {
-  int cost = -500 * playground.knowledge() - 5000;
+  int scale_factor= playground.knowledge();
+  if(scale_factor<0) {scale_factor=0;}
+  int cost = -50000 * scale_factor - 5000;
   std::cout << "The cost of investment is: " << -cost << " "
             << "Do you want to proceede? (y for yes, n for no)" << '\n';
   char decision;
@@ -338,11 +340,11 @@ void invest_in_digital(City& playground)
       playground.add_$(cost);
 
       Age other_young = playground.Young();
-      other_young.income += 1;
-
+      //other_young.income += 1; too op
+      other_young.morale +=1;
       Age other_adu = playground.Adults();
-      other_adu.income += 2;
-
+      //other_adu.income += 2;
+       other_young.morale +=1;
       Age other_el = playground.Elders();
 
       playground.Set_ages(other_young, other_adu, other_el);
@@ -492,7 +494,7 @@ void vaccinate_young(City& playground)
       playground.Set_ages(rep_y, rep_a, rep_e);
       playground.add_$(-cost);
       std::cout << "Decision registered! Nurses managed to vaccinate "
-                << vaccines << "Young people." << '\n';
+                << vaccines << " Young people." << '\n';
     } else {
       std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/"
                 << cost << ") \n";
@@ -571,7 +573,7 @@ void vaccinate_elders(City& playground)
       playground.Set_ages(rep_y, rep_a, rep_e);
       playground.add_$(-cost);
       std::cout << "Decision registered! Nurses managed to vaccinate "
-                << vaccines << "Elders." << '\n';
+                << vaccines << " Elders." << '\n';
     } else {
       std::cout << "Not enough funds! (" << playground.GetRef_treasure() << "/"
                 << cost << ") \n";

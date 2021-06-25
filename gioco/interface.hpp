@@ -39,7 +39,7 @@ void print_opt(City& playground)
     std::cout << "Alleviate curfew (Type -)" << '\n';
   }
   std::cout << "Buy masks (Type m)" << '\n';
-  std::cout << "Invest in research (Type e)" << '\n';
+ if(playground.knowledge()<50) {std::cout << "Invest in research (Type e)" << '\n';}
   if (!current.schools) {
     std::cout << "Build infrastructure to reduce digital divide (Type d)"
               << '\n';
@@ -70,7 +70,7 @@ void print_opt(City& playground)
   if (current.vaccines) {
     std::cout << "Vaccinate Young (Type z)" << '\n';
   }
-  //std::cout<< "Skip N weeks (Type #)" << '\n'; //hidden, meant for testing
+  std::cout<< "Skip N weeks (Type #)" << '\n'; 
 }
 
 void execute(City& playground, char order)
@@ -115,7 +115,7 @@ void execute(City& playground, char order)
       buy_masks(playground);
       break;
     case 'e':
-      invest_in_research(playground);
+      if(!current.vaccines){invest_in_research(playground);}
       break;
     case 'd':
       if (!current.schools) {
