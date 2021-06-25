@@ -10,6 +10,17 @@ struct Virus
   double b;  // contagiosità
   double g;  // recovery rate
   double d;  // mortalità
+  double h; //hosp chance 
+  bool valid(){
+   bool a= true;
+   if(b<=0 && b>1) {a=false;}
+   if(g<0 && g>=1) {a=false;}
+   if(d<0 && d>=1) {a=false;}
+ if(h<0 && h>=1) {a=false;}   
+   if(g+d+h>1) {a=false;} 
+  return a;
+  }
+  
 };
 
 struct Transmatrix
@@ -55,7 +66,7 @@ struct Age
   int morale;
 
   double d_mod;        // modifies death chance based on age
-  double hosp_chance;  // probability of critical condition
+  double h_mod;  // modifier of critical condition chance
 
   // made it a member function
   void invariant()
@@ -303,6 +314,56 @@ class City
       next_treasury();
     }
   }
+  //mod fixers
+   void mod_fixer(Age & t)
+   {
+    if(vir.h+t.h_mod<0){
+      t.h_mod=-vir.h;
+    }
+    if(vir.h+t.h_mod>1){
+      t.h_mod=t.h_mod-0.5*t.h_mod;
+      mod_fixer(t);
+    }
+    if(vir.d+t.d_mod<0){
+      t.d_mod=-vir.d;
+    }
+    if(vir.d+t.d_mod>1){
+
+      t.d_mod=t.d_mod-0.5*t.d_mod;
+      mod_fixer(t);
+    }
+    if(vir.h+t.h_mod+vir.g+vir.d+t.d_mod>1){
+  t.h_mod=t.h_mod-0.5*t.h_mod;
+  t.d_mod=t.d_mod-0.5*t.d_mod;
+  mod_fixer(t);
+    }
+  //if ridicolous values are inserted as modifiers, they are ignored
+  //1 is the maximum, it means that all infected turn into rec, dead or hops
+  //virus values are handeled by vir.valid(), which is asserted in evolve
+}
+void hosp_mod_fixer(){
+  //vir.g+vir.h+h_r_mod+h_d_mod=1 all hosp heal or die
+  if(vir.g+h.r_chance_mod+vir.d+h.d_chance_mod>1){
+    h.r_chance_mod=-h.d_chance_mod;
+  }
+  if(vir.g+h.r_chance_mod+vir.d+h.d_chance_mod<0){
+    h.r_chance_mod=-h.d_chance_mod;
+  }
+  if (vir.d + h.d_chance_mod <0.) {
+     //all heal implies no one dies, but not vice-versa
+      h.d_chance_mod= -vir.d; //no one dies
+    }
+    if(vir.d+h.d_chance_mod>1){
+      h.d_chance_mod=0;
+
+    }
+   if (vir.g + h.r_chance_mod > 1.) {
+      h.r_chance_mod = 1. - vir.g; //all heal 
+      h.d_chance_mod= -vir.d; //no one dies
+    }
+    
+}
+
   //functions to display deltas in game-loop
   double D_inf_y()
   {  // percentage delta inside of young
@@ -312,16 +373,16 @@ class City
                    mob.ya * a.inf * mob.ye * e.inf;
     double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
     double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
-    if(D_y<0){
-      D_y=0;
+    if(D_y<0 || D_y>1){
+      D_y=y.sus;
     }
-   if (y.sus -D_y < 0) {
+   /*if (y.sus -D_y < 0) {
       D_y = 1-y.rec-y.hosp-y.ded-y.inf;
     }
     if (y.inf+D_y> 1) {
       D_y = 1-y.sus-y.hosp-y.ded-y.rec-y.inf;
       
-    }
+    }*/
     
     return D_y;
   }
@@ -333,16 +394,16 @@ class City
                    mob.aa * a.inf * mob.ae * e.inf;
     double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
     double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
-    if(D_a<0){
-      D_a=0;
+    if(D_a<0 || D_a>1){
+      D_a=a.sus;
     }
-   if (a.sus -D_a < 0) {
+   /*if (a.sus -D_a < 0) {
       D_a = 1-a.rec-a.hosp-a.ded-a.inf;
     }
     if (a.inf+D_a> 1) {
       D_a = 1-a.sus-a.hosp-a.ded-a.rec-a.inf;
       
-    }
+    }*/
 
     return D_a;
   }
@@ -354,16 +415,16 @@ class City
                    mob.ae * a.inf * mob.ee * e.inf;
     double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
     double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
-    if(D_e<0){
-      D_e=0;
+    if(D_e<0 || D_e>1){
+      D_e=e.sus;
     }
-   if (e.sus -D_e < 0) {
+   /*if (e.sus -D_e < 0) {
       D_e = 1-e.rec-e.hosp-e.ded-e.inf;
     }
     if (e.inf+D_e> 1) {
       D_e = 1-e.sus-e.hosp-e.ded-e.rec-e.inf;
       
-    }
+    }*/
     return D_e;
   }
 
@@ -379,12 +440,15 @@ class City
   }
   int next_turn_crit()
   {
+    mod_fixer(y);
+    mod_fixer(a);
+    mod_fixer(e);
     double current_young_inf = y.inf + D_inf_y();
     double current_adult_inf = a.inf + D_inf_a();
     double current_elder_inf = e.inf + D_inf_e();
-    int new_patients = population * (y_per * y.hosp_chance * current_young_inf +
-                                     a_per * a.hosp_chance * current_adult_inf +
-                                     e_per * e.hosp_chance * current_elder_inf);
+    int new_patients = population * (y_per * (vir.h+y.h_mod) * current_young_inf +
+                                     a_per * (vir.h+a.h_mod) * current_adult_inf +
+                                     e_per * (vir.h+e.h_mod) * current_elder_inf);
     return new_patients;
   }
   int next_turn_ovrfl()
@@ -399,9 +463,8 @@ class City
   }
   int next_turn_dismissed()
   {  // people leaving hospitals alive
-    if (vir.g + h.r_chance_mod > 1.) {
-      h.r_chance_mod = 1 - vir.g;
-    }
+  hosp_mod_fixer();
+    
     double current_young_inf = y.inf + D_inf_y();
     double current_adult_inf = a.inf + D_inf_a();
     double current_elder_inf = e.inf + D_inf_e();
@@ -415,12 +478,12 @@ class City
     }
     double current_young_hosp =
         y.hosp +
-        y.hosp_chance * current_young_inf *
+        (vir.h+y.h_mod) * current_young_inf *
             (1 - overflow);  // saving the current percentages of hospitalized
     double current_adult_hosp =
-        a.hosp + a.hosp_chance * current_adult_inf * (1 - overflow);
+        a.hosp + (vir.h+a.h_mod) * current_adult_inf * (1 - overflow);
     double current_elder_hosp =
-        e.hosp + e.hosp_chance * current_elder_inf * (1 - overflow);
+        e.hosp + (vir.h+e.h_mod) * current_elder_inf * (1 - overflow);
     double D_y_h = (vir.g + h.r_chance_mod) * current_young_hosp;
     double D_a_h = (vir.g + h.r_chance_mod) * current_adult_hosp;
     double D_e_h = (vir.g + h.r_chance_mod) * current_elder_hosp;
@@ -430,42 +493,28 @@ class City
 
   int next_turn_deaths()
   {
+    hosp_mod_fixer();
+    mod_fixer(y);
+    mod_fixer(a);
+    mod_fixer(e);
     double current_young_inf = y.inf + D_inf_y();
     double current_adult_inf = a.inf + D_inf_a();
     double current_elder_inf = e.inf + D_inf_e();
     double current_young_hosp =
         y.hosp +
-        y.hosp_chance * current_young_inf;  // saving the current percentages of
+        (vir.h+y.h_mod) * current_young_inf;  // saving the current percentages of
                                             // hospitalized
-    double current_adult_hosp = a.hosp + a.hosp_chance * current_adult_inf;
-    double current_elder_hosp = e.hosp + e.hosp_chance * current_elder_inf;
-    if (vir.d + y.d_mod < 0) {
-      y.d_mod = -vir.d;
-    }
-    if (vir.d + y.d_mod > 1) {
-      y.d_mod = 1 - vir.d;
-    }
-    if (vir.d + h.d_chance_mod < 0) {
-      h.d_chance_mod = -vir.d;
-    }
+    double current_adult_hosp = a.hosp + (vir.h+a.h_mod) * current_adult_inf;
+    double current_elder_hosp = e.hosp + (vir.h+e.h_mod) * current_elder_inf;
+    
 
     double D_y_deaths = ((vir.d + y.d_mod) * current_young_inf +
                          (vir.d + h.d_chance_mod) * current_young_hosp);
 
-    if (vir.d + a.d_mod < 0) {
-      a.d_mod = -vir.d;
-    }
-    if (vir.d + a.d_mod > 1) {
-      a.d_mod = 1 - vir.d;
-    }
+    
     double D_a_deaths = ((vir.d + a.d_mod) * current_adult_inf +
                          (vir.d + h.d_chance_mod) * current_adult_hosp);
-    if (vir.d + e.d_mod < 0) {
-      e.d_mod = -vir.d;
-    }
-    if (vir.d + e.d_mod > 1) {
-      e.d_mod = 1 - vir.d;
-    }
+    
     double D_e_deaths = ((vir.d + e.d_mod) * current_elder_inf +
                          (vir.d + h.d_chance_mod) * current_elder_hosp);
 
@@ -476,6 +525,10 @@ class City
   }
   int next_turn_rec()
   {
+    hosp_mod_fixer();
+    mod_fixer(y);
+    mod_fixer(a);
+    mod_fixer(e);
     double current_young_inf = y.inf + D_inf_y();
     double current_adult_inf = a.inf + D_inf_a();
     double current_elder_inf = e.inf + D_inf_e();
@@ -487,9 +540,11 @@ class City
         next_turn_dismissed();
     return miracle;
   }
-  void evolve()  // add virus and mobility as function parameters instead of
-                 // implementing them as City data members (?)
+  //main function: handles infections, deaths, recoveries and critical cases
+ 
+  void evolve()  
   {
+    assert(vir.valid());
     /*yy ya ye
                         ya aa ae
                         ye ae ye
@@ -515,20 +570,22 @@ class City
     double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
     double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
    //this if should be valid only in cases of ridicolously high mobility, which shouldn't be reachable in the game loop(with presets). For improved solidity, it's better if it stays on
-    if(D_y<0){
-      D_y=0;
+    if(D_y<0 || D_y>1)
+    {
+      D_y=y.sus;
+      //negative values are reached only in cases of absurdly high mobilities, so all susceptibles turn into inf
     }
     y.sus -= D_y;
     y.inf += D_y;
-
-    if (y.sus < 0) {
+//std::cout<< "D_y: "<< D_y << "from value: "<<vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3) <<'\n'; //for testing
+    /*if (y.sus < 0) { //shouldn't be necessary
       y.sus = 0;
       y.inf = 1-y.rec-y.hosp-y.ded;
     }
     if (y.inf > 1) {
       y.inf = 1-y.sus-y.hosp-y.ded-y.rec;
       
-    }
+    }*/
     
    
     // adults part
@@ -538,18 +595,19 @@ class City
                    mob.aa * a.inf * mob.ae * e.inf;
     double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
     double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
-    if(D_a<0){
-      D_a=0;
+    if(D_a<0 ||D_a>1){
+      D_a=a.sus;
     }
     a.sus -= D_a;
     a.inf += D_a;
-    if (a.sus < 0) {
+  //  std::cout<< "D_a: "<< D_a <<'\n';
+    /*if (a.sus < 0) { //shouldn't be necessary
       a.sus = 0;
       a.inf=1-a.sus-a.ded-a.rec-a.hosp;
     }
     if (a.inf > 1) {
       a.inf=1-a.sus-a.ded-a.rec-a.hosp;
-    }
+    }*/
    
     
     
@@ -560,19 +618,20 @@ class City
                    mob.ae * a.inf * mob.ee * e.inf;
     double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
     double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
-    if(D_e<0){
-      D_e=0;
+    if(D_e<0 ||D_e>1){
+      D_e=e.sus;
     }
     e.sus -= D_e;
     e.inf += D_e;
-    if (e.sus < 0) {
+    //std::cout<< "D_e: "<< D_e <<'\n';
+    /*if (e.sus < 0) { //shouldn't be necessary
       e.sus = 0;
       e.inf=1.-e.rec-e.ded-e.hosp-e.sus;
     }
     if (e.inf > 1) {
       e.inf = 1-e.rec-e.ded-e.hosp-e.sus;
       
-    }
+    }*/
     
     
 // saving the current percentages of infected, since we have to
@@ -582,14 +641,17 @@ class City
     double current_elder_inf = e.inf;
 
     // hospitalized
+mod_fixer(y);
+mod_fixer(a);
+mod_fixer(e);
 
-    h.patients =
-        population * (y_per * y.hosp + a_per * a.hosp + e_per * e.hosp);
-    int new_patients = population * (y_per * y.hosp_chance * current_young_inf +
-                                     a_per * a.hosp_chance * current_adult_inf +
-                                     e_per * e.hosp_chance * current_elder_inf);
-    int total_patients = h.patients + new_patients;
-    double overflow = 0;
+    /*h.patients = //already inside
+        population * (y_per * y.hosp + a_per * a.hosp + e_per * e.hosp);*/
+    int new_patients = population * (y_per * (vir.h+y.h_mod) * current_young_inf +
+                                     a_per * (vir.h+a.h_mod) * current_adult_inf +
+                                     e_per * (vir.h+e.h_mod) * current_elder_inf);
+    double total_patients = h.patients + new_patients;
+    double overflow = 0; //people who need hospitalization but are rejected due to the number of beds
     if (new_patients != 0) {
       overflow = (total_patients - h.n_beds) / new_patients;
     }
@@ -597,19 +659,26 @@ class City
     if (overflow < 0) {
       overflow = 0;
     }
+    //std::cout<< "Overflow: : "<< overflow <<'\n';
     // overflow < 0 ? overflow = 0 : false; equivalente
-    y.inf -= y.hosp_chance * current_young_inf;
-    y.hosp += y.hosp_chance * current_young_inf * (1 - overflow);
-    y.ded += y.hosp_chance * current_young_inf * overflow;
- 
+    y.inf -= (vir.h+y.h_mod) * current_young_inf;
+    y.hosp += (vir.h+y.h_mod) * current_young_inf * (1 - overflow);
+    y.ded += (vir.h+y.h_mod) * current_young_inf * overflow;
+ /*std::cout<< "D_y_hosp "<< (vir.h+y.h_mod) * current_young_inf * (1 - overflow) <<'\n';
+std::cout<< "y_hosp: " << y.hosp <<'\n';*/
 
-    a.inf -= a.hosp_chance * current_adult_inf;
-    a.hosp += a.hosp_chance * current_adult_inf * (1 - overflow);
-    a.ded += a.hosp_chance * current_adult_inf * overflow;
- 
-    e.inf -= e.hosp_chance * current_elder_inf;
-    e.hosp += e.hosp_chance * current_elder_inf * (1 - overflow);
-    e.ded += e.hosp_chance * current_elder_inf * overflow;
+    a.inf -= (vir.h+a.h_mod) * current_adult_inf;
+    a.hosp += (vir.h+a.h_mod) * current_adult_inf * (1 - overflow);
+    a.ded += (vir.h+a.h_mod) * current_adult_inf * overflow;
+ /*std::cout<< "D_a_hosp "<< (vir.h+a.h_mod) * current_adult_inf * (1 - overflow) <<'\n';
+std::cout<< "a_hosp: " << a.hosp <<'\n';*/
+
+
+    e.inf -= (vir.h+e.h_mod) * current_elder_inf;
+    e.hosp += (vir.h+e.h_mod) * current_elder_inf * (1 - overflow);
+    e.ded += (vir.h+e.h_mod) * current_elder_inf * overflow;
+ /*std::cout<< "D_e_hosp "<< (vir.h+e.h_mod) * current_elder_inf * (1 - overflow) <<'\n';
+std::cout<< "e_hosp: " << e.hosp <<'\n';*/
     
     //no need to refresh if gamma+delta+hosp_chance<=1 for every age
   /* current_young_inf = y.inf;  
@@ -622,9 +691,8 @@ class City
 //gamma+delta+hosp_chance<=1 for every age, if 1 all infected should recover 
     // recoveries
     // ===>people infected just above will already recover the same day<===
-    if (vir.g + h.r_chance_mod > 1.) {
-      h.r_chance_mod = 1 - vir.g;
-    }
+    hosp_mod_fixer();
+   
     y.inf -= vir.g * current_young_inf;
     y.hosp -= (vir.g + h.r_chance_mod) * current_young_hosp;
     y.rec += vir.g * current_young_inf +
@@ -654,15 +722,7 @@ class City
     // deaths
     // ===>people infected just above will already die the same day<===
     // WARNING negative values
-    if (vir.d + y.d_mod < 0) {
-      y.d_mod = -vir.d;
-    }
-    if (vir.d + y.d_mod > 1) {
-      y.d_mod = 1 - vir.d;
-    }
-    if (vir.d + h.d_chance_mod < 0) {
-      h.d_chance_mod = -vir.d;
-    }
+    
     assert(vir.d + y.d_mod >= 0 );
     assert(vir.d + y.d_mod <= 1);
     y.inf -= (vir.d + y.d_mod) * current_young_inf;
@@ -670,31 +730,21 @@ class City
     y.ded += ((vir.d + y.d_mod) * current_young_inf +
               (vir.d + h.d_chance_mod) * current_young_hosp);
   
-    if (vir.d + a.d_mod < 0) {
-      a.d_mod = -vir.d;
-    }
-    if (vir.d + a.d_mod > 1) {
-      a.d_mod = 1 - vir.d;
-    }
+  
     assert(vir.d + a.d_mod >= 0 && vir.d + a.d_mod <= 1);
     a.inf -= (vir.d + a.d_mod) * current_adult_inf;
     a.hosp -= (vir.d + h.d_chance_mod) * current_adult_hosp;
     a.ded += ((vir.d + a.d_mod) * current_adult_inf +
               (vir.d + h.d_chance_mod) * current_adult_hosp);
   
-    if (vir.d + e.d_mod < 0) {
-      e.d_mod = -vir.d;
-    }
-    if (vir.d + e.d_mod > 1) {
-      e.d_mod = 1 - vir.d;
-    }
+   
     assert(vir.d + e.d_mod >= 0 && vir.d + e.d_mod <= 1);
     e.inf -= (vir.d + e.d_mod) * current_elder_inf;
     e.hosp -= (vir.d + h.d_chance_mod) * current_elder_hosp;
     e.ded += ((vir.d + e.d_mod) * current_elder_inf +
               (vir.d + h.d_chance_mod) * current_elder_hosp);
 
-    h.patients = population * (y.hosp + a.hosp + e.hosp);
+    h.patients = population * (y_per*y.hosp + a_per*a.hosp + e_per*e.hosp);
 
     invariant();
     y.invariant();
