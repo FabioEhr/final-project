@@ -26,6 +26,7 @@ int main()
       vir = Ebola();
       break;
     }
+    
     continue;
   }               // end of vir selection loop
   while (true) {  // city selection loop
@@ -82,6 +83,10 @@ int main()
       if (input == 'n') {
         break;
       }
+      //Next option is for testing. To have a more significant test
+      //on high skips tests it's suggested to disable random events
+      //since they may alter significantly the results 
+      
       if(input == '#'){ //hidden option for testing
         std::cout<< "How many weeks would you like to skip?"<< '\n';
         std::string number;
@@ -91,11 +96,12 @@ int main()
         for(int i=0; i<n-1; ++i){
         playground.evolve();
         playground.next_treasury();
-        rnd_events(playground); 
+        //rnd_events(playground); 
         ++turns;
         D_ovrfl = playground.next_turn_ovrfl();
         if (D_ovrfl > 0) {
-      no_beds(playground);}
+      no_beds(playground);
+      }
       omega = playground.N() * (playground.total_per_infected() +
                                   
                                   playground.total_per_hosp());

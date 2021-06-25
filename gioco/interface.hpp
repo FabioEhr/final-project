@@ -5,6 +5,7 @@
 #include <string>
 #include "decisions.hpp"
 #include "gioco.hpp"
+#include "useful_func.hpp"
 
 void print_opt(City& playground)
 { std::cout<< "Current treasury: " << playground.$() << '\n'; 
@@ -162,8 +163,8 @@ std::string mood(Age const& person)
 {    std::string text= "Depressed";
      
      int mor=person.morale;
-     if(mor>=20) {text = "Enthusiastic";}
-     if(mor>=15 && mor<20) {text= "Happy";}
+     if(mor>=20) {text = "Happy";}
+     if(mor>=15 && mor<20) {text= "Mildly Happy";}
      if(mor>=10 && mor<15) {text= "Unhappy";}
      if(mor>=5 && mor<10) {text= "Sad";}
      if(mor>=0 && mor<5) {text= "Enraged at the government.";}
@@ -319,6 +320,7 @@ std::string groups(City& playground)
   return a;
 }
 
+
 void print_vir_opt()
 {
   std::cout << "Select a virus." << '\n';
@@ -328,6 +330,7 @@ void print_vir_opt()
       << '\n';
   std::cout << "Type 3 for Ebola. Lowest recovery rate and highest letality."
             << '\n';
+            
 }
 void print_city_opt()
 {

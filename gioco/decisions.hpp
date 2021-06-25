@@ -3,64 +3,12 @@
 #include <iostream>
 #include <string>
 #include "gioco.hpp"
-
+#include "useful_func.hpp"
 // IMPORTANT: all values must be balanced
 // balanced functions will be marked with a comment
 // stating AB (already balanced)
 // when you change a value remember that DOCTEST
 // values must be changed as well
-int char_to_int(char a)
-{
-  switch (a) {
-    case '0':
-      return 0;
-      break;
-    case '1':
-      return 1;
-      break;
-    case '2':
-      return 2;
-      break;
-    case '3':
-      return 3;
-      break;
-    case '4':
-      return 4;
-      break;
-    case '5':
-      return 5;
-      break;
-    case '6':
-      return 6;
-      break;
-    case '7':
-      return 7;
-      break;
-    case '8':
-      return 8;
-      break;
-    case '9':
-      return 9;
-      break;
-    default:
-      return 0;
-  }
-}
-int string_to_int(std::string& a)
-{
-  int j = a.size();
-  int z = 0;
-  for (int i = 0; i < j; ++i) {
-    int exponent = j - i - 1;
-    int pow = 1;
-    for (int m = 0; m < exponent; ++m) {
-      pow = pow * 10;
-    }
-    int e = char_to_int(a[i]) * pow;
-    z += e;
-  }
-  return z;
-}
 
 void buy_masks(City& playground)
 {  // lowers mobility by the same ammount for all

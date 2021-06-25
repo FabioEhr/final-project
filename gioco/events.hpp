@@ -176,15 +176,13 @@ void rnd_events(City& playground)
     if (mor_ < 0) {
       mor_ = 0;
     }
-
-    std::uniform_int_distribution<int> mrl(
-        0, mor_ + unlucky);  // if there are a lot of inf less protests
-    int event = mrl(r1);
-
-    if (event < unlucky) {
+std::default_random_engine generator2{r1()};
+  std::uniform_int_distribution<int> morale_dist(0, mor_+5);
+  int event = morale_dist(r1);
+    if (event < 3) {
       if (!current.restaurants || !current.theatres || !current.churches ||
           !current.schools) {
-        if (event < unlucky / 3) {
+        if (event< 1) {
           violent_protests(playground);
         } else {
           protests(playground);
@@ -194,7 +192,7 @@ void rnd_events(City& playground)
     if (!current.perceived_danger) {
       if (!current.restaurants || !current.theatres || !current.churches ||
           !current.schools) {
-        if (event < 7) {
+        if (event < 5) {
           illegal_parties(playground);
         }
       }

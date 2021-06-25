@@ -1,6 +1,7 @@
 #ifndef PRESETS_HPP
 #define PRESETS_HPP
 #include "gioco.hpp"
+
 // Virus presets
 Virus Covid()
 {
@@ -9,7 +10,7 @@ Virus Covid()
 }
 Virus Flu()
 {
-  Virus flu = {0.5, 0.1, 0.0};
+  Virus flu = {0.6, 0.1, 0.0};
   return flu;
 }
 Virus Ebola()
@@ -17,6 +18,7 @@ Virus Ebola()
   Virus ebola = {0.4, 0.02, 0.15};
   return ebola;
 }
+
 // City presets
 City Bologna(Virus& new_virus)
 {
@@ -30,9 +32,9 @@ City Bologna(Virus& new_virus)
                10,
                20,
                -0.05,
-               0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance
+               0.01};  // sus inf rec hosp dead income mor d_mod, hosp_chance
   Age Adults = {0.999, 0.001, 0., 0., 0., 20, 20, 0., 0.1};
-  Age Elders = {1., 0.000, 0., 0., 0., -2, 20, 0.2, 0.25};
+  Age Elders = {1., 0.000, 0., 0., 0., -2, 20, 0.2, 0.3};
 
   Transmatrix Mobility = {0.8, 0.5, 0.45, 0.4, 0.3, 0.4};
 
@@ -72,9 +74,9 @@ City Milano(Virus& new_virus)
                15,
                20,
                -0.05,
-               0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance
+               0.01};  // sus inf rec hosp dead income mor d_mod, hosp_chance
   Age Adults = {0.999, 0.001, 0., 0., 0., 30, 20, 0., 0.1};
-  Age Elders = {1., 0.00, 0., 0., 0., -4, 20, 0.2, 0.25};
+  Age Elders = {1., 0.00, 0., 0., 0., -4, 20, 0.2, 0.3};
 
   Transmatrix Mobility = {2, 1, 0.8, 0.8, 0.35, 0.55};
   Hospitals SanPaolo = {0, 4000, 1, 0.2, -0.1};
@@ -111,9 +113,9 @@ City Matera(Virus& new_virus)
                7,
                20,
                -0.05,
-               0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance
+               0.01};  // sus inf rec hosp dead income mor d_mod, hosp_chance
   Age Adults = {0.999, 0.001, 0., 0., 0., 18, 20, 0., 0.1};
-  Age Elders = {1., 0.00, 0., 0., 0., -1, 20, 0.2, 0.25};
+  Age Elders = {1., 0.00, 0., 0., 0., -1, 20, 0.2, 0.3};
 
   Transmatrix Mobility = {0.7, 0.45, 0.45, 0.3, 0.25, 0.35};
   Hospitals OurLady = {0, 400, 1, 0.2, -0.1};
