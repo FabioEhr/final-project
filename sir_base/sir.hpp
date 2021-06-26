@@ -10,10 +10,7 @@ namespace sir {
 // funzione che si rivelerà molto utile per verificare se il valore inserito
 // dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e
 // l'estremo sinistro exl) e rende il codice molto più leggibile
-bool d_comp(double value, double exl, double exr)
-{
-  return value >= exl && value <= exr;
-}
+
 
 struct condition
 {
@@ -149,7 +146,7 @@ pandemy createVirus()
   while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
     std::cout << '\n'
 
-              << " write a double between 0 and 1 that represents the "
+              << " Write a double between 0 and 1 that represents the "
 
                  "contagiousness of the virus: ";
 
