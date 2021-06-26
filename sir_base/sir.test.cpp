@@ -40,8 +40,8 @@ TEST_CASE("Testing different contagiousness"){
     test_2.evolveNTimes(10);
     CHECK(test_1.situationP.infected < test_2.situationP.infected);
     CHECK(test_1.situationP.suscettibles > test_2.situationP.suscettibles);
-    CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+    CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
 }
 
 TEST_CASE("Testing recovery rates"){
@@ -54,8 +54,8 @@ TEST_CASE("Testing recovery rates"){
     test_2.evolveNTimes(10);
     CHECK(test_1.situationP.infected > test_2.situationP.infected);
     CHECK(test_1.situationP.recovered < test_2.situationP.recovered);
-    CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+    CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
 }
 TEST_CASE("Testing that percentages always add up to 1"){
     sir::virus alpha_var= {0.2, 0.01};
@@ -71,50 +71,50 @@ TEST_CASE("Testing that percentages always add up to 1"){
 test_2.evolveNTimes(5);
 test_3.evolveNTimes(5);
 test_4.evolveNTimes(5);
-CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
+CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
 test_1.evolveNTimes(5);
 test_2.evolveNTimes(5);
 test_3.evolveNTimes(5);
 test_4.evolveNTimes(5);
-CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
+CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
 test_1.evolveNTimes(5);
 test_2.evolveNTimes(5);
 test_3.evolveNTimes(5);
 test_4.evolveNTimes(5);
-CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
+CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
 test_1.evolveNTimes(5);
 test_2.evolveNTimes(5);
 test_3.evolveNTimes(5);
 test_4.evolveNTimes(5);
-CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
+CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
 test_1.evolveNTimes(5);
 test_2.evolveNTimes(5);
 test_3.evolveNTimes(5);
 test_4.evolveNTimes(5);
-CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
+CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
 test_1.evolveNTimes(5);
 test_2.evolveNTimes(5);
 test_3.evolveNTimes(5);
 test_4.evolveNTimes(5);
-CHECK(sir::good(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
- CHECK(sir::good(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
+CHECK(sir::d_comp(test_1.situationP.infected+test_1.situationP.suscettibles+test_1.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_2.situationP.infected+test_2.situationP.suscettibles+test_2.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_3.situationP.infected+test_3.situationP.suscettibles+test_3.situationP.recovered, 0.99, 1.01) );
+ CHECK(sir::d_comp(test_4.situationP.infected+test_4.situationP.suscettibles+test_4.situationP.recovered, 0.99, 1.01) );
 
 }
  

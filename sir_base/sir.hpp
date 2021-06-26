@@ -10,7 +10,7 @@ namespace sir {
 // funzione che si rivelerà molto utile per verificare se il valore inserito
 // dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e
 // l'estremo sinistro exl) e rende il codice molto più leggibile
-bool good(double value, double exl, double exr)
+bool d_comp(double value, double exl, double exr)
 {
   return value >= exl && value <= exr;
 }
@@ -48,23 +48,23 @@ class pandemy
     // nel costruttore verifichiamo che i termini inseriti dall'utente siano
     // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i catch
     // nel main
-    if (!good(current.contagiousness, 0., 1.)) {
+    if (!d_comp(current.contagiousness, 0., 1.)) {
       throw std::runtime_error{
           "Contagiousnees must be a positive value between 0 and 1"};
     }
-    if (!good(current.recovery_rate, 0., 1.)) {
+    if (!d_comp(current.recovery_rate, 0., 1.)) {
       throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
     }
-    if (!good(situation.infected, 0., 1.)) {
+    if (!d_comp(situation.infected, 0., 1.)) {
       throw std::runtime_error{"The infected must be between 0 and 1  "};
     }
-    if (!good(situation.suscettibles, 0., 1.)) {
+    if (!d_comp(situation.suscettibles, 0., 1.)) {
       throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
     }
-    if (!good(situation.recovered, 0., 1.)) {
+    if (!d_comp(situation.recovered, 0., 1.)) {
       throw std::runtime_error{"The recovered must be between 0 and 1  "};
     }
-    if (!good(situation.infected + situation.suscettibles + situation.recovered,
+    if (!d_comp(situation.infected + situation.suscettibles + situation.recovered,
               0.99,
               1.01)) {
       throw std::runtime_error
@@ -111,7 +111,7 @@ class pandemy
 
     situation = next;
     assert(
-        good(situation.infected + situation.recovered + situation.suscettibles,
+        d_comp(situation.infected + situation.recovered + situation.suscettibles,
              0.999,
              1.001));
     situationP = situation;
@@ -146,7 +146,7 @@ pandemy createVirus()
   std::string antibug = "14";
   // attraverso questa condizione il programma non procede fino a quando
   // l'utente non inserisce dei valori allowed
-  while (!good(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
+  while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
@@ -163,7 +163,7 @@ pandemy createVirus()
   }
   std::cout << '\n';
   std::cout << "Contagiousness has been set to: " << Contagiousness << '\n';
-  while (!good(Recovery_rate, 0., 1.) || !valid_string(antibug)) {
+  while (!d_comp(Recovery_rate, 0., 1.) || !valid_string(antibug)) {
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the recovery "
@@ -178,7 +178,7 @@ pandemy createVirus()
 
   virus nuovo{Contagiousness, Recovery_rate};
 
-  while (!good(Infected, 0., 1.) || !valid_string(antibug)) {
+  while (!d_comp(Infected, 0., 1.) || !valid_string(antibug)) {
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
@@ -195,7 +195,7 @@ pandemy createVirus()
   }
   std::cout << "Percentage of Infected has been set to: " << Infected << '\n';
 
-  while (!good(Recovered, 0., 1.) || !good(Recovered + Infected, 0., 1.) ||
+  while (!d_comp(Recovered, 0., 1.) || !d_comp(Recovered + Infected, 0., 1.) ||
          !valid_string(antibug)) {
     std::cout << '\n'
 
