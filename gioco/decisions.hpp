@@ -19,7 +19,7 @@ void buy_masks(City& playground)
   std::cin >> anti_bug;
   quantity = string_to_int(anti_bug);
   // if (quantity<0) {quantity= quantity *(-1);} should be done by string_to int
-  int cost = 2;
+  int cost = 5;
   std::cout << "The cost of investment is: " << quantity * cost << " "
             << "Do you want to proceede? (y for yes, n for no)" << '\n';
   char decision;
@@ -28,7 +28,7 @@ void buy_masks(City& playground)
     if (playground.$() >= cost * quantity) {
       playground.add_$(-cost * quantity);
       double m_change =
-          -0.000001 *
+          -0.0000001 *
           quantity;  // change in mobility //maybe make it a change to beta or
                      // add it in evolve() calculation in other ways
       playground.add_mob(m_change,
@@ -155,7 +155,7 @@ void curfew(City& playground)
   other_young.morale += -1 * hours;
 
   Age other_adu = playground.Adults();
-  other_adu.morale += -1 * hours + 1;
+  other_adu.morale += -1 * hours ;
 
   Age other_el = playground.Elders();
 
@@ -279,15 +279,15 @@ void alleviate_curfew(
   }
 
   Age other_young = playground.Young();
-  other_young.morale += 2 * hours - 1;
+  other_young.morale += 2 * hours ;
 
   Age other_adu = playground.Adults();
-  other_adu.morale += 2 * hours - 2;
+  other_adu.morale += 2 * hours ;
 
   Age other_el = playground.Elders();
 
   playground.Set_ages(other_young, other_adu, other_el);
-  playground.add_mob(0.2 * hours - 0.1, 0.2 * hours - 2, 0., 0., 0., 0.);
+  playground.add_mob(0.2 * hours , 0.2 * hours , 0., 0., 0., 0.);
   replacer.curfew_hours -= hours;
   playground.Set_status(replacer);
   std::cout << "Decision registered! Curfew has been set to "
@@ -413,12 +413,14 @@ void modernize_hospitals(City& playground)
 
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= upgrade_cost) {
-      (playground.GetRef_hospitals()).level += 1;
-      (playground.GetRef_hospitals()).d_chance_mod +=
-          -(playground.GetRef_hospitals()).level / 100;
-      (playground.GetRef_hospitals()).r_chance_mod +=
-          (playground.GetRef_hospitals()).level / 100;
-      playground.GetRef_treasure() -= upgrade_cost;
+      Hospitals replacer=playground.Get_hospitals();
+      replacer.level += 1;
+      replacer.d_chance_mod +=
+          -replacer.level / 100.0;
+      replacer.r_chance_mod +=
+          replacer.level / 100.0;
+      playground.add_$(-upgrade_cost);
+      playground.Set_hospital(replacer);
       std::cout << "Decision registered! You invested " << upgrade_cost
                 << " in better hospital equipment." << '\n';
 
@@ -448,9 +450,11 @@ void build_beds(City& playground)
   char decision;
   std::cin >> decision;
   if (decision == 'y' || decision == 'Y') {
-    if (playground.GetRef_treasure() >= build_cost) {
-      (playground.GetRef_hospitals()).n_beds += amount;
-      playground.GetRef_treasure() -= build_cost;
+    if (playground.$() >= build_cost) {
+      Hospitals replacer=playground.Get_hospitals();
+      replacer.n_beds += amount;
+      playground.add_$(-build_cost);
+      playground.Set_hospital(replacer);
       std::cout
           << "Decision registered! You have incresed our hospitals capacity by "
           << amount << " beds." << '\n';

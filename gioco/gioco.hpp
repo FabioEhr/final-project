@@ -252,6 +252,12 @@ class City
                     double xye = 1,
                     double xae = 1)
   {
+  assert(xyy>=0);
+  assert(xaa>=0);
+assert(xee>=0);
+assert(xya>=0);
+assert(xye>=0);
+assert(xae>=0);  
     mob.yy = mob.yy * xyy;
     mob.aa = mob.aa * xaa;
     mob.ee = mob.ee * xee;
@@ -285,6 +291,9 @@ class City
   void Set_virus(Virus& replacer)
   {
     vir = replacer;
+  }
+  void Set_hospital(Hospitals& hosp){
+    h=hosp;
   }
   // GetRef functions
   Hospitals& GetRef_hospitals()
@@ -568,7 +577,7 @@ void hosp_mod_fixer(){
                    mob.yy * y.inf * mob.ye * e.inf -
                    mob.ya * a.inf * mob.ye * e.inf;
     double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
-    double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
+    double D_y = vir.b * y.sus * (p_y_1 /*+ p_y_2 + p_y_3*/);
    //this if should be valid only in cases of ridicolously high mobility, which shouldn't be reachable in the game loop(with presets). For improved solidity, it's better if it stays on
     if(D_y<0 || D_y>1)
     {
@@ -594,7 +603,7 @@ void hosp_mod_fixer(){
                    mob.ya * y.inf * mob.ae * e.inf -
                    mob.aa * a.inf * mob.ae * e.inf;
     double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
-    double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
+    double D_a = vir.b * a.sus * (p_a_1 /*+ p_a_2 + p_a_3*/);
     if(D_a<0 ||D_a>1){
       D_a=a.sus;
     }
@@ -751,6 +760,242 @@ std::cout<< "e_hosp: " << e.hosp <<'\n';*/
     a.invariant();
     e.invariant();
   }
+   void evolve_n_print()  
+  {
+    assert(vir.valid());
+    /*yy ya ye
+                        ya aa ae
+                        ye ae ye
+                */
+
+    // p(A U B U C)= p(A)+p(B)+p(C)-p(AnB)-p(AnC)-p(BnC)+p(AnBnC): calculating
+    // the probaility of be infected by one of the 3 population groups mobility=
+    // numero di persone y/a/e che un y/a/e incontra ogni giorno in media
+
+    // mob.xx' * x.inf è la probabilità che ogni persona di tipo x ha di
+    // incontrare un infetto di tipo x' (p_x_1+p_x_2+p_x_3)=total_prob è la
+    // probabilità che ogni persona di tipo x ha di incontrare almeno un infetto
+    // tra tutti i tipi total_prob*contagiosità del virus*x.sus calcola in
+    // maniera deterministica le infezioni della popolazione di tipo x
+
+    // susceptibles to infected
+std::cout<< "Mobility: "<< '\n';
+std::cout<< mob.yy << " "<< mob.ya << " "<< mob.ye <<'\n';
+std::cout<< mob.ya << " "<< mob.aa << " "<< mob.ae <<'\n';
+std::cout<< mob.ye << " "<< mob.ae << " "<< mob.ee <<'\n';
+std::cout<< '\n';
+    // young people part
+    double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
+    double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf -
+                   mob.yy * y.inf * mob.ye * e.inf -
+                   mob.ya * a.inf * mob.ye * e.inf;
+    double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
+    double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
+   //this if should be valid only in cases of ridicolously high mobility, which shouldn't be reachable in the game loop(with presets). For improved solidity, it's better if it stays on
+    if(D_y<0 || D_y>1)
+    {
+      D_y=y.sus;
+      //negative values are reached only in cases of absurdly high mobilities, so all susceptibles turn into inf
+    }
+    y.sus -= D_y;
+    y.inf += D_y;
+std::cout<< "D_y_%: "<< D_y << "from value: "<<vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3) <<'\n'; //for testing
+int delta_y= D_y*population*y_per;
+std::cout<< "D_y: "<< delta_y << '\n';
+int displayed_y= population*y_per*D_inf_y();
+std::cout<< "Displayed value: " << displayed_y << '\n';
+std::cout<< '\n';    
+    /*if (y.sus < 0) { //shouldn't be necessary
+      y.sus = 0;
+      y.inf = 1-y.rec-y.hosp-y.ded;
+    }
+    if (y.inf > 1) {
+      y.inf = 1-y.sus-y.hosp-y.ded-y.rec;
+      
+    }*/
+    
+   
+    // adults part
+    double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
+   double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf -
+                   mob.ya * y.inf * mob.ae * e.inf -
+                   mob.aa * a.inf * mob.ae * e.inf;
+   double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
+    double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
+    if(D_a<0 ||D_a>1){
+      D_a=a.sus;
+    }
+    a.sus -= D_a;
+    a.inf += D_a;
+   std::cout<< "D_a%: "<< D_a << "From value: "<<  vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3) <<'\n';
+   int delta_a=D_a*population*a_per;
+   std::cout<< "D_a: "<< delta_a << '\n';
+   int displayed_a=D_inf_a()*population*a_per;
+   std::cout<< "Displayed value: "<< displayed_a << '\n';
+   std::cout<< '\n';
+    /*if (a.sus < 0) { //shouldn't be necessary
+      a.sus = 0;
+      a.inf=1-a.sus-a.ded-a.rec-a.hosp;
+    }
+    if (a.inf > 1) {
+      a.inf=1-a.sus-a.ded-a.rec-a.hosp;
+    }*/
+   
+    
+    
+    // elders part
+    double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
+    double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf -
+                   mob.ye * y.inf * mob.ee * e.inf -
+                   mob.ae * a.inf * mob.ee * e.inf;
+    double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
+    double D_e = vir.b * e.sus * (p_e_1 /*+ p_e_2 + p_e_3*/);
+    if(D_e<0 ||D_e>1){
+      D_e=e.sus;
+    }
+    e.sus -= D_e;
+    e.inf += D_e;
+    
+    std::cout<< "D_e%: "<< D_e <<"From value: "<< vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3)<< '\n';
+    int delta_e=D_e*population*e_per;
+    std::cout<< "D_e: "<< delta_e << '\n';
+    int displayed_e=D_inf_e()*population*e_per;
+    std::cout<< "Displayed value: " << displayed_e << '\n';
+    std::cout<< '\n';
+ 
+    int delta_inf= delta_y+delta_a+delta_e;
+    std::cout<< "Total new infected: "<< delta_inf <<'\n';
+    std::cout<< "Displayed value: " << next_turn_inf() << '\n';
+    std::cout<<'\n';
+    /*if (e.sus < 0) { //shouldn't be necessary
+      e.sus = 0;
+      e.inf=1.-e.rec-e.ded-e.hosp-e.sus;
+    }
+    if (e.inf > 1) {
+      e.inf = 1-e.rec-e.ded-e.hosp-e.sus;
+      
+    }*/
+    
+    
+// saving the current percentages of infected, since we have to
+                // do multiple calculations based on them
+    double current_young_inf = y.inf;  
+    double current_adult_inf = a.inf;
+    double current_elder_inf = e.inf;
+
+    // hospitalized
+mod_fixer(y);
+mod_fixer(a);
+mod_fixer(e);
+
+    /*h.patients = //already inside
+        population * (y_per * y.hosp + a_per * a.hosp + e_per * e.hosp);*/
+    int new_patients = population * (y_per * (vir.h+y.h_mod) * current_young_inf +
+                                     a_per * (vir.h+a.h_mod) * current_adult_inf +
+                                     e_per * (vir.h+e.h_mod) * current_elder_inf);
+    double total_patients = h.patients + new_patients;
+    double overflow = 0; //people who need hospitalization but are rejected due to the number of beds
+    if (new_patients != 0) {
+      overflow = (total_patients - h.n_beds) / new_patients;
+    }
+
+    if (overflow < 0) {
+      overflow = 0;
+    }
+    std::cout<< "Overflow: : "<< overflow <<'\n';
+    std::cout<< '\n';
+    // overflow < 0 ? overflow = 0 : false; equivalente
+    y.inf -= (vir.h+y.h_mod) * current_young_inf;
+    y.hosp += (vir.h+y.h_mod) * current_young_inf * (1 - overflow);
+    y.ded += (vir.h+y.h_mod) * current_young_inf * overflow;
+ /*std::cout<< "D_y_hosp "<< (vir.h+y.h_mod) * current_young_inf * (1 - overflow) <<'\n';
+ std::cout<< "y_hosp: " << y.hosp <<'\n';
+ std::cout<< '\n';*/
+
+    a.inf -= (vir.h+a.h_mod) * current_adult_inf;
+    a.hosp += (vir.h+a.h_mod) * current_adult_inf * (1 - overflow);
+    a.ded += (vir.h+a.h_mod) * current_adult_inf * overflow;
+/*std::cout<< "D_a_hosp "<< (vir.h+a.h_mod) * current_adult_inf * (1 - overflow) <<'\n';
+std::cout<< "a_hosp: " << a.hosp <<'\n';
+ std::cout<< '\n';*/
+
+    e.inf -= (vir.h+e.h_mod) * current_elder_inf;
+    e.hosp += (vir.h+e.h_mod) * current_elder_inf * (1 - overflow);
+    e.ded += (vir.h+e.h_mod) * current_elder_inf * overflow;
+/*std::cout<< "D_e_hosp "<< (vir.h+e.h_mod) * current_elder_inf * (1 - overflow) <<'\n';
+std::cout<< "e_hosp: " << e.hosp <<'\n';
+   std::cout<< '\n';*/  
+    //no need to refresh if gamma+delta+hosp_chance<=1 for every age
+  /* current_young_inf = y.inf;  
+  current_adult_inf = a.inf;
+  current_elder_inf = e.inf;*/
+
+    double current_young_hosp =y.hosp; // saving the current percentages of hospitalized 
+    double current_adult_hosp = a.hosp;
+    double current_elder_hosp = e.hosp;
+//gamma+delta+hosp_chance<=1 for every age, if 1 all infected should recover 
+    // recoveries
+    // ===>people infected just above will already recover the same day<===
+    hosp_mod_fixer();
+   
+    y.inf -= vir.g * current_young_inf;
+    y.hosp -= (vir.g + h.r_chance_mod) * current_young_hosp;
+    y.rec += vir.g * current_young_inf +
+              (vir.g + h.r_chance_mod) * current_young_hosp;
+                
+
+    a.inf -= vir.g * current_adult_inf;
+    a.hosp -= (vir.g + h.r_chance_mod) * current_adult_hosp;
+    a.rec += (vir.g * current_adult_inf +
+              (vir.g + h.r_chance_mod) * current_adult_hosp);
+  
+    e.inf -= vir.g * current_elder_inf;
+    e.hosp -= (vir.g + h.r_chance_mod) * current_elder_hosp;
+    e.rec += vir.g * current_elder_inf +
+             (vir.g + h.r_chance_mod) * current_elder_hosp;
+  
+  //no need to refresh if hosp_chance+gamma+delta <= 1 for every age
+  /*current_young_inf = y.inf;  
+  current_adult_inf = a.inf;
+  current_elder_inf = e.inf;*/
+
+    /*current_young_hosp =y.hosp; 
+    current_adult_hosp = a.hosp;
+    current_elder_hosp = e.hosp;*/
+
+
+    // deaths
+    // ===>people infected just above will already die the same day<===
+    // WARNING negative values
+    
+    assert(vir.d + y.d_mod >= 0 );
+    assert(vir.d + y.d_mod <= 1);
+    y.inf -= (vir.d + y.d_mod) * current_young_inf;
+    y.hosp -= (vir.d + h.d_chance_mod) * current_young_hosp;
+    y.ded += ((vir.d + y.d_mod) * current_young_inf +
+              (vir.d + h.d_chance_mod) * current_young_hosp);
+  
+  
+    assert(vir.d + a.d_mod >= 0 && vir.d + a.d_mod <= 1);
+    a.inf -= (vir.d + a.d_mod) * current_adult_inf;
+    a.hosp -= (vir.d + h.d_chance_mod) * current_adult_hosp;
+    a.ded += ((vir.d + a.d_mod) * current_adult_inf +
+              (vir.d + h.d_chance_mod) * current_adult_hosp);
+  
+   
+    assert(vir.d + e.d_mod >= 0 && vir.d + e.d_mod <= 1);
+    e.inf -= (vir.d + e.d_mod) * current_elder_inf;
+    e.hosp -= (vir.d + h.d_chance_mod) * current_elder_hosp;
+    e.ded += ((vir.d + e.d_mod) * current_elder_inf +
+              (vir.d + h.d_chance_mod) * current_elder_hosp);
+
+    h.patients = population * (y_per*y.hosp + a_per*a.hosp + e_per*e.hosp);
+
+    invariant();
+    y.invariant();
+    a.invariant();
+    e.invariant();
+  }
   void evolve_n_times(int n)
   {
     for (int i = 0; i < n; ++i) {
@@ -776,8 +1021,7 @@ std::cout<< "e_hosp: " << e.hosp <<'\n';*/
     return y_m + a_m + e_m;
   }
 
-  double total_per_susceptibles()  // PROBLEM: if 2 inf, 6 sus, 2 dead returns
-                                   // 20% infected (in reality is 33%)
+  double total_per_susceptibles()  
   {
     return (y.sus * y_per + a.sus * a_per +
             e.sus * e_per);  // returna la percentuale di popolazione

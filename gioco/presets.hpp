@@ -24,8 +24,8 @@ City Bologna(Virus& new_virus)
 {
   // beta gamma delta
 
-  Age Young = {0.999,
-               0.001,
+  Age Young = {0.99,
+               0.01,
                0.,
                0.,
                0.,
@@ -33,10 +33,10 @@ City Bologna(Virus& new_virus)
                20,
                -0.05,
                -0.05};  // sus inf rec hosp dead income mor d_mod, h_mod
-  Age Adults = {0.999, 0.001, 0., 0., 0., 20, 20, 0., 0.};
+  Age Adults = {0.99, 0.01, 0., 0., 0., 20, 20, 0., 0.};
   Age Elders = {1., 0.000, 0., 0., 0., -2, 20, 0.1, 0.1};
 
-  Transmatrix Mobility = {0.8, 0.5, 0.45, 0.4, 0.3, 0.4};
+  Transmatrix Mobility = {0.8, 0.6, 0.5, 0.5, 0.4, 0.45};
 
   Hospitals SantOrsola = {0, 2000, 1, 0.2, -0.02}; //patients, n_beds, lvl, r_chance_mid, d_chance_mod
   state_function initial = {
@@ -71,7 +71,7 @@ City Milano(Virus& new_virus)
                0.,
                0.,
                0.,
-               15,
+               12,
                20,
                -0.05,
                -0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance_mod
@@ -97,7 +97,7 @@ City Milano(Virus& new_virus)
                  Elders,
                  new_virus,
                  Mobility,
-                 1000000,
+                 700000,
                  SanPaolo,
                  initial};
   return milano;
@@ -105,8 +105,8 @@ City Milano(Virus& new_virus)
 
 City Matera(Virus& new_virus)
 {
-  Age Young = {0.999,
-               0.001,
+  Age Young = {0.99,
+               0.01,
                0.,
                0.,
                0.,
@@ -114,7 +114,7 @@ City Matera(Virus& new_virus)
                20,
                -0.05,
                0.05};  // sus inf rec hosp dead income mor d_mod, hosp_chance_mod
-  Age Adults = {0.999, 0.001, 0., 0., 0., 18, 20, 0., 0.};
+  Age Adults = {0.99, 0.01, 0., 0., 0., 18, 20, 0., 0.};
   Age Elders = {1., 0.00, 0., 0., 0., -1, 20, 0.1, 0.1};
 
   Transmatrix Mobility = {0.7, 0.45, 0.45, 0.3, 0.25, 0.35};
@@ -136,7 +136,7 @@ City Matera(Virus& new_virus)
                  Elders,
                  new_virus,
                  Mobility,
-                 1000000,
+                 350000,
                  OurLady,
                  initial};
   return matera;
