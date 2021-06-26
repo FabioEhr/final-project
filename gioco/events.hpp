@@ -12,7 +12,7 @@ void mutate_contagiousness(
   plague.b += amount;
   if (plague.b > 1.) {
     plague.b = 1.;
-  }  // check with Fabio
+  }  
   playground.Set_virus(plague);
   playground.add_know(-2);
   std::cout << "On the local newspaper " << news_paper()
@@ -53,7 +53,7 @@ void mutate_deadliness(City& playground)
                "in the virus' genetic sequence, might increase its deadliness.'"
             << '\n';
 }
-// void variante ricaduta
+
 
 void protests(City& playground)  // they occur when morale is low
 {
@@ -171,18 +171,17 @@ void rnd_events(City& playground)
     panic(playground);
   }
   if (playground.total_per_infected() < 0.05) {  // punishes early closures
-    int mor_ =
-        playground.cumulative_morale() / playground.N();  // starts at 20
+    int mor_ = playground.cumulative_morale() / playground.N();  // starts at 20
     if (mor_ < 0) {
       mor_ = 0;
     }
-std::default_random_engine generator2{r1()};
-  std::uniform_int_distribution<int> morale_dist(0, mor_+5);
-  int event = morale_dist(r1);
+    std::default_random_engine generator2{r1()};
+    std::uniform_int_distribution<int> morale_dist(0, mor_ + 5);
+    int event = morale_dist(r1);
     if (event < 3) {
       if (!current.restaurants || !current.theatres || !current.churches ||
           !current.schools) {
-        if (event< 1) {
+        if (event < 1) {
           violent_protests(playground);
         } else {
           protests(playground);
@@ -209,7 +208,7 @@ std::default_random_engine generator2{r1()};
   }
   std::uniform_real_distribution<double> science(0., 1. / e);
   double eureker = science(r1);
-  if (eureker < 0.009 && e<51) {
+  if (eureker < 0.009 && e < 51) {
     eureka(playground);
   }
 }

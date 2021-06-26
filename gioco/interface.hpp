@@ -8,7 +8,8 @@
 #include "useful_func.hpp"
 
 void print_opt(City& playground)
-{ std::cout<< "Current treasury: " << playground.$() << '\n'; 
+{
+  std::cout << "Current treasury: " << playground.$() << '\n';
   std::cout << "Here are your options :" << '\n';
   state_function current = playground.Get_status();
   std::cout << "Let another week go by (Type n)" << '\n';
@@ -39,7 +40,9 @@ void print_opt(City& playground)
     std::cout << "Alleviate curfew (Type -)" << '\n';
   }
   std::cout << "Buy masks (Type m)" << '\n';
- if(playground.knowledge()<50) {std::cout << "Invest in research (Type e)" << '\n';}
+  if (playground.knowledge() < 50) {
+    std::cout << "Invest in research (Type e)" << '\n';
+  }
   if (!current.schools) {
     std::cout << "Build infrastructure to reduce digital divide (Type d)"
               << '\n';
@@ -70,7 +73,7 @@ void print_opt(City& playground)
   if (current.vaccines) {
     std::cout << "Vaccinate Young (Type z)" << '\n';
   }
-  std::cout<< "Skip N weeks (Type #)" << '\n'; 
+  std::cout << "Skip N weeks (Type #)" << '\n';
 }
 
 void execute(City& playground, char order)
@@ -115,7 +118,9 @@ void execute(City& playground, char order)
       buy_masks(playground);
       break;
     case 'e':
-      if(!current.vaccines){invest_in_research(playground);}
+      if (!current.vaccines) {
+        invest_in_research(playground);
+      }
       break;
     case 'd':
       if (!current.schools) {
@@ -156,20 +161,29 @@ void execute(City& playground, char order)
         vaccinate_young(playground);
       }
       break;
-    
   }
 }
 std::string mood(Age const& person)
-{    std::string text= "Depressed";
-     
-     int mor=person.morale;
-     if(mor>=20) {text = "Happy";}
-     if(mor>=15 && mor<20) {text= "Mildly Happy";}
-     if(mor>=10 && mor<15) {text= "Unhappy";}
-     if(mor>=5 && mor<10) {text= "Sad";}
-     if(mor>=0 && mor<5) {text= "Enraged at the government.";}
+{
+  std::string text = "Depressed";
+
+  int mor = person.morale;
+  if (mor >= 20) {
+    text = "Happy";
+  }
+  if (mor >= 15 && mor < 20) {
+    text = "Mildly Happy";
+  }
+  if (mor >= 10 && mor < 15) {
+    text = "Unhappy";
+  }
+  if (mor >= 5 && mor < 10) {
+    text = "Sad";
+  }
+  if (mor >= 0 && mor < 5) {
+    text = "Enraged at the government.";
+  }
   return text;
-  
 }
 
 void print_situation(City& playground,
@@ -185,8 +199,11 @@ void print_situation(City& playground,
   int sus = n * playground.total_per_susceptibles();
   int inf = n * playground.total_per_infected();
   int rec = n * playground.total_per_recovered();
-  int dead = n * playground.total_per_dead();
   int n_hospitalized = n * (playground.total_per_hosp());
+  int dead = n - sus - inf - rec -
+             n_hospitalized;  // by calculating this way we avoid double-->int
+                              // approximations and display always the same sum.
+                              // (else there is a +/- 1 person error)
   if (turns > 0) {
     std::cout << "This week " << D_inf << " new infections were registered, "
               << '\n';
@@ -203,7 +220,8 @@ void print_situation(City& playground,
   std::cout << "Number of hospitalized :" << n_hospitalized << '\n';
   std::cout << "Number of recovered :" << rec << '\n';
   std::cout << "Number of pandemic related deaths :" << dead << '\n';
-
+  std::cout << "Sum: " << sus + inf + n_hospitalized + rec + dead
+            << '\n';  // usefull  for testing
   std::cout << "Current treasury :" << playground.$()
             << "  Income per week :" << playground.turn_income() << '\n';
   char input;
@@ -240,14 +258,17 @@ void print_situation(City& playground,
     std::cout << "Percentage of Elders Hospitalized/Dead :"
               << playground.Elders().hosp << " /" << playground.Elders().ded
               << '\n';
-              std::cout<< '\n';
-              std::cout << "Young/Adult/Elder Income: " << playground.Young().income << " / "
-            << playground.Adults().income << " / " << playground.Elders().income
-            << '\n';
-            std::cout<< '\n';
-std::cout<< "The average Young person classifies himself as " << mood(playground.Young()) << '\n';
-std::cout<< "The average Adult classifies himself as " << mood(playground.Adults()) << '\n';
-std::cout<< "The average Elder classifies himself as " << mood(playground.Elders()) << '\n';
+    std::cout << '\n';
+    std::cout << "Young/Adult/Elder Income: " << playground.Young().income
+              << " / " << playground.Adults().income << " / "
+              << playground.Elders().income << '\n';
+    std::cout << '\n';
+    std::cout << "The average Young person classifies himself as "
+              << mood(playground.Young()) << '\n';
+    std::cout << "The average Adult classifies himself as "
+              << mood(playground.Adults()) << '\n';
+    std::cout << "The average Elder classifies himself as "
+              << mood(playground.Elders()) << '\n';
     std::cout << '\n';
   }
 }
@@ -320,7 +341,6 @@ std::string groups(City& playground)
   return a;
 }
 
-
 void print_vir_opt()
 {
   std::cout << "Select a virus." << '\n';
@@ -330,7 +350,6 @@ void print_vir_opt()
       << '\n';
   std::cout << "Type 3 for Ebola. Lowest recovery rate and highest letality."
             << '\n';
-            
 }
 void print_city_opt()
 {
@@ -346,22 +365,4 @@ void print_city_opt()
       << '\n';
 }
 
-
-/*void score(City& playground)
-{
-  int n = playground.N();
-  int mor = playground.cumulative_morale();
-  int cash = playground.$();
-  int growth = playground.turn_income();
-  int el_d = n * playground.Elders().ded;
-  int a_d = n * playground.Adults().ded;
-  int y_d = n * playground.Young().ded;
-  int know = playground.knowledge();
-  int score = know + mor + cash + growth - (el_d) * (el_d) * (el_d) -
-              (a_d) * (a_d) -
-              (y_d) * (y_d);  // elders deaths are weighted more because they
-                              // are harder to protect
-  std::cout << "Based on how you handeled the pandemic, your score is :"
-            << score << '\n';
-}*/
 #endif

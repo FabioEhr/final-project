@@ -54,65 +54,79 @@ int string_to_int(std::string& a)
   return z;
 }
 
-bool valid_string(std::string & input){
-  int size=input.size();
-  bool a=true;
-  int dots=0;
-  for(int i=0; i<size; ++i){
-    if(a==false) {break;}
-    switch(input[i]){
+bool valid_string(std::string& input)
+{
+  int size = input.size();
+  bool a = true;
+  if (input[0] != '0' ||
+      input[0] != '.') {  // only numbers in [0,1] are accepted
+    a = false;
+  }
+  int dots = 0;
+  for (int i = 0; i < size; ++i) {
+    if (a == false) {
+      break;
+    }
+
+    switch (input[i]) {
       case '0':
 
-      break;
-    case '1':
-      
-      break;
-    case '2':
-      
-      break;
-    case '3':
-      
-      break;
-    case '4':
-      
-      break;
-    case '5':
-      
-      break;
-    case '6':
-      
-      break;
-    case '7':
-      
-      break;
-    case '8':
-      
-      break;
-    case '9':
-     
-      break;
+        break;
+      case '1':
+
+        break;
+      case '2':
+
+        break;
+      case '3':
+
+        break;
+      case '4':
+
+        break;
+      case '5':
+
+        break;
+      case '6':
+
+        break;
+      case '7':
+
+        break;
+      case '8':
+
+        break;
+      case '9':
+
+        break;
       case '.':
-      ++dots;
-      if(dots>1) {a= false; 
-      }
-      break;
-    default:
-      a= false;
-      break;
+        ++dots;
+        if (dots > 1) {
+          a = false;
+        }
+        break;
+      default:
+        a = false;
+        break;
     }
   }
   return a;
 }
-double string_to_decimal(std::string &input){
-int int_value= string_to_int(input);
- int size= input.size()-2;
- if(input[0] == '.') {++size;}
-  if(size<0) {size=0;}
-  double div=1.;
-  for(int i=0; i<size; ++i){
-    div=div*10.;
+double string_to_decimal(std::string& input)
+{  // turns in a number between 0 and 1
+  int int_value = string_to_int(input);
+  int size = input.size() - 2;
+  if (input[0] == '.') {
+    ++size;
   }
-  double d_value= int_value/div;
+  if (size < 0) {
+    size = 0;
+  }
+  double div = 1.;
+  for (int i = 0; i < size; ++i) {
+    div = div * 10.;
+  }
+  double d_value = int_value / div;
   return d_value;
 }
 #endif
