@@ -58,10 +58,8 @@ bool valid_string(std::string& input)
 {
   int size = input.size();
   bool a = true;
-  if (input[0] != '0' ||
-      input[0] != '.') {  // only numbers in [0,1] are accepted
-    a = false;
-  }
+  char b=input[0];
+  
   int dots = 0;
   for (int i = 0; i < size; ++i) {
     if (a == false) {
