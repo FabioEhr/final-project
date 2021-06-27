@@ -1,7 +1,7 @@
 #ifndef YAE_HPP
 #define YAE_HPP
 #include <cassert>
-
+#include "useful_func.hpp"
 struct Virus
 {
   double b;  // contagiosità
@@ -39,15 +39,6 @@ struct Transmatrix
   double ye;
   double ae;
 };
-
-bool double_compare(double left, double right, double precision = 0.0001)
-{
-  if ((right - left) > -precision && (right - left) < precision) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 bool operator==(Transmatrix left, Transmatrix right)  // what is this needed
                                                       // for?
@@ -96,9 +87,10 @@ struct Hospitals
   double d_chance_mod;
 };
 
-struct state_function
+struct state_function  // used for keeping track of what's open and what's
+                       // closed
 {
-  bool restaurants;
+  bool restaurants;  // true means open
   bool theatres;
   bool schools;
   bool churches;
@@ -119,8 +111,8 @@ class City
   Virus vir;
   Transmatrix mob;
   int treasure;         // treasure
-  int know = 0;         // knowledge
-  Hospitals h;          // cap sanitario
+  int know = 0;         // knowledge, used for vaccines
+  Hospitals h;          // sistema sanitario
   state_function stat;  // info on measures
   void invariant()
   {
@@ -153,6 +145,7 @@ class City
       , h{hosp}
       , stat{status}
   {
+    invariant();
   }
 
   // getter functions
@@ -369,8 +362,7 @@ class City
       h.d_chance_mod = -vir.d;  // no one dies
     }
     if (vir.d + h.d_chance_mod > 1) {
-      h.d_chance_mod -=0.1*h.d_chance_mod;
-     
+      h.d_chance_mod -= 0.1 * h.d_chance_mod;
     }
     if (vir.g + h.r_chance_mod > 1.) {
       h.r_chance_mod = 1. - vir.g;  // all heal
@@ -378,7 +370,7 @@ class City
     }
   }
 
-  // functions to display deltas in game-loop
+  // functions to display deltas in game-loop, they do the same thing as evolve, read evolve() first
   double D_inf_y()
   {  // percentage delta inside of young
     double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
@@ -534,8 +526,8 @@ class City
         next_turn_dismissed();
     return miracle;
   }
-  // main function: handles infections, deaths, recoveries and critical cases
 
+  // main function: handles infections, deaths, recoveries and critical cases
   void evolve()
   {
     assert(vir.valid());
@@ -692,7 +684,7 @@ class City
     a.invariant();
     e.invariant();
   }
-  // used in tests, remember to include iostream
+  // used for testing, remember to include iostream
   void evolve_n_print()
   {
     assert(vir.valid());
@@ -722,7 +714,7 @@ class City
     y.sus -= D_y;
     y.inf += D_y;
     std::cout << "D_y_%: " << D_y
-             
+
               << '\n';  // for testing
     int delta_y = D_y * population * y_per;
     std::cout << "D_y: " << delta_y << '\n';
@@ -743,7 +735,7 @@ class City
     a.sus -= D_a;
     a.inf += D_a;
     std::cout << "D_a%: " << D_a
-              
+
               << '\n';
     int delta_a = D_a * population * a_per;
     std::cout << "D_a: " << delta_a << '\n';
@@ -766,7 +758,7 @@ class City
     e.inf += D_e;
 
     std::cout << "D_e%: " << D_e
-              
+
               << '\n';
     int delta_e = D_e * population * e_per;
     std::cout << "D_e: " << delta_e << '\n';
@@ -811,8 +803,8 @@ class City
     y.ded += (vir.h + y.h_mod) * current_young_inf * overflow;
     std::cout << "D_y_hosp "
               << (vir.h + y.h_mod) * current_young_inf * (1 - overflow) << '\n';
-    std::cout << "y.h_mod: " << y.h_mod << " "<< "y.h_mod+vir.h: " << vir.h + y.h_mod
-              << '\n';
+    std::cout << "y.h_mod: " << y.h_mod << " "
+              << "y.h_mod+vir.h: " << vir.h + y.h_mod << '\n';
     std::cout << '\n';
 
     a.inf -= (vir.h + a.h_mod) * current_adult_inf;
@@ -820,8 +812,8 @@ class City
     a.ded += (vir.h + a.h_mod) * current_adult_inf * overflow;
     std::cout << "D_a_hosp "
               << (vir.h + a.h_mod) * current_adult_inf * (1 - overflow) << '\n';
-    std::cout << "a.h_mod: " << a.h_mod << " "<<"a.h_mod+vir.h: " << vir.h + a.h_mod
-              << '\n';
+    std::cout << "a.h_mod: " << a.h_mod << " "
+              << "a.h_mod+vir.h: " << vir.h + a.h_mod << '\n';
     std::cout << '\n';
 
     e.inf -= (vir.h + e.h_mod) * current_elder_inf;
@@ -829,8 +821,8 @@ class City
     e.ded += (vir.h + e.h_mod) * current_elder_inf * overflow;
     std::cout << "D_e_hosp "
               << (vir.h + e.h_mod) * current_elder_inf * (1 - overflow) << '\n';
-    std::cout << "e.h_mod: " << e.h_mod << " "<<"e.h_mod+vir.h: " << vir.h + e.h_mod
-              << '\n';
+    std::cout << "e.h_mod: " << e.h_mod << " "
+              << "e.h_mod+vir.h: " << vir.h + e.h_mod << '\n';
     std::cout << '\n';
 
     double current_young_hosp =
@@ -864,24 +856,27 @@ class City
     y.hosp -= (vir.d + h.d_chance_mod) * current_young_hosp;
     y.ded += ((vir.d + y.d_mod) * current_young_inf +
               (vir.d + h.d_chance_mod) * current_young_hosp);
-      std::cout<< "y.d_mod: "<<y.d_mod << " vir.d+y.d_mod: " << vir.d+y.d_mod <<'\n';
-      std::cout<< '\n';        
+    std::cout << "y.d_mod: " << y.d_mod << " vir.d+y.d_mod: " << vir.d + y.d_mod
+              << '\n';
+    std::cout << '\n';
 
     assert(vir.d + a.d_mod >= 0 && vir.d + a.d_mod <= 1);
     a.inf -= (vir.d + a.d_mod) * current_adult_inf;
     a.hosp -= (vir.d + h.d_chance_mod) * current_adult_hosp;
     a.ded += ((vir.d + a.d_mod) * current_adult_inf +
               (vir.d + h.d_chance_mod) * current_adult_hosp);
-std::cout<< "a.d_mod: "<<a.d_mod << " vir.d+a.d_mod: " << vir.d+a.d_mod <<'\n';
-      std::cout<< '\n';
+    std::cout << "a.d_mod: " << a.d_mod << " vir.d+a.d_mod: " << vir.d + a.d_mod
+              << '\n';
+    std::cout << '\n';
 
     assert(vir.d + e.d_mod >= 0 && vir.d + e.d_mod <= 1);
     e.inf -= (vir.d + e.d_mod) * current_elder_inf;
     e.hosp -= (vir.d + h.d_chance_mod) * current_elder_hosp;
     e.ded += ((vir.d + e.d_mod) * current_elder_inf +
               (vir.d + h.d_chance_mod) * current_elder_hosp);
-std::cout<< "e.d_mod: "<<e.d_mod << " vir.d+e.d_mod: " << vir.d+e.d_mod <<'\n';
-      std::cout<< '\n';
+    std::cout << "e.d_mod: " << e.d_mod << " vir.d+e.d_mod: " << vir.d + e.d_mod
+              << '\n';
+    std::cout << '\n';
     h.patients =
         population * (y_per * y.hosp + a_per * a.hosp + e_per * e.hosp);
 

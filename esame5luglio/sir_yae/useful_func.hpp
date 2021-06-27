@@ -127,4 +127,13 @@ double string_to_decimal(std::string& input)
   double d_value = int_value / div;
   return d_value;
 }
+bool double_compare(double left, double right, double precision = 0.0001)
+{
+  if ((right - left) > -precision && (right - left) < precision) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 #endif

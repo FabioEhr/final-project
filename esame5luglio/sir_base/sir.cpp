@@ -1,6 +1,7 @@
 #include "sir.hpp"
 #include "useful_func.hpp"
-int main() {
+int main()
+{
   try {
     sir::pandemy play = sir::createVirus();
 
@@ -9,7 +10,7 @@ int main() {
     std::cout << "quanti giorni vuoi far evolvere l'epidemia?";
 
     std::cin >> a;
-    N=string_to_int(a);
+    N = string_to_int(a);
 
     std::vector<sir::condition> decorso = play.evolveNTimes(N);
 

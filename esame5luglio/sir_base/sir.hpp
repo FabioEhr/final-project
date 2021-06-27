@@ -7,10 +7,6 @@
 #include "useful_func.hpp"
 
 namespace sir {
-// funzione che si rivelerà molto utile per verificare se il valore inserito
-// dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e
-// l'estremo sinistro exl) e rende il codice molto più leggibile
-
 
 struct condition
 {
@@ -29,9 +25,7 @@ struct virus
 
   double recovery_rate;
 };
-// il programma è stato strutturato nel seguente modo, in pratica si ha una
-// pandemia se si ha un virus con le sue caratteristiche e i dati della
-// popolazione
+
 class pandemy
 {
  private:
@@ -71,9 +65,7 @@ class pandemy
     }
   };
   // queste variabili per poter accedere anche dall'esterno ai dati che
-  // descrivono l'epidemia, forse sono inutili ne discutiamo o si potrebbe creare
-  // dei metodi per accedervi solo in lettura o si potrebbe mettere direttamente
-  // situation in public, ma non penso sia una buona idea
+  // descrivono l'epidemia, 
   virus currentP = current;
 
   condition situationP = situation;
