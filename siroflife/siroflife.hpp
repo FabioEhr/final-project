@@ -5,15 +5,13 @@
 #include <vector>
 #include <set>
 #include <random>
-#include <algorithm>
-#include <iterator>
+
 #include <string>
 
-//note: i've implemented some data members as public because of lazyness, but they should be private with getter functions or instead we can make the class a struct
 
-class Virus {
+struct Virus {
     
-    public:
+    
 
     double contagiousness; 
     double recovery_rate;
@@ -22,9 +20,9 @@ class Virus {
     Virus (double m_cont = 0, double m_rec = 0, int m_incub = 1) : contagiousness{m_cont}, recovery_rate{m_rec}, incubation_time{m_incub} {}
 };
 
-class Cell {
+struct Cell {
 
-    public:
+    
 
     int r; //possibly rewrite as private with getter functions
     int c;
@@ -51,11 +49,11 @@ class Cell {
     }
 };   
 
-class Person {
-    public:
+struct Person {
+    
 
     Cell P_cell;
-    int condition; //or an enum. for now it's susceptible=0, infected=1, recovered=2, incubating infection=3
+    int condition; // susceptible=0, infected=1, recovered=2, incubating infection=3
     int incub_day=0; //counter for days of incubation
 
     Person (int m_r = 1, int m_c = 1, int m_cond = 0) : P_cell{m_r, m_c}, condition{m_cond} {};
@@ -69,10 +67,10 @@ class Person {
         
         //r+= a_randomnumber between -speed and +speed 
         //c+= a_randomnumber between -speed and +speed
-        //could be reimplemented with pytagoras theorem to be more accurate, but then we would get numbers that are not ints 
+        
         
         std::random_device r1;
-        //std::default_random_engine generator1 {r1()}; perchè togliendo questo funziona lo stesso? farsi spiegare da Lorenzo
+        std::default_random_engine generator1 {r1()}; 
         std::uniform_int_distribution<int> distr_r(-speed, speed);
         int walk_r = distr_r(r1);
         P_cell.r += walk_r;
@@ -84,8 +82,7 @@ class Person {
         P_cell.c += walk_c;    
 
         //if r>rndmove_width r=rndmove_width, if r<1 r=1 and same for c -->Imposing boundaries (walls)
-        //questo fa sì che se le persone uscissero dai muri rimangano sui muri. potrebbe essere un bias del movimento (?)
-        //si potrebbe implementare invece un "rimbalzo", anche se forse a quel punto il bias sarebbe verso il centro (?)
+        //questo fa sì che se le persone uscissero dai muri rimangano sui muri. 
 
         if (P_cell.r>rndmove_height) {
             P_cell.r = rndmove_height;
@@ -113,9 +110,9 @@ std::string cond_to_string (int cond) {
 
     };
 
-class Grid {
+struct Grid {
    
-    public:
+    
    
     int height;
     int width;
@@ -159,14 +156,14 @@ class Grid {
             // (people[i]).c = a_random_number between 1 and  width
 
         std::random_device grid_r1;
-        //std::default_random_engine generator_grid1 {grid_r1()};
+        std::default_random_engine generator_grid1 {grid_r1()};
         std::uniform_int_distribution<int> grid_r(1, height);
-        (people[i]).P_cell.r = grid_r(grid_r1);
+        people[i].P_cell.r = grid_r(grid_r1);
 
-        //std::random_device grid_r2;
-        //std::default_random_engine generator_grid2 {grid_r2()};
-        //std::uniform_int_distribution<int> grid_c(1, width);
-        (people[i]).P_cell.c = grid_r(grid_r1);
+        std::random_device grid_r2;
+        std::default_random_engine generator_grid2 {grid_r2()};
+         std::uniform_int_distribution<int> grid_c(1, width);
+        people[i].P_cell.c = grid_c(grid_r2);
         }
 
     }
@@ -181,13 +178,10 @@ class Grid {
         //evolves the grid (handles the "sus to infected" part)
         // everyone in the same coordinates can infect and be infected, as they're all "breathing the same air" 
 
-        //need something that gives an unique position to each person (based on the cell, so row and column), and does the contamination for each position. 
-        //^^actually i changed the approach, see below
 
         //keeping a set containing all the cells that are "contagious", that means they have at least one infected inside them
         std::set<class Cell> inf_cells;
-        //keeping a vector of pointers to infected people inside the people vector, needed later to calculate recoveries. is it really needed(?)       
-
+        
         for (Person& inf_person : people) {
             
             if(inf_person.condition==1) {                 
@@ -211,7 +205,7 @@ class Grid {
 
                     //if it finds it then sus_person.condition=1  based on a probability (random number between 0 and 1, if number<= virus contagiousness it gets infected)
                     std::random_device grid_evolve_r2;
-                    //std::default_random_engine generator_grid_evolve2 {grid_evolve_r2()};
+                    std::default_random_engine generator_grid_evolve2 {grid_evolve_r2()};
                     std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
 
                     if ((grid_evolve_distr2(grid_evolve_r2)) <= e_virus.contagiousness) {
@@ -220,7 +214,7 @@ class Grid {
                     --susceptible;
                     ++infected; //infected people and incubating count as "infected" in general
                 
-                    std::cout << "person " << person_index << " infected in cell (" << sus_person.P_cell.r << "," << sus_person.P_cell.c << ") \n"; //optional, it's for debugging purposes
+                    std::cout << "person " << person_index << " infected in cell (" << sus_person.P_cell.r << "," << sus_person.P_cell.c << ")" << '\n'; //optional, it's for debugging purposes
 
                     };
                 };
@@ -229,9 +223,6 @@ class Grid {
             };
 
         };
-
-        //possibly add a "for" that removes recovered people from the "people" vector, for efficiency reasons since they won't have any effects anymore as the model is for now
-        //if we want to still track  only the number (and not the position) of recovered we could do so in the "recovered" data member
         
     }
 
@@ -256,7 +247,7 @@ class Grid {
             //instead of the evening, reducing infections 
             if (inf_or_incub.condition==1){
                 std::random_device grid_evolve_r1;
-                //std::default_random_engine generator_grid_evolve1 {grid_evolve_r1()};
+                std::default_random_engine generator_grid_evolve1 {grid_evolve_r1()};
                 std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
 
                 if (grid_evolve_distr1(grid_evolve_r1) <= mne_virus.recovery_rate) {
@@ -291,5 +282,99 @@ class Grid {
         };
     }
 };
+std::vector<char> get_map(Grid const& board){
+int height = board.height;
+int width = board.width;
+int area = width*height;
+std::vector<char> map;
+for(int i=0; i<area; ++i ){
+    map.push_back('-');
+}
+std::vector<Person> pieces = board.people;
+int n_pieces= pieces.size();
+int row=0;
+int column=0;
+//information priority is: INFECTED, SUSCEPTIBLE, INCUBATING, RECOVERED, EMPTY SPACE
+for (int j=0; j<n_pieces; ++j){
+     row=(pieces[j]).P_cell.r;
+     column =(pieces[j]).P_cell.c;
+     int position_in_map= (row-1)*width+column-1;
+     char cluster = map[position_in_map];
+     switch(cluster){
+         case '-': //if the space is empty, it is overwritten by the condition
+    if (pieces[j].condition==0){
+map[position_in_map] = 'S';
+    }
+    if(pieces[j].condition==1){
+        map[position_in_map] = 'I';
+    }
+    if(pieces[j].condition==2){
+        map[position_in_map] = 'R';
+    }
+    if(pieces[j].condition==3){
+        map[position_in_map] = 'F'; //incubating inFection
+    }
+    break;
+ case 'S': //if it's suceptible
+ if(pieces[j].condition==0){
+     map[position_in_map] = 'S'; // susceptible-rec cluster
+ }
+ if(pieces[j].condition==1){
+     map[position_in_map]= '!'; //risky encounter, it means that there is at least an infected who didn't manage to infect a susceptible
+ }
+ if(pieces[j].condition==3) {
+     map[position_in_map]= '#'; //incubating-sus encounter
+ }
+ //all other cases are of lower priority
+ break;
+ case 'I':
+ if(pieces[j].condition==0){
+     map[position_in_map] = '!'; //risky encounter, it means that there is at least an infected who didn't manage to infect a susceptible
+     if(pieces[j].condition==1){
+     map[position_in_map] = 'I'; //infected cluster, an I stands for one or more infected
+ }
+ break;
+ case 'R':
+ if(pieces[j].condition==0){
+     map[position_in_map] = 'S'; //sus are higher priority
+     } 
+     if(pieces[j].condition == 1) {
+         map[position_in_map]= 'I'; //inf are higher priority
+     }
+     if(pieces[j].condition == 3){
+         map[position_in_map] = 'F'; //inc are higher priority
+     }
+ break;
+ case 'F':
+ if(pieces[j].condition == 0) {map[position_in_map] = '#';} //sus-inc cluster, at least a sus and inc in tile
+ if(pieces[j].condition == 1) {map[position_in_map] = 'I';} //infected are higher priority
+ break;
+ 
+ case '!':
+ break; //highest priority
+ case '#':
+ if(pieces[j].condition == 1) {map[position_in_map] = '!';} //infected-sus is more important than inf-inc
+ 
+ }
+     }//closes switch
+}//closes for
+
+
+return map;    
+}
+void draw_map(std::vector<char> const& map, Grid const& board){
+    int size=map.size();
+    int width= board.width;
+    for (int i=0; i<size; ++i){
+    if(i% width== 0){
+        std::cout<<'\n';
+    }
+    std::cout<<map[i]<< " ";
+}
+
+}
+void get_n_draw(Grid const& board){
+    draw_map(get_map(board), board);
+}
 
 #endif

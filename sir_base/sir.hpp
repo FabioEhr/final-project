@@ -1,11 +1,13 @@
-#ifndef SIR_HPP 
+#ifndef SIR_HPP
 #define SIR_HPP
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include "useful_func.hpp"
 
 namespace sir {
+<<<<<<< HEAD
 //funzione che si rivelerà molto utile per verificare se il valore inserito 
 //dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e l'estremo sinistro exl)
 //e rende il codice molto più leggibile
@@ -13,6 +15,12 @@ bool is_in_range(double value, double exl, double exr)
 {
   return value >= exl && value <= exr;
 }
+=======
+// funzione che si rivelerà molto utile per verificare se il valore inserito
+// dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e
+// l'estremo sinistro exl) e rende il codice molto più leggibile
+
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
 
 struct condition
 {
@@ -31,8 +39,9 @@ struct virus
 
   double recovery_rate;
 };
-//il programma è stato strutturato nel seguente modo, in pratica si ha una pandemia se si ha un virus
-//con le sue caratteristiche e i dati della popolazione
+// il programma è stato strutturato nel seguente modo, in pratica si ha una
+// pandemia se si ha un virus con le sue caratteristiche e i dati della
+// popolazione
 class pandemy
 {
  private:
@@ -43,6 +52,7 @@ class pandemy
  public:
   pandemy(virus& curr, condition& initial) : current{curr}, situation{initial}
   {
+<<<<<<< HEAD
     //nel costruttore verifichiamo che i termini inseriti dall'utente siano permessi 
     //e se non lo sono lanciamo delle eccezioni di cui facciamo i catch nel main
     if (!is_in_range(current.contagiousness, 0., 100000.)) {
@@ -61,6 +71,28 @@ class pandemy
       throw std::runtime_error{"The recovered must be between 0 and 1  "};
     }
     if (!is_in_range(situation.infected + situation.suscettibles + situation.recovered,
+=======
+    // nel costruttore verifichiamo che i termini inseriti dall'utente siano
+    // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i catch
+    // nel main
+    if (!d_comp(current.contagiousness, 0., 1.)) {
+      throw std::runtime_error{
+          "Contagiousnees must be a positive value between 0 and 1"};
+    }
+    if (!d_comp(current.recovery_rate, 0., 1.)) {
+      throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
+    }
+    if (!d_comp(situation.infected, 0., 1.)) {
+      throw std::runtime_error{"The infected must be between 0 and 1  "};
+    }
+    if (!d_comp(situation.suscettibles, 0., 1.)) {
+      throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
+    }
+    if (!d_comp(situation.recovered, 0., 1.)) {
+      throw std::runtime_error{"The recovered must be between 0 and 1  "};
+    }
+    if (!d_comp(situation.infected + situation.suscettibles + situation.recovered,
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
               0.99,
               1.01)) {
       throw std::runtime_error
@@ -68,116 +100,163 @@ class pandemy
           {" The percentage of infected, susceptible and recovered people must "
            "add up to 1"};
     }
-  
-};
-//queste variabili per poter accedere anche dall'esterno ai dati che descrivono l'epidemia, forse sono inutili ne discutiamo
-//o si potrebbe creare dei metodi per accedervi solo in lettura o si potrebbe mettere direttamente situation in public, ma non penso sia una buona idea
-virus currentP = current;
+  };
+  // queste variabili per poter accedere anche dall'esterno ai dati che
+  // descrivono l'epidemia, forse sono inutili ne discutiamo o si potrebbe creare
+  // dei metodi per accedervi solo in lettura o si potrebbe mettere direttamente
+  // situation in public, ma non penso sia una buona idea
+  virus currentP = current;
 
-condition situationP = situation;
-//questo metodo fa evolvere la classe pandemy di un giorno
-void evolve()
-{
-  condition next;
+  condition situationP = situation;
+  // questo metodo fa evolvere la classe pandemy di un giorno
+  void evolve()
+  {
+    condition next;
 
-  next.infected =
-      situation.infected +
+    next.infected =
+        situation.infected +
 
-      current.contagiousness * situation.infected * situation.suscettibles -
+        current.contagiousness * situation.infected * situation.suscettibles -
 
-      situation.infected * current.recovery_rate;
+        situation.infected * current.recovery_rate;
 
-  next.recovered =
+    next.recovered =
 
-      situation.recovered + situation.infected * current.recovery_rate;
+        situation.recovered + situation.infected * current.recovery_rate;
 
-  next.time = situation.time + 1;
+    next.time = situation.time + 1;
 
-  next.suscettibles =
+    next.suscettibles =
 
-      situation.suscettibles -
-      current.contagiousness * situation.infected * situation.suscettibles;
+        situation.suscettibles -
+        current.contagiousness * situation.infected * situation.suscettibles;
 
-  if (next.suscettibles < 0) {
-    next.suscettibles = 0.;
+    if (next.suscettibles < 0) {
+      next.suscettibles = 0.;
 
-    next.infected = 1 - next.recovered;
+      next.infected = 1 - next.recovered;
+    }
+
+    situation = next;
+    assert(
+        d_comp(situation.infected + situation.recovered + situation.suscettibles,
+             0.999,
+             1.001));
+    situationP = situation;
   }
-
-  situation = next;
-
-  situationP = situation;
-}
-//questo metodo fa evolvere la classe pandemy di N step e poi ritorna un vector di pandemy di lunghezza N+1
-//la lunghezza non è N perchè ho inserito alla posizione 0 del vector la condizione da cui si parte
-std::vector<condition> evolveNTimes(int N)
-{
-  std::vector<condition> development;
-
-  development.push_back(situation);
-
-  for (int i = 1; i <= N; i++) { //perchè in 0 c'è  la condizione iniziale
-    evolve();
+  // questo metodo fa evolvere la classe pandemy di N step e poi ritorna un
+  // vector di pandemy di lunghezza N+1 la lunghezza non è N perchè ho inserito
+  // alla posizione 0 del vector la condizione da cui si parte
+  std::vector<condition> evolveNTimes(int N)
+  {
+    std::vector<condition> development;
 
     development.push_back(situation);
-  }
 
-  return development;
-}
+    for (int i = 1; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
+      evolve();
+
+      development.push_back(situation);
+    }
+
+    return development;
+  }
 };
-// questa classe se chiamata permette di creare una oggetto di pandemy e controlla anche che
-// i valori inseriti siano corretti
+// questa classe se chiamata permette di creare una oggetto di pandemy e
+// controlla anche che i valori inseriti siano corretti
 pandemy createVirus()
 {
   double Contagiousness = -1.;
   double Recovery_rate = -1.;
   double Infected = -1;
   double Suscettibles = -1.;
+<<<<<<< HEAD
   double  Recovered = -1.;
 //attraverso questa condizione il programma non procede fino a quando l'utente non inserisce dei valori allowed
   while (!is_in_range(Contagiousness, 0., 10000.)) {
+=======
+  double Recovered = -1.;
+  std::string antibug = "14";
+  // attraverso questa condizione il programma non procede fino a quando
+  // l'utente non inserisce dei valori allowed
+  while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
-              << " write a double greater then 0 that represents the "
+              << " Write a double between 0 and 1 that represents the "
 
                  "contagiousness of the virus: ";
 
-    std::cin >> Contagiousness;
+    std::cin >> antibug;
+    if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
+        antibug == "1.00" || antibug == "1.000") {
+      Contagiousness = 1;
+      break;
+    }
+    Contagiousness = string_to_decimal(antibug);
   }
+<<<<<<< HEAD
 
   while (!is_in_range(Recovery_rate, 0., 1.)) {
+=======
+  std::cout << '\n';
+  std::cout << "Contagiousness has been set to: " << Contagiousness << '\n';
+  while (!d_comp(Recovery_rate, 0., 1.) || !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the recovery "
 
                  "rate of the virus: ";
 
-    std::cin >> Recovery_rate;
+    std::cin >> antibug;
+    Recovery_rate = string_to_decimal(antibug);
   }
+  std::cout << '\n';
+  std::cout << "Recovery rate has been set to: " << Recovery_rate << '\n';
 
   virus nuovo{Contagiousness, Recovery_rate};
 
+<<<<<<< HEAD
   while (!is_in_range(Infected, 0., 1.)) {
+=======
+  while (!d_comp(Infected, 0., 1.) || !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
 
                  "percentage of infected: ";
 
-    std::cin >> Infected;
+    std::cin >> antibug;
+    if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
+        antibug == "1.00" || antibug == "1.000") {
+      Infected = 1.;
+      break;
+    }
+    Infected = string_to_decimal(antibug);
   }
+  std::cout << "Percentage of Infected has been set to: " << Infected << '\n';
 
+<<<<<<< HEAD
   while (!is_in_range(Recovered, 0., 1.) || !is_in_range(Recovered + Infected, 0., 1.)) {
+=======
+  while (!d_comp(Recovered, 0., 1.) || !d_comp(Recovered + Infected, 0., 1.) ||
+         !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
 
                  "percentage of recovered(remember recovered+infected<1): ";
 
-    std::cin >> Recovered;
+    std::cin >> antibug;
+    Recovered = string_to_int(antibug);
   }
- // sia per alleggerire il lavoro dell'utente finale che per evitare che inserisca dei valori tali per cui 
- // le percentuali infetti suscettibili e guariti sia diversa da 1 calcoliamo i suscettibili
+  std::cout << "Percentage of Recovered has been set to: " << Recovered << '\n';
+  // sia per alleggerire il lavoro dell'utente finale che per evitare che
+  // inserisca dei valori tali per cui le percentuali infetti suscettibili e
+  // guariti sia diversa da 1 calcoliamo i suscettibili
   Suscettibles = 1. - Infected - Recovered;
 
   condition now{Suscettibles, Infected, Recovered, 0};
@@ -186,8 +265,6 @@ pandemy createVirus()
 
   return generated;
 }
-// questa funzione è diventata inutile per come abbiamo implementato il programma potremmo farla diventare un metodo 
-// così situationP diventa inutile
 void Print(pandemy& a)
 {
   std::cout << '\n'
@@ -201,6 +278,5 @@ void Print(condition& a)
   std::cout << " S= " << a.suscettibles << " I=" << a.infected
             << " R=" << a.recovered << '\n';
 }
-}
+}  // namespace sir
 #endif
-
