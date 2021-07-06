@@ -1,14 +1,14 @@
-#ifndef SIR_HPP
-#define SIR_HPP
-#include <cassert>
-#include <iostream>
+
 #include <stdexcept>
 #include <vector>
 #include "useful_func.hpp"
-
+#include <iostream>
+#include <cassert>
+#ifndef SIR_HPP
+#define SIR_HPP
 namespace sir {
 
-struct condition
+struct Condition
 {
   double suscettibles;
 
@@ -19,43 +19,43 @@ struct condition
   int time;
 };
 
-struct virus
+struct Virus
 {
   double contagiousness;
 
   double recovery_rate;
 };
 
-class pandemy
+class Pandemic
 {
  private:
-  virus current;
+  Virus virus;
 
-  condition situation;
+  Condition condition;
 
  public:
-  pandemy(virus& curr, condition& initial) : current{curr}, situation{initial}
+  Pandemic(Virus& vir, Condition& cond) : virus{vir}, condition{cond}
   {
     // nel costruttore verifichiamo che i termini inseriti dall'utente siano
     // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i catch
     // nel main
-    if (!d_comp(current.contagiousness, 0., 1.)) {
+    if (!d_comp(virus.contagiousness, 0., 1.)) {
       throw std::runtime_error{
           "Contagiousnees must be a positive value between 0 and 1"};
     }
-    if (!d_comp(current.recovery_rate, 0., 1.)) {
+    if (!d_comp(virus.recovery_rate, 0., 1.)) {
       throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
     }
-    if (!d_comp(situation.infected, 0., 1.)) {
+    if (!d_comp(condition.infected, 0., 1.)) {
       throw std::runtime_error{"The infected must be between 0 and 1  "};
     }
-    if (!d_comp(situation.suscettibles, 0., 1.)) {
+    if (!d_comp(condition.suscettibles, 0., 1.)) {
       throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
     }
-    if (!d_comp(situation.recovered, 0., 1.)) {
+    if (!d_comp(condition.recovered, 0., 1.)) {
       throw std::runtime_error{"The recovered must be between 0 and 1  "};
     }
-    if (!d_comp(situation.infected + situation.suscettibles + situation.recovered,
+    if (!d_comp(condition.infected + condition.suscettibles + condition.recovered,
               0.99,
               1.01)) {
       throw std::runtime_error
@@ -64,33 +64,37 @@ class pandemy
            "add up to 1"};
     }
   };
-  // queste variabili per poter accedere anche dall'esterno ai dati che
-  // descrivono l'epidemia, 
-  virus currentP = current;
+  //getter functions
+  Virus Get_virus(){
+    return virus;
+  }
 
-  condition situationP = situation;
-  // questo metodo fa evolvere la classe pandemy di un giorno
+Condition Get_condition(){
+  return condition;
+}
+  
+  // questo metodo fa evolvere la classe Pandemic di un giorno
   void evolve()
   {
-    condition next;
+    Condition next;
 
     next.infected =
-        situation.infected +
+        condition.infected +
 
-        current.contagiousness * situation.infected * situation.suscettibles -
+        virus.contagiousness * condition.infected * condition.suscettibles -
 
-        situation.infected * current.recovery_rate;
+        condition.infected * virus.recovery_rate;
 
     next.recovered =
 
-        situation.recovered + situation.infected * current.recovery_rate;
+        condition.recovered + condition.infected * virus.recovery_rate;
 
-    next.time = situation.time + 1;
+    next.time = condition.time + 1;
 
     next.suscettibles =
 
-        situation.suscettibles -
-        current.contagiousness * situation.infected * situation.suscettibles;
+        condition.suscettibles -
+        virus.contagiousness * condition.infected * condition.suscettibles;
 
     if (next.suscettibles < 0) {
       next.suscettibles = 0.;
@@ -98,34 +102,31 @@ class pandemy
       next.infected = 1 - next.recovered;
     }
 
-    situation = next;
-    assert(
-        d_comp(situation.infected + situation.recovered + situation.suscettibles,
-             0.999,
-             1.001));
-    situationP = situation;
+    condition = next;
+    assert(double_compare(condition.infected + condition.recovered + condition.suscettibles, 1.));
+    
   }
-  // questo metodo fa evolvere la classe pandemy di N step e poi ritorna un
-  // vector di pandemy di lunghezza N+1 la lunghezza non è N perchè ho inserito
+  // questo metodo fa evolvere la classe Pandemic di N step e poi ritorna un
+  // vector di Pandemic di lunghezza N+1 la lunghezza non è N perchè ho inserito
   // alla posizione 0 del vector la condizione da cui si parte
-  std::vector<condition> evolveNTimes(int N)
+  std::vector<Condition> evolveNTimes(int N)
   {
-    std::vector<condition> development;
+    std::vector<Condition> development;
 
-    development.push_back(situation);
+    development.push_back(condition);
 
     for (int i = 1; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
       evolve();
 
-      development.push_back(situation);
+      development.push_back(condition);
     }
 
     return development;
   }
 };
-// questa classe se chiamata permette di creare una oggetto di pandemy e
+// questa classe se chiamata permette di creare una oggetto di Pandemic e
 // controlla anche che i valori inseriti siano corretti
-pandemy createVirus()
+Pandemic createVirus()
 {
   double Contagiousness = -1.;
   double Recovery_rate = -1.;
@@ -165,7 +166,7 @@ pandemy createVirus()
   std::cout << '\n';
   std::cout << "Recovery rate has been set to: " << Recovery_rate << '\n';
 
-  virus nuovo{Contagiousness, Recovery_rate};
+  Virus nuovo{Contagiousness, Recovery_rate};
 
   while (!d_comp(Infected, 0., 1.) || !valid_string(antibug)) {
     std::cout << '\n'
@@ -201,24 +202,25 @@ pandemy createVirus()
   // guariti sia diversa da 1 calcoliamo i suscettibili
   Suscettibles = 1. - Infected - Recovered;
 
-  condition now{Suscettibles, Infected, Recovered, 0};
+  Condition now{Suscettibles, Infected, Recovered, 0};
 
-  pandemy generated{nuovo, now};
+  Pandemic generated{nuovo, now};
 
   return generated;
 }
-void Print(pandemy& a)
+ inline void Print(Pandemic& a)
 {
   std::cout << '\n'
-            << " S= " << a.situationP.suscettibles
-            << " I=" << a.situationP.infected
-            << " R=" << a.situationP.recovered;
+            << " S= " << a.Get_condition().suscettibles
+            << " I=" << a.Get_condition().infected
+            << " R=" << a.Get_condition().recovered;
 }
 
-void Print(condition& a)
+inline void Print(Condition& a)
 {
   std::cout << " S= " << a.suscettibles << " I=" << a.infected
             << " R=" << a.recovered << '\n';
 }
 }  // namespace sir
+
 #endif
