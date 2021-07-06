@@ -9,7 +9,7 @@ namespace sir {
 //funzione che si rivelerà molto utile per verificare se il valore inserito 
 //dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e l'estremo sinistro exl)
 //e rende il codice molto più leggibile
-bool good(double value, double exl, double exr)
+bool is_in_range(double value, double exl, double exr)
 {
   return value >= exl && value <= exr;
 }
@@ -45,22 +45,22 @@ class pandemy
   {
     //nel costruttore verifichiamo che i termini inseriti dall'utente siano permessi 
     //e se non lo sono lanciamo delle eccezioni di cui facciamo i catch nel main
-    if (!good(current.contagiousness, 0., 100000.)) {
+    if (!is_in_range(current.contagiousness, 0., 100000.)) {
       throw std::runtime_error{"Contagiousnees must be a positive value"};
     }
-    if (!good(current.recovery_rate, 0., 1.)) {
+    if (!is_in_range(current.recovery_rate, 0., 1.)) {
       throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
     }
-    if (!good(situation.infected, 0., 1.)) {
+    if (!is_in_range(situation.infected, 0., 1.)) {
       throw std::runtime_error{"The infected must be between 0 and 1  "};
     }
-    if (!good(situation.suscettibles, 0., 1.)) {
+    if (!is_in_range(situation.suscettibles, 0., 1.)) {
       throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
     }
-    if (!good(situation.recovered, 0., 1.)) {
+    if (!is_in_range(situation.recovered, 0., 1.)) {
       throw std::runtime_error{"The recovered must be between 0 and 1  "};
     }
-    if (!good(situation.infected + situation.suscettibles + situation.recovered,
+    if (!is_in_range(situation.infected + situation.suscettibles + situation.recovered,
               0.99,
               1.01)) {
       throw std::runtime_error
@@ -135,7 +135,7 @@ pandemy createVirus()
   double Suscettibles = -1.;
   double  Recovered = -1.;
 //attraverso questa condizione il programma non procede fino a quando l'utente non inserisce dei valori allowed
-  while (!good(Contagiousness, 0., 10000.)) {
+  while (!is_in_range(Contagiousness, 0., 10000.)) {
     std::cout << '\n'
 
               << " write a double greater then 0 that represents the "
@@ -145,7 +145,7 @@ pandemy createVirus()
     std::cin >> Contagiousness;
   }
 
-  while (!good(Recovery_rate, 0., 1.)) {
+  while (!is_in_range(Recovery_rate, 0., 1.)) {
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the recovery "
@@ -157,7 +157,7 @@ pandemy createVirus()
 
   virus nuovo{Contagiousness, Recovery_rate};
 
-  while (!good(Infected, 0., 1.)) {
+  while (!is_in_range(Infected, 0., 1.)) {
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
@@ -167,7 +167,7 @@ pandemy createVirus()
     std::cin >> Infected;
   }
 
-  while (!good(Recovered, 0., 1.) || !good(Recovered + Infected, 0., 1.)) {
+  while (!is_in_range(Recovered, 0., 1.) || !is_in_range(Recovered + Infected, 0., 1.)) {
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
