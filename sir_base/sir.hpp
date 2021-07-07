@@ -7,10 +7,20 @@
 #include "useful_func.hpp"
 
 namespace sir {
+<<<<<<< HEAD
+//funzione che si rivelerà molto utile per verificare se il valore inserito 
+//dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e l'estremo sinistro exl)
+//e rende il codice molto più leggibile
+bool is_in_range(double value, double exl, double exr)
+{
+  return value >= exl && value <= exr;
+}
+=======
 // funzione che si rivelerà molto utile per verificare se il valore inserito
 // dall'utente in input sia corretto(cioè compreso fre l'estremo destro exr e
 // l'estremo sinistro exl) e rende il codice molto più leggibile
 
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
 
 struct condition
 {
@@ -42,6 +52,26 @@ class pandemy
  public:
   pandemy(virus& curr, condition& initial) : current{curr}, situation{initial}
   {
+<<<<<<< HEAD
+    //nel costruttore verifichiamo che i termini inseriti dall'utente siano permessi 
+    //e se non lo sono lanciamo delle eccezioni di cui facciamo i catch nel main
+    if (!is_in_range(current.contagiousness, 0., 100000.)) {
+      throw std::runtime_error{"Contagiousnees must be a positive value"};
+    }
+    if (!is_in_range(current.recovery_rate, 0., 1.)) {
+      throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
+    }
+    if (!is_in_range(situation.infected, 0., 1.)) {
+      throw std::runtime_error{"The infected must be between 0 and 1  "};
+    }
+    if (!is_in_range(situation.suscettibles, 0., 1.)) {
+      throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
+    }
+    if (!is_in_range(situation.recovered, 0., 1.)) {
+      throw std::runtime_error{"The recovered must be between 0 and 1  "};
+    }
+    if (!is_in_range(situation.infected + situation.suscettibles + situation.recovered,
+=======
     // nel costruttore verifichiamo che i termini inseriti dall'utente siano
     // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i catch
     // nel main
@@ -62,6 +92,7 @@ class pandemy
       throw std::runtime_error{"The recovered must be between 0 and 1  "};
     }
     if (!d_comp(situation.infected + situation.suscettibles + situation.recovered,
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
               0.99,
               1.01)) {
       throw std::runtime_error
@@ -139,11 +170,17 @@ pandemy createVirus()
   double Recovery_rate = -1.;
   double Infected = -1;
   double Suscettibles = -1.;
+<<<<<<< HEAD
+  double  Recovered = -1.;
+//attraverso questa condizione il programma non procede fino a quando l'utente non inserisce dei valori allowed
+  while (!is_in_range(Contagiousness, 0., 10000.)) {
+=======
   double Recovered = -1.;
   std::string antibug = "14";
   // attraverso questa condizione il programma non procede fino a quando
   // l'utente non inserisce dei valori allowed
   while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " Write a double between 0 and 1 that represents the "
@@ -158,9 +195,14 @@ pandemy createVirus()
     }
     Contagiousness = string_to_decimal(antibug);
   }
+<<<<<<< HEAD
+
+  while (!is_in_range(Recovery_rate, 0., 1.)) {
+=======
   std::cout << '\n';
   std::cout << "Contagiousness has been set to: " << Contagiousness << '\n';
   while (!d_comp(Recovery_rate, 0., 1.) || !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the recovery "
@@ -175,7 +217,11 @@ pandemy createVirus()
 
   virus nuovo{Contagiousness, Recovery_rate};
 
+<<<<<<< HEAD
+  while (!is_in_range(Infected, 0., 1.)) {
+=======
   while (!d_comp(Infected, 0., 1.) || !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "
@@ -192,8 +238,12 @@ pandemy createVirus()
   }
   std::cout << "Percentage of Infected has been set to: " << Infected << '\n';
 
+<<<<<<< HEAD
+  while (!is_in_range(Recovered, 0., 1.) || !is_in_range(Recovered + Infected, 0., 1.)) {
+=======
   while (!d_comp(Recovered, 0., 1.) || !d_comp(Recovered + Infected, 0., 1.) ||
          !valid_string(antibug)) {
+>>>>>>> 651f7ddbd668cd1ad6ce9b47ea7794d105b72268
     std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the "

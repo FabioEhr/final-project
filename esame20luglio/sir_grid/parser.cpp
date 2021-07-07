@@ -1,9 +1,9 @@
-#include "siroflife.hpp"
-#include "useful_func.hpp"
+ #include "siroflife.hpp"
+ #include "useful_func.hpp"
+#include <iostream>
 
-int main()
-{
-  double Contagiousness = -1;
+Virus makeVirus(){
+       double Contagiousness = -1;
   double Recovery_rate = -1;
   std::string antibug = "t";
   while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
@@ -14,6 +14,7 @@ int main()
                  "contagiousness of the virus: ";
 
     std::cin >> antibug;
+    //non va bene
     if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
         antibug == "1.00" || antibug == "1.000") {
       Contagiousness = 1;
@@ -46,11 +47,18 @@ int main()
     std::cin >> decision;
     if (decision == 'y') {
       break;
-    } else {
-      continue;
     }
   }
-  Virus vir = {Contagiousness, Recovery_rate, incubation};
+  //nome con minuscola e maiuscola
+   Virus vir = {Contagiousness, Recovery_rate, incubation};
+   return vir;
+
+}
+Grid makeGrid(){
+
+      std::string antibug = "t";
+
+ 
   int height = 1;
   while (true) {
     std::cout << "Insert Grid height (>=1)." << '\n';
@@ -77,12 +85,11 @@ int main()
       continue;
     }
   }
+  //troppi dati non va bene inizializzare così
   int sus = 0;
   int inf = 0;
   int rec = 0;
-  int mob = 0;
-  int speed = 0;
-
+  //
   std::cout << "Insert the number of susceptibles" << '\n';
   std::cin >> antibug;
   sus = string_to_int(antibug);
@@ -95,39 +102,37 @@ int main()
   std::cin >> antibug;
   rec = string_to_int(antibug);
   std::cout << "The number of recovered has been set to " << rec << '\n';
+
+
+  Grid city = {height, width, sus, inf, rec};
+  return city;  
+}
+Behaviour makeBehaviour(){
+  Behaviour be;
+  std::string antibug = "t";
+
+
   std::cout << "How many times should people move in a single day?" << '\n';
   std::cin >> antibug;
-  mob = string_to_int(antibug);
-  if (mob < 1) {
-    mob = 1;
+  be.mob = string_to_int(antibug);
+  if (be.mob < 1) {
+    be.mob = 1;
     std::cout << "Mobility has been set to the minimum value of 1" << '\n';
   } else {
-    std::cout << "Mobility has been set to " << mob << '\n';
+    std::cout << "Mobility has been set to " << be.mob << '\n';
   }
   std::cout << "How many maximum squares should people be able to move for in "
                "each direction?"
             << '\n';
   std::cin >> antibug;
-  speed = string_to_int(antibug);
-  if (speed < 1) {
-    speed = 1;
+  be.speed = string_to_int(antibug);
+  if (be.speed < 1) {
+    be.speed = 1;
     std::cout << "Speed has been set to the minimum value of 1" << '\n';
   } else {
-    std::cout << "Speed has been set to " << speed << '\n';
+    std::cout << "Speed has been set to " << be.speed << '\n';
   }
-
-  Grid city = {height, width, sus, inf, rec};
-
-  while (true) {
-    std::cout << '\n';
-    city.move_and_evolve(mob, speed, vir);
-    get_n_draw(city);
-    std::cout << '\n';
-    std::cout << "Day: " << city.day << '\n';
-    std::cout << "Number of susceptibles: " << city.susceptible << '\n';
-    std::cout << "Number of infected and incubating: " << city.infected << '\n';
-    std::cout << "Number of recovered: " << city.recovered << '\n';
-    char a;
-    std::cin >> a;
-  }
+  return be;
 }
+ 
+  
