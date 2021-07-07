@@ -27,24 +27,22 @@ TEST_CASE("Testing incubation")
   Grid test = {1, 1, 1, 1, 0};
 
   test.move_and_evolve(1, 1, vir);
-
-  CHECK(test.people[0].condition + test.people[1].condition == 4);
-  CHECK(test.population == 2);
-
-  test.move_and_evolve(1, 1, vir);
-  CHECK(test.people[0].condition + test.people[1].condition == 4);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 3);
   CHECK(test.population == 2);
   test.move_and_evolve(1, 1, vir);
-  CHECK(test.people[0].condition + test.people[1].condition == 4);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 3);
   CHECK(test.population == 2);
   test.move_and_evolve(1, 1, vir);
-  CHECK(test.people[0].condition + test.people[1].condition == 4);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 3);
   CHECK(test.population == 2);
   test.move_and_evolve(1, 1, vir);
-  CHECK(test.people[0].condition + test.people[1].condition == 4);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 3);
   CHECK(test.population == 2);
   test.move_and_evolve(1, 1, vir);
-  CHECK(test.people[0].condition + test.people[1].condition == 2);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 3);
+  CHECK(test.population == 2);
+  test.move_and_evolve(1, 1, vir);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 2);
   CHECK(test.population == 2);
 }
 TEST_CASE("Testing boundries")
@@ -84,13 +82,13 @@ TEST_CASE("Testing effectiveness of speed")
   t = get_map(test_3);
   CHECK(t[0] == 'I');
   Grid test_4 = {1, 1, 1, 1, 0};
-  test_4.people[0].condition = 0;  // sus
-  test_4.people[1].condition = 3;  // inc
+  test_4.people[0].condition = static_cast<PersonState>(0);  // sus
+  test_4.people[1].condition = static_cast<PersonState>(1);  // inc
   t = get_map(test_4);
   CHECK(t[0] == '#');
   Grid test_5 = {1, 1, 0, 1, 1};
-  test_5.people[0].condition = 1;  // inf
-  test_5.people[1].condition = 3;  // inc
+  test_5.people[0].condition = static_cast<PersonState>(2);  // inf
+  test_5.people[1].condition = static_cast<PersonState>(1);  // inc
   t = get_map(test_5);
   CHECK(t[0] == 'I');
   Grid test_6 = {1, 1, 0, 0, 8};
