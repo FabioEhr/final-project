@@ -73,7 +73,7 @@ namespace sir{
                  "percentage of recovered(remember recovered+infected<1): ";
 
     std::cin >> antibug;
-    Recovered = string_to_int(antibug);
+    Recovered = string_to_decimal(antibug);
   }
   std::cout << "Percentage of Recovered has been set to: " << Recovered << '\n';
   // sia per alleggerire il lavoro dell'utente finale che per evitare che
