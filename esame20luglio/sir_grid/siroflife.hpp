@@ -58,15 +58,13 @@ struct Cell
 
 enum class PersonState {Susceptible, Incubating, Infected, Recovered};
 
-struct Person
+class Person
 {
   Cell P_cell;
-
   PersonState condition;
-  
-  
-  
   int incub_day = 0;  // counter for days of incubation
+
+  public:
 
   Person(int m_r = 1, int m_c = 1, PersonState m_cond = PersonState::Susceptible)
       : P_cell{m_r, m_c}, condition{m_cond} {};
@@ -101,6 +99,40 @@ struct Person
       P_cell.c = 1;
     };
   }
+
+  //getters and setters
+
+  Cell Get_P_Cell() {
+    return P_cell;
+  }
+
+  void Set_P_Cell(Cell set_cell) { //not used 
+    P_cell.r = set_cell.r;
+    P_cell.c = set_cell.c;
+  }
+
+  void Set_P_Cell(int set_r, int set_c) { //not used 
+  P_cell.r = set_r;
+  P_cell.c = set_c;
+  }
+
+
+  PersonState Get_Condition () {
+    return condition;
+  }
+
+  void Set_Condition (PersonState set_condition) {
+    condition = set_condition;
+  }
+
+  int Get_Incub_Day () {
+    return incub_day;
+  }
+
+  void Set_Incub_Day (int set_incub_day) {
+    incub_day = set_incub_day;
+  }
+
 };
 
 inline std::string cond_to_string(PersonState cond)
@@ -165,11 +197,7 @@ struct Grid
     std::default_random_engine generator_grid2{grid_r2()};
     std::uniform_int_distribution<int> grid_c(1, width);
 
-      people[i].P_cell.r = grid_r(grid_r1);
-
-      
-      
-      people[i].P_cell.c = grid_c(grid_r2);
+      people[i].Set_P_Cell(grid_r(grid_r1),grid_c(grid_r2));
     }
   }
 
@@ -191,12 +219,12 @@ struct Grid
     std::set<struct Cell> inf_cells;
 
     for (Person& inf_person : people) {
-      if (inf_person.condition == PersonState::Infected) {
+      if (inf_person.Get_Condition() == PersonState::Infected) {
         // having a set instead of a vector natively prevents inserting the same
         // cell multiple times and also has a binary search algorithm since it's
         // sorted, improving efficiency
 
-        inf_cells.insert(inf_person.P_cell);
+        inf_cells.insert(inf_person.Get_P_Cell());
       };
     };
 
@@ -204,8 +232,8 @@ struct Grid
 
     if (inf_cells.begin() != inf_cells.end()) {
       for (Person& sus_person : people) {
-        if (sus_person.condition == PersonState::Susceptible &&
-            (inf_cells.find(sus_person.P_cell) !=
+        if (sus_person.Get_Condition() == PersonState::Susceptible &&
+            (inf_cells.find(sus_person.Get_P_Cell()) !=
              inf_cells.end())) {  // find a sus person in an infected cell.
           // find returns an iterator to the end of the vector if it doesn't
           // find anything
@@ -217,13 +245,13 @@ struct Grid
           std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
 
           if ((grid_evolve_distr2(grid_evolve_r2)) <= e_virus.contagiousness) {
-            sus_person.condition = PersonState::Incubating;
+            sus_person.Set_Condition(PersonState::Incubating);
             --susceptible;
             ++infected;  // infected people and incubating count as "infected"
                          // in general
 
             std::cout << "person " << person_index << " infected in cell ("
-                      << sus_person.P_cell.r << "," << sus_person.P_cell.c
+                      << sus_person.Get_P_Cell().r << "," << sus_person.Get_P_Cell().c
                       << ")" << '\n';  // optional, it's for debugging purposes
           };
         };
@@ -254,27 +282,27 @@ struct Grid
 
     for (Person& inf_or_incub : people) {
       // making infected people recover based on recovery_rate.
-      if (inf_or_incub.condition == PersonState::Infected) {
+      if (inf_or_incub.Get_Condition() == PersonState::Infected) {
         std::random_device grid_evolve_r1;
         std::default_random_engine generator_grid_evolve1{grid_evolve_r1()};
         std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
 
         if (grid_evolve_distr1(grid_evolve_r1) <= mne_virus.recovery_rate) {
-          inf_or_incub.condition = PersonState::Recovered;
+          inf_or_incub.Set_Condition(PersonState::Recovered);
           --infected;
           ++recovered;
         };
 
-      } else if (inf_or_incub.condition == PersonState::Incubating) {  // implemented incubation so that the people that get
+      } else if (inf_or_incub.Get_Condition() == PersonState::Incubating) {  // implemented incubation so that the people that get
                        // infected can't infect other people right away, unless
                        // incubation=0 days
 
-        if (inf_or_incub.incub_day < mne_virus.incubation_time) {
-          ++inf_or_incub.incub_day;
+        if (inf_or_incub.Get_Incub_Day() < mne_virus.incubation_time) {
+          inf_or_incub.Set_Incub_Day(inf_or_incub.Get_Incub_Day() + 1);
 
         } else {
-          inf_or_incub.condition = PersonState::Infected;
-          inf_or_incub.incub_day = 0;
+          inf_or_incub.Set_Condition(PersonState::Infected);
+          inf_or_incub.Set_Incub_Day(0);
         };
       };
 
@@ -314,65 +342,65 @@ inline std::vector<char> get_map(Grid const& board)
   // information priority is: INFECTED, SUSCEPTIBLE, INCUBATING, RECOVERED,
   // EMPTY SPACE
   for (int j = 0; j < n_pieces; ++j) {
-    row = (pieces[j]).P_cell.r;
-    column = (pieces[j]).P_cell.c;
+    row = (pieces[j]).Get_P_Cell().r;
+    column = (pieces[j]).Get_P_Cell().c;
     int position_in_map = (row - 1) * width + column - 1;
     char cluster = map[position_in_map];
     switch (cluster) {
       case '-':  // if the space is empty, it is overwritten by the condition
-        if (pieces[j].condition == PersonState::Susceptible) {
+        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = 'S';
         }
-        if (pieces[j].condition == PersonState::Infected) {
+        if (pieces[j].Get_Condition() == PersonState::Infected) {
           map[position_in_map] = 'I';
         }
-        if (pieces[j].condition == PersonState::Recovered) {
+        if (pieces[j].Get_Condition() == PersonState::Recovered) {
           map[position_in_map] = 'R';
         }
-        if (pieces[j].condition == PersonState::Incubating) {
+        if (pieces[j].Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = 'F';  // incubating inFection
         }
         break;
       case 'S':  // if it's suceptible
-        if (pieces[j].condition == PersonState::Susceptible) {
+        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = 'S';  // susceptible-rec cluster
         }
-        if (pieces[j].condition == PersonState::Infected) {
+        if (pieces[j].Get_Condition() == PersonState::Infected) {
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
                     // infected who didn't manage to infect a susceptible
         }
-        if (pieces[j].condition == PersonState::Incubating) {
+        if (pieces[j].Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = '#';  // incubating-sus encounter
         }
         // all other cases are of lower priority
         break;
       case 'I':
-        if (pieces[j].condition == PersonState::Susceptible) {
+        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
                     // infected who didn't manage to infect a susceptible
-          if (pieces[j].condition == PersonState::Infected) {
+          if (pieces[j].Get_Condition() == PersonState::Infected) {
             map[position_in_map] =
                 'I';  // infected cluster, an I stands for one or more infected
           }
           break;
           case 'R':
-            if (pieces[j].condition == PersonState::Susceptible) {
+            if (pieces[j].Get_Condition() == PersonState::Susceptible) {
               map[position_in_map] = 'S';  // sus are higher priority
             }
-            if (pieces[j].condition == PersonState::Infected) {
+            if (pieces[j].Get_Condition() == PersonState::Infected) {
               map[position_in_map] = 'I';  // inf are higher priority
             }
-            if (pieces[j].condition == PersonState::Incubating) {
+            if (pieces[j].Get_Condition() == PersonState::Incubating) {
               map[position_in_map] = 'F';  // inc are higher priority
             }
             break;
           case 'F':
-            if (pieces[j].condition == PersonState::Susceptible) {
+            if (pieces[j].Get_Condition() == PersonState::Susceptible) {
               map[position_in_map] = '#';
             }  // sus-inc cluster, at least a sus and inc in tile
-            if (pieces[j].condition == PersonState::Infected) {
+            if (pieces[j].Get_Condition() == PersonState::Infected) {
               map[position_in_map] = 'I';
             }  // infected are higher priority
             break;
@@ -380,7 +408,7 @@ inline std::vector<char> get_map(Grid const& board)
           case '!':
             break;  // highest priority
           case '#':
-            if (pieces[j].condition == PersonState::Infected) {
+            if (pieces[j].Get_Condition() == PersonState::Infected) {
               map[position_in_map] = '!';
             }  // infected-sus is more important than inf-inc
         }
