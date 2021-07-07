@@ -1,7 +1,7 @@
  #include "siroflife.hpp"
  #include "useful_func.hpp"
 #include <iostream>
-
+namespace grid{
 Virus makeVirus(){
        double Contagiousness = -1;
   double Recovery_rate = -1;
@@ -136,3 +136,8 @@ Behaviour makeBehaviour(){
 }
  
   
+
+
+
+
+}

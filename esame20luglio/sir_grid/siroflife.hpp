@@ -7,6 +7,7 @@
 #include <vector>
 #include <cassert>
 #include <string>
+namespace grid{
 struct Behaviour{
   int mob = 0;
   int speed = 0;
@@ -147,7 +148,7 @@ inline std::string cond_to_string(PersonState cond)
     return "incubating";
 };
 
-struct Grid
+class Grid
 {
   int height;
   int width;
@@ -161,6 +162,8 @@ struct Grid
   std::vector<Person> people;
 
   int day = 0; 
+
+  public:
 
   Grid(int m_h = 1, int m_w = 1, int m_sus = 1, int m_inf = 0, int m_rec = 0)
       : height{m_h}
@@ -182,13 +185,7 @@ struct Grid
     for (int rec_i = 0; rec_i < recovered; ++rec_i) {
       people.push_back(Person{1, 1, PersonState::Recovered});
     }
-
-
-    for (int i = 0; i < population; ++i) {
-      // taking all the people from (1,1) to a random starting position
-      // (people[i]).r = a_random_number between 1 and  height
-      // (people[i]).c = a_random_number between 1 and  width
-
+    //inserisco qui la dichiarazione dei random generator per non doverli dichiarare tutte le volte
     std::random_device grid_r1;
     std::default_random_engine generator_grid1{grid_r1()};
     std::uniform_int_distribution<int> grid_r(1, height);
@@ -196,6 +193,13 @@ struct Grid
     std::random_device grid_r2;
     std::default_random_engine generator_grid2{grid_r2()};
     std::uniform_int_distribution<int> grid_c(1, width);
+
+    for (int i = 0; i < population; ++i) {
+      // taking all the people from (1,1) to a random starting position
+      // (people[i]).r = a_random_number between 1 and  height
+      // (people[i]).c = a_random_number between 1 and  width
+
+    
 
       people[i].Set_P_Cell(grid_r(grid_r1),grid_c(grid_r2));
     }
@@ -231,6 +235,10 @@ struct Grid
     int person_index = 1;
 
     if (inf_cells.begin() != inf_cells.end()) {
+      std::random_device grid_evolve_r2;
+      std::default_random_engine generator_grid_evolve2{grid_evolve_r2()};
+      std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
+
       for (Person& sus_person : people) {
         if (sus_person.Get_Condition() == PersonState::Susceptible &&
             (inf_cells.find(sus_person.Get_P_Cell()) !=
@@ -240,10 +248,7 @@ struct Grid
           // if it finds it then sus_person.condition=1  based on a probability
           // (random number between 0 and 1, if number<= virus contagiousness it
           // gets infected)
-          std::random_device grid_evolve_r2;
-          std::default_random_engine generator_grid_evolve2{grid_evolve_r2()};
-          std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
-
+          
           if ((grid_evolve_distr2(grid_evolve_r2)) <= e_virus.contagiousness) {
             sus_person.Set_Condition(PersonState::Incubating);
             --susceptible;
@@ -279,13 +284,14 @@ struct Grid
 
     // infection can happen multiple times because of mobility but recovery
     // isn't affected
+    std::random_device grid_evolve_r1;
+    std::default_random_engine generator_grid_evolve1{grid_evolve_r1()};
+    std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
 
     for (Person& inf_or_incub : people) {
       // making infected people recover based on recovery_rate.
       if (inf_or_incub.Get_Condition() == PersonState::Infected) {
-        std::random_device grid_evolve_r1;
-        std::default_random_engine generator_grid_evolve1{grid_evolve_r1()};
-        std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
+        
 
         if (grid_evolve_distr1(grid_evolve_r1) <= mne_virus.recovery_rate) {
           inf_or_incub.Set_Condition(PersonState::Recovered);
@@ -321,12 +327,81 @@ struct Grid
       (*this).move_and_evolve(Nmobility, Ngrid_speed, mnen_virus);
     };
   }
+
+  //getters and setters 
+
+  int Get_Height () const {
+    return height;
+  }
+
+  void Set_Height (int set_height) {
+    height = set_height;
+  }
+
+  int Get_Width () const {
+    return width;
+  }
+
+  void Set_Width (int set_width){
+    width = set_width;
+  }
+
+  int Get_Susceptible () const {
+    return susceptible;
+  }
+
+  void Set_Susceptible (int set_susceptible) {
+    susceptible = set_susceptible;
+  }
+
+  int Get_Infected () const {
+    return infected;
+  }
+
+  void Set_infected (int set_infected) {
+    infected = set_infected;
+  }
+
+  int Get_Recovered () const {
+    return recovered;
+  }
+
+  void Set_Recovered (int set_recovered) {
+    recovered = set_recovered;
+  }
+
+  int Get_Population () {
+    return population;
+  }
+
+  void Set_Population (int set_population) {
+    population = set_population;
+  } 
+
+  //commented since they are not used
+
+  std::vector<Person> Get_People () const {
+    return people;
+  }
+
+  void Set_People (std::vector<Person> set_people) {
+    people = set_people;
+  }  
+
+  int Get_Day () const {
+    return day;
+  }
+
+  void Set_Day (int set_day) {
+    day = set_day;
+  }
+
 };
 
 inline std::vector<char> get_map(Grid const& board)
 {
-  int height = board.height;
-  int width = board.width;
+  int height = board.Get_Height();
+  int width = board.Get_Width();
   int area = width * height;
 
   std::vector<char> map;
@@ -334,7 +409,7 @@ inline std::vector<char> get_map(Grid const& board)
     map.push_back('-');
   }
 
-  std::vector<Person> pieces = board.people;
+  std::vector<Person> pieces = board.Get_People();
 
   int n_pieces = pieces.size();
   int row = 0;
@@ -420,7 +495,7 @@ inline std::vector<char> get_map(Grid const& board)
 inline void draw_map(std::vector<char> const& map, Grid const& board)
 {
   int size = map.size();
-  int width = board.width;
+  int width = board.Get_Width();
   for (int i = 0; i < size; ++i) {
     if (i % width == 0) {
       std::cout << '\n';
@@ -432,5 +507,7 @@ inline void get_n_draw(Grid const& board)
 {
   draw_map(get_map(board), board);
 }
+}
+
 
 #endif

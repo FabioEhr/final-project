@@ -53,12 +53,14 @@ namespace sir{
                  "percentage of infected: ";
 
     std::cin >> antibug;
+    std::cout<<antibug<<'\n';
     if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
         antibug == "1.00" || antibug == "1.000") {
       Infected = 1.;
       break;
     }
     Infected = string_to_decimal(antibug);
+    std::cout<<Infected+Recovered<<'\n';
   }
   std::cout << "Percentage of Infected has been set to: " << Infected << '\n';
 
