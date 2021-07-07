@@ -1,10 +1,10 @@
 #include <iostream>
-#include <random>
-#include <string>
 #include "events.hpp"
 #include "yae.hpp"
 #include "interface.hpp"
 #include "presets.hpp"
+
+
 int main()
 {
   std::cout << "Welcome!" << '\n';
@@ -47,14 +47,10 @@ int main()
     }
     continue;
   }  // end of city selection loop
-  int turns = 0;
-  int D_inf = 0;      // aumento di contagi
-  int D_crit = 0;     // aumento di casi critici
-  int D_rec = 0;      // aumento di recoveries
-  int D_deaths = 0;   // aumento di morti
-  int D_dismmis = 0;  // aumento di persone guarite in ospedale
-  int D_ovrfl = 0;  // aumento di persone a cui è negato l'accesso in ospedale
+ 
+  Deltas delta; //includes various deltas i.e. number of new infected this week
   int omega = 0;    // exit condition
+
   while (true) {    // mother game loop
     if (playground.knowledge() >= 50) {
       state_function Pfizer = playground.Get_status();
@@ -62,18 +58,18 @@ int main()
       playground.Set_status(Pfizer);
       std::cout << "The vaccine is ready for rollout!" << '\n';
     }
-    std::cout << "Weeks since start of simulation: " << turns << '\n';
+    
 
-    if (turns != 0) {
+    if (playground.Get_turns() != 0) {
       rnd_events(playground);
     }
 
-    if (D_ovrfl > 0) {
+    if (delta.D_ovrfl > 0) { //hospital crisis, lowers morale
       no_beds(playground);
     }
 
     print_situation(
-        playground, D_inf, D_crit, D_deaths, D_ovrfl, D_rec, D_dismmis, turns);
+        playground, delta);
 
     char input;
     while (true) {  // choices loop
@@ -82,26 +78,24 @@ int main()
       if (input == 'n') {
         break;
       }
-      // Next option is useful for testing. To have a more significant test
-      // on high skips tests it's suggested to disable random events
-      // since they may alter significantly the results
-
-      if (input == '#') {  // hidden option for testing
+      
+      if (input == '#') {  
         std::cout << "How many weeks would you like to skip?" << '\n';
         std::string number;
         std::cin >> number;
         int n = string_to_int(number);
 
         for (int i = 0; i < n - 1; ++i) {
+          delta.update(playground);
           playground.evolve();
           playground.next_treasury();
           rnd_events(playground);
-          ++turns;
-          D_ovrfl = playground.next_turn_ovrfl();
-          if (D_ovrfl > 0) {
+          playground.next_turn();
+          
+          if (delta.D_ovrfl > 0) {
             no_beds(playground);
           }
-          omega = playground.N() * (playground.total_per_infected() +
+           omega = playground.N() * (playground.total_per_infected() +
 
                                     playground.total_per_hosp());
           if (omega == 0) {
@@ -113,18 +107,13 @@ int main()
       execute(playground, input);
       continue;
     }  // closes choices loop
-    D_inf = playground.next_turn_inf();
-    D_crit = playground.next_turn_crit();
-    D_rec = playground.next_turn_rec();
-    D_deaths = playground.next_turn_deaths();
-    D_dismmis = playground.next_turn_dismissed();
-    D_ovrfl = playground.next_turn_ovrfl();
+    delta.update(playground);
     playground.evolve();
     playground.next_treasury();  // updates treasury, infected people don't work
     omega = playground.N() * (playground.total_per_infected() +
 
                               playground.total_per_hosp());
-    ++turns;
+    playground.next_turn();
     if (omega == 0) {
       break;
     }
@@ -138,7 +127,7 @@ int main()
   int d_y = playground.N() * playground.Young().ded * playground.Y_per();
   int d_a = playground.N() * playground.Adults().ded * playground.A_per();
   int d_e = playground.N() * playground.Elders().ded * playground.E_per();
-  std::cout << "The pandemic lasted: " << turns << " weeks" << '\n';
+  std::cout << "The pandemic lasted: " << playground.Get_turns() << " weeks" << '\n';
   std::cout << "Total deaths: " << d_total << '\n';
   std::cout << "Number of Young/Adults/Elders who died: " << d_y << " / " << d_a
             << " / " << d_e << '\n';
@@ -146,6 +135,6 @@ int main()
   char last_decision;
   std::cin >> last_decision;
   if (last_decision == 'i') {
-    print_situation(playground, 0, 0, 0, 0, 0, 0, 0);
+    print_situation(playground, delta);
   }
 }

@@ -2,6 +2,7 @@
 #define YAE_HPP
 #include <cassert>
 #include "useful_func.hpp"
+//#include <iostream>
 struct Virus
 {
   double b;  // contagiosità
@@ -114,6 +115,7 @@ class City
   int know = 0;         // knowledge, used for vaccines
   Hospitals h;          // sistema sanitario
   state_function stat;  // info on measures
+  int turns=0;
   void invariant()
   {
     assert(double_compare((y_per + a_per + e_per), 1));
@@ -200,6 +202,9 @@ class City
   Virus Get_virus()
   {
     return vir;
+  }
+  int Get_turns(){
+    return turns;
   }
 
   // add functions
@@ -303,7 +308,10 @@ class City
   {
     return treasure;
   }
-
+ //next functions
+ void next_turn(){
+   ++turns;
+ }
   void next_treasury()
   {
     // income change (infected people don't work?)
@@ -363,22 +371,44 @@ class City
     }
     if (vir.d + h.d_chance_mod > 1) {
       h.d_chance_mod -= 0.1 * h.d_chance_mod;
+      hosp_mod_fixer();
     }
     if (vir.g + h.r_chance_mod > 1.) {
       h.r_chance_mod = 1. - vir.g;  // all heal
       h.d_chance_mod = -vir.d;      // no one dies
     }
   }
-
-  // functions to display deltas in game-loop, they do the same thing as evolve, read evolve() first
-  double D_inf_y()
-  {  // percentage delta inside of young
+  //functions to evaluate probability of inf-sus encounter for various ages
+  double y_sus_inf_encounter(){
     double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
     double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf -
                    mob.yy * y.inf * mob.ye * e.inf -
                    mob.ya * a.inf * mob.ye * e.inf;
     double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
-    double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
+return p_y_1+p_y_2+p_y_3;
+  }
+  double a_sus_inf_encounter(){
+ double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
+    double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf -
+                   mob.ya * y.inf * mob.ae * e.inf -
+                   mob.aa * a.inf * mob.ae * e.inf;
+    double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
+    return p_a_1+p_a_2+p_a_3;
+  }
+  double e_sus_inf_encounter(){
+double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
+    double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf -
+                   mob.ye * y.inf * mob.ee * e.inf -
+                   mob.ae * a.inf * mob.ee * e.inf;
+    double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
+    return p_e_1+p_e_2+p_e_3;
+  }
+
+  // functions to display deltas in game-loop, they do the same things as evolve 
+  double D_inf_y()
+  {  // percentage delta inside of young
+    
+    double D_y = vir.b * y.sus * (y_sus_inf_encounter());
     if (D_y < 0 || D_y > 1) {
       D_y = y.sus;
     }
@@ -387,12 +417,8 @@ class City
   }
   double D_inf_a()
   {
-    double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
-    double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf -
-                   mob.ya * y.inf * mob.ae * e.inf -
-                   mob.aa * a.inf * mob.ae * e.inf;
-    double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
-    double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
+   
+    double D_a = vir.b * a.sus * (a_sus_inf_encounter());
     if (D_a < 0 || D_a > 1) {
       D_a = a.sus;
     }
@@ -401,12 +427,8 @@ class City
   }
   double D_inf_e()
   {
-    double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
-    double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf -
-                   mob.ye * y.inf * mob.ee * e.inf -
-                   mob.ae * a.inf * mob.ee * e.inf;
-    double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
-    double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
+    
+    double D_e = vir.b * e.sus * (e_sus_inf_encounter());
     if (D_e < 0 || D_e > 1) {
       D_e = e.sus;
     }
@@ -455,7 +477,7 @@ class City
     double current_young_inf = y.inf + D_inf_y();
     double current_adult_inf = a.inf + D_inf_a();
     double current_elder_inf = e.inf + D_inf_e();
-    int crit = next_turn_crit();
+    double crit = next_turn_crit();
     double overflow = 0;
     if (crit != 0) {
       overflow = (h.patients + crit - h.n_beds) / crit;
@@ -547,48 +569,21 @@ class City
     // maniera deterministica le infezioni della popolazione di tipo x
 
     // susceptibles to infected
-
+ double D_y = D_inf_y();
+    double D_a = D_inf_a();
+    double D_e=D_inf_e();
+   
     // young people part
-    double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
-    double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf -
-                   mob.yy * y.inf * mob.ye * e.inf -
-                   mob.ya * a.inf * mob.ye * e.inf;
-    double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
-    double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
-    // this if should be valid only in cases of ridicolously high mobility,
-    // which shouldn't be reachable in the game loop(with presets). For improved
-    // solidity, it's better if it stays on
-    if (D_y < 0 || D_y > 1) {
-      D_y = y.sus;
-      // negative values are reached only in cases of absurdly high mobilities,
-      // so all susceptibles turn into inf
-    }
+    
     y.sus -= D_y;
     y.inf += D_y;
 
     // adults part
-    double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
-    double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf -
-                   mob.ya * y.inf * mob.ae * e.inf -
-                   mob.aa * a.inf * mob.ae * e.inf;
-    double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
-    double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
-    if (D_a < 0 || D_a > 1) {
-      D_a = a.sus;
-    }
+    
     a.sus -= D_a;
     a.inf += D_a;
 
     // elders part
-    double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
-    double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf -
-                   mob.ye * y.inf * mob.ee * e.inf -
-                   mob.ae * a.inf * mob.ee * e.inf;
-    double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
-    double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
-    if (D_e < 0 || D_e > 1) {
-      D_e = e.sus;
-    }
     e.sus -= D_e;
     e.inf += D_e;
 
@@ -696,21 +691,11 @@ class City
     std::cout << mob.ye << " " << mob.ae << " " << mob.ee << '\n';
     std::cout << '\n';
     // young people part
-    double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
-    double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf -
-                   mob.yy * y.inf * mob.ye * e.inf -
-                   mob.ya * a.inf * mob.ye * e.inf;
-    double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
-    double D_y = vir.b * y.sus * (p_y_1 + p_y_2 + p_y_3);
-    // this if should be valid only in cases of ridicolously high mobility,
-    // which shouldn't be reachable in the game loop(with presets). For improved
-    // solidity, it's better if it stays on
-    if (D_y < 0 || D_y > 1) {
-      D_y = y.sus;
-      // negative values are reached only in cases of absurdly high mobilities,
-      // so all susceptibles turn into inf
-    }
-    int displayed_y = population * y_per * D_inf_y();
+    double D_y =D_inf_y();
+    double D_a= D_inf_a();
+    double D_e= D_inf_e();
+
+    
     y.sus -= D_y;
     y.inf += D_y;
     std::cout << "D_y_%: " << D_y
@@ -719,19 +704,8 @@ class City
     int delta_y = D_y * population * y_per;
     std::cout << "D_y: " << delta_y << '\n';
 
-    std::cout << "Displayed value: " << displayed_y << '\n';
     std::cout << '\n';
     // adults part
-    double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
-    double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf -
-                   mob.ya * y.inf * mob.ae * e.inf -
-                   mob.aa * a.inf * mob.ae * e.inf;
-    double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
-    double D_a = vir.b * a.sus * (p_a_1 + p_a_2 + p_a_3);
-    if (D_a < 0 || D_a > 1) {
-      D_a = a.sus;
-    }
-    int displayed_a = D_inf_a() * population * a_per;
     a.sus -= D_a;
     a.inf += D_a;
     std::cout << "D_a%: " << D_a
@@ -740,20 +714,10 @@ class City
     int delta_a = D_a * population * a_per;
     std::cout << "D_a: " << delta_a << '\n';
 
-    std::cout << "Displayed value: " << displayed_a << '\n';
     std::cout << '\n';
 
     // elders part
-    double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
-    double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf -
-                   mob.ye * y.inf * mob.ee * e.inf -
-                   mob.ae * a.inf * mob.ee * e.inf;
-    double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
-    double D_e = vir.b * e.sus * (p_e_1 + p_e_2 + p_e_3);
-    if (D_e < 0 || D_e > 1) {
-      D_e = e.sus;
-    }
-    int displayed_e = D_inf_e() * population * e_per;
+    
     e.sus -= D_e;
     e.inf += D_e;
 
@@ -763,13 +727,17 @@ class City
     int delta_e = D_e * population * e_per;
     std::cout << "D_e: " << delta_e << '\n';
 
-    std::cout << "Displayed value: " << displayed_e << '\n';
     std::cout << '\n';
 
-    int delta_inf = delta_y + delta_a + delta_e;
-    std::cout << "Total new infected: " << delta_inf << '\n';
-    std::cout << "Displayed value: " << displayed_a + displayed_e + displayed_y
-              << '\n';
+    int delta_inf = population*(D_e*e_per+D_y*y_per+D_a*a_per);
+    std::cout << "Displayed value: " << delta_inf << '\n';
+    std::cout << "Delta sum: " << delta_y+ delta_a+ delta_e << '\n';
+    std::cout<< "Apparent rounding error: "<< delta_inf-delta_y-delta_a-delta_e << '\n';
+    //this apparent rounding error is irrelevant because we always use percentages for calculations.
+    //the discrepancy is due to the way the compiler rounds integers from double*ints operations  
+    //the displayed value is the most accurate one, because in the Delta sum the compiler rounds
+    //3 times, while in the displayed one there is only one rounding. Still for testing and calibration
+    //it's usefull to have a rough estimate on how many young/adults/elders are infected.           
     std::cout << '\n';
     // saving the current percentages of infected, since we have to
     // do multiple calculations based on them
@@ -932,6 +900,25 @@ class City
   double total_per_hosp()
   {
     return (y.hosp * y_per + a.hosp * a_per + e.hosp * e_per);
+  }
+};
+//used for a cleaner code
+struct Deltas
+{ 
+ int D_inf = 0;      // aumento di contagi
+  int D_crit = 0;     // aumento di casi critici
+  int D_rec = 0;      // aumento di recoveries
+  int D_deaths = 0;   // aumento di morti
+  int D_dismmis = 0;  // aumento di persone guarite in ospedale
+  int D_ovrfl = 0;  // aumento di persone a cui è negato l'accesso in ospedale
+  //must be run before evolve!!
+  void update(City & playground){
+    D_inf = playground.next_turn_inf();
+    D_crit = playground.next_turn_crit();
+    D_rec = playground.next_turn_rec();
+    D_deaths = playground.next_turn_deaths();
+    D_dismmis = playground.next_turn_dismissed();
+    D_ovrfl = playground.next_turn_ovrfl();
   }
 };
 

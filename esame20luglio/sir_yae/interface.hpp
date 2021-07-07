@@ -1,14 +1,13 @@
 #ifndef INTERFACE_HPP
 #define INTERFACE_HPP
-#include <iostream>
 #include <random>
-#include <string>
 #include "decisions.hpp"
 #include "yae.hpp"
 #include "useful_func.hpp"
 
 void print_opt(City& playground)
 {
+  
   std::cout << "Current treasury: " << playground.$() << '\n';
   std::cout << "Here are your options :" << '\n';
   state_function current = playground.Get_status();
@@ -187,14 +186,8 @@ std::string mood(Age const& person)
 }
 
 void print_situation(City& playground,
-                     int D_inf,
-                     int D_crit,
-                     int D_deaths,
-                     int D_overflow,
-                     int D_rec,
-                     int D_dism,
-                     int turns)
-{
+                     Deltas& deltas)
+{std::cout<< "Weeks since start of simulation: " << playground.Get_turns() << '\n';
   int n = playground.N();
   int sus = n * playground.total_per_susceptibles();
   int inf = n * playground.total_per_infected();
@@ -204,16 +197,16 @@ void print_situation(City& playground,
              n_hospitalized;  // by calculating this way we avoid double-->int
                               // approximations and display always the same sum.
                               // (else there is a +/- 1 person error)
-  if (turns > 0) {
-    std::cout << "This week " << D_inf << " new infections were registered, "
+  if (playground.Get_turns() > 0) {
+    std::cout << "This week " << deltas.D_inf << " new infections were registered, "
               << '\n';
-    std::cout << "This week " << D_crit
+    std::cout << "This week " << deltas.D_crit
               << " new people were in critical condition." << '\n';
-    std::cout << "This week " << D_deaths
-              << " new virus-related deaths were registered, " << D_overflow
-              << " of which were due to the lack of hospitals bed." << '\n';
-    std::cout << "This week " << D_rec << " people recovered from the virus, "
-              << D_dism << " of which thanks to our medical staff." << '\n';
+    std::cout << "This week " << deltas.D_deaths
+              << " new virus-related deaths were registered, " << deltas.D_ovrfl
+              << " of which were due to the lack of hospitals' beds." << '\n';
+    std::cout << "This week " << deltas.D_rec << " people recovered from the virus, "
+              << deltas.D_dismmis << " of which thanks to our medical staff." << '\n';
   }
   std::cout << "Number of susceptibles :" << sus << '\n';
   std::cout << "Number of infected :" << inf << '\n';
