@@ -42,7 +42,7 @@ TEST_CASE("Testing incubation")
   CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 3);
   CHECK(test.population == 2);
   test.move_and_evolve(1, 1, vir);
-  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 2);
+  CHECK(static_cast<int>(test.people[0].condition) + static_cast<int>(test.people[1].condition) == 4);
   CHECK(test.population == 2);
 }
 TEST_CASE("Testing boundries")
