@@ -384,10 +384,6 @@ class Grid
     return people;
   }
 
-  std::vector<Person>& Get_People_Ref () {
-    return people;
-  }  
-
   void Set_People (std::vector<Person> set_people) {
     people = set_people;
   }  

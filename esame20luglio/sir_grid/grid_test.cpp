@@ -2,7 +2,7 @@
 #include "doctest.h"
 #include "siroflife.hpp"
 #include "useful_func.hpp"
-
+#include <vector>
 TEST_CASE("Testing recovery rate")
 {
   grid::Virus vir = {0., 0.5, 0};  // 50% chance of recovery
@@ -98,15 +98,23 @@ TEST_CASE("Testing effectiveness of speed")
   t = grid::get_map(test_3);
   CHECK(t[0] == 'I');
 
-  grid::Grid test_4 = {1, 1, 1, 0, 1};
-  test_4.Get_People_Ref()[0].Set_Condition(static_cast<grid::PersonState>(0));  // sus
-  test_4.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));  // inc
+  grid::Grid test_4 = {1, 1, 1, 1, 0};
+  std::vector<grid::Person> people_test_4; 
+  people_test_4.push_back(grid::Person{1, 1, grid::PersonState::Susceptible});
+  people_test_4.push_back(grid::Person{1, 1, grid::PersonState::Incubating});
+  test_4.Set_People(people_test_4);
+  //test_4.Get_People_Ref()[0].Set_Condition(static_cast<grid::PersonState>(0));  // sus
+  //test_4.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));  // inc
   t = grid::get_map(test_4);
   CHECK(t[0] == '#');
 
   grid::Grid test_5 = {1, 1, 0, 1, 1};
-  test_5.Get_People_Ref()[0].Set_Condition(static_cast<grid::PersonState>(2));  // inf
-  test_5.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));  // inc
+  std::vector<grid::Person> people_test_5; 
+  people_test_5.push_back(grid::Person{1, 1, grid::PersonState::Infected});
+  people_test_5.push_back(grid::Person{1, 1, grid::PersonState::Incubating});
+  test_5.Set_People(people_test_5);
+  //test_5.Get_People_Ref()[0].Set_Condition(static_cast<grid::PersonState>(2));  // inf
+  //test_5.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));  // inc
   t = grid::get_map(test_5);
   CHECK(t[0] == 'I');
 
