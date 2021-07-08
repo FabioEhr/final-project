@@ -60,7 +60,6 @@ namespace sir{
       break;
     }
     Infected = string_to_decimal(antibug);
-    std::cout<<Infected+Recovered<<'\n';
   }
   std::cout << "Percentage of Infected has been set to: " << Infected << '\n';
 
