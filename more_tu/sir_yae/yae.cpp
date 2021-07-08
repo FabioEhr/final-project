@@ -51,19 +51,19 @@ void City::invariant()
   {
     assert(double_compare((y_per + a_per + e_per), 1));
   }
-int const City::N()
+int City::N()
   {
     return population;
   }
-  double const City::Y_per()
+  double City::Y_per()
   {
     return y_per;
   }
-  double const City::A_per()
+  double City::A_per()
   {
     return a_per;
   }
-  double const City::E_per()
+  double City::E_per()
   {
     return e_per;
   }
@@ -103,7 +103,7 @@ int const City::N()
   {
     return vir;
   }
-  int const City::Get_turns(){
+  int City::Get_turns(){
     return turns;
   }
 //add functions

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/YAE.dir/game_main.cpp.o  -o YAE 

@@ -110,13 +110,13 @@ class City
   }
 
   // getter functions
-  int const N(); //population
+  int N(); //population
   
-  double const Y_per(); //percentage of young people
+  double Y_per(); //percentage of young people
   
-  double const A_per();
+  double A_per();
 
-  double const E_per();
+  double E_per();
   
   Age const& Young();
 
@@ -135,7 +135,7 @@ class City
 
   Virus const& Get_virus();
 
-  int const Get_turns();
+  int Get_turns();
 
   // add functions
   void add_$(int amount);
