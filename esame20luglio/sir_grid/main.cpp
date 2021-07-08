@@ -4,9 +4,9 @@
 
 int main()
 {
-  grid::Virus vir=grid::makeVirus();
-  grid::Grid city = grid::makeGrid();
-  grid::Behaviour Behaviour=grid::makeBehaviour();
+  pippo::Virus vir=pippo::makeVirus();
+  pippo::Grid city = pippo::makeGrid();
+  pippo::Behaviour Behaviour=pippo::makeBehaviour();
 
 
   while (true) {
@@ -22,7 +22,7 @@ int main()
 
     char a;
     if(a=='m'){
-      Behaviour=grid::makeBehaviour();
+      Behaviour=pippo::makeBehaviour();
     }
     std::cin >> a;
   }
