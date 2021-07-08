@@ -2,6 +2,8 @@
 #include <iostream>
 #include "useful_func.hpp"
 #include "sir.hpp"
+#include "parser.hpp"
+
 namespace sir{
  Pandemic createVirus() 
 {

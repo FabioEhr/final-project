@@ -5,6 +5,7 @@
 #include "useful_func.hpp"
 
 #include "sir.hpp"
+#include "parser.hpp"
  
 
 TEST_CASE("Testing stable lives") {

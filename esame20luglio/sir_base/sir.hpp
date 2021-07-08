@@ -125,12 +125,6 @@ Condition Get_condition(){
 };
 // questa classe se chiamata permette di creare una oggetto di Pandemic e
 // controlla anche che i valori inseriti siano corretti
- Pandemic createVirus(); //defined in sir.cpp
-
-void Print(Pandemic& a);
-
-
-void Print(Condition& a);
 
 }  // namespace sir
 
