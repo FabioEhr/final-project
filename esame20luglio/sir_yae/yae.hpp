@@ -2,7 +2,7 @@
 #define YAE_HPP
 #include <cassert>
 #include "useful_func.hpp"
-//#include <iostream>
+#include <iostream>
 struct Virus
 {
   double b;  // contagiosità
@@ -41,7 +41,7 @@ struct Transmatrix
   double ae;
 };
 
-bool operator==(Transmatrix left, Transmatrix right)  // what is this needed
+inline bool operator==(Transmatrix left, Transmatrix right)  // what is this needed
                                                       // for?
 {
   if (double_compare(left.yy, right.yy) && double_compare(left.aa, right.aa) &&

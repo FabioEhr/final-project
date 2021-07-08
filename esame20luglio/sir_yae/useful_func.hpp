@@ -1,7 +1,7 @@
 #ifndef FUNC_HPP
 #define FUNC_HPP
 #include <string>
-int char_to_int(char a)
+inline int char_to_int(char a)
 {
   switch (a) {
     case '0':
@@ -38,7 +38,7 @@ int char_to_int(char a)
       return 0;
   }
 }
-int string_to_int(std::string& a)
+inline int string_to_int(std::string& a)
 {
   int j = a.size();
   int z = 0;
@@ -54,7 +54,7 @@ int string_to_int(std::string& a)
   return z;
 }
 
-bool valid_string(std::string& input)
+inline bool valid_string(std::string& input)
 {
   int size = input.size();
   bool a = true;
@@ -110,7 +110,7 @@ bool valid_string(std::string& input)
   }
   return a;
 }
-double string_to_decimal(std::string& input)
+inline double string_to_decimal(std::string& input)
 {  // turns in a number between 0 and 1
   int int_value = string_to_int(input);
   int size = input.size() - 2;
@@ -127,7 +127,7 @@ double string_to_decimal(std::string& input)
   double d_value = int_value / div;
   return d_value;
 }
-bool double_compare(double left, double right, double precision = 0.0001)
+inline bool double_compare(double left, double right, double precision = 0.0001)
 {
   if ((right - left) > -precision && (right - left) < precision) {
     return true;
@@ -135,5 +135,10 @@ bool double_compare(double left, double right, double precision = 0.0001)
     return false;
   }
 }
+inline bool d_comp(double value, double exl, double exr)
+{
+  return value >= exl && value <= exr;
+}
+
 
 #endif

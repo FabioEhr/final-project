@@ -5,7 +5,7 @@
 #include "yae.hpp"
 #include "useful_func.hpp"
 
-void print_opt(City& playground)
+inline void print_opt(City& playground)
 {
   
   std::cout << "Current treasury: " << playground.$() << '\n';
@@ -75,7 +75,7 @@ void print_opt(City& playground)
   std::cout << "Skip N weeks (Type #)" << '\n';
 }
 
-void execute(City& playground, char order)
+inline void execute(City& playground, char order)
 {
   state_function current = playground.Get_status();
   switch (order) {
@@ -162,7 +162,7 @@ void execute(City& playground, char order)
       break;
   }
 }
-std::string mood(Age const& person)
+inline std::string mood(Age const& person)
 {
   std::string text = "Depressed";
 
@@ -185,7 +185,7 @@ std::string mood(Age const& person)
   return text;
 }
 
-void print_situation(City& playground,
+inline void print_situation(City& playground,
                      Deltas& deltas)
 {std::cout<< "Weeks since start of simulation: " << playground.Get_turns() << '\n';
   int n = playground.N();
@@ -266,7 +266,7 @@ void print_situation(City& playground,
   }
 }
 
-std::string news_paper()
+inline std::string news_paper()
 {
   std::string b;
   std::string name;
@@ -288,7 +288,7 @@ std::string news_paper()
   }
   return b;
 }
-std::string variant()
+inline std::string variant()
 {
   std::string name;
   std::random_device r1;
@@ -315,7 +315,7 @@ std::string variant()
   }
   return name;
 }
-std::string groups(City& playground)
+inline std::string groups(City& playground)
 {
   state_function alpha = playground.Get_status();
   std::string a = "Groups of so called 'no masks' ";
@@ -334,7 +334,7 @@ std::string groups(City& playground)
   return a;
 }
 
-void print_vir_opt()
+inline void print_vir_opt()
 {
   std::cout << "Select a virus." << '\n';
   std::cout << "Type 1 for Flu. Contagious but not extremly deadly." << '\n';
@@ -344,7 +344,7 @@ void print_vir_opt()
   std::cout << "Type 3 for Ebola. Lowest recovery rate and highest letality."
             << '\n';
 }
-void print_city_opt()
+inline void print_city_opt()
 {
   std::cout << "Select a City." << '\n';
   std::cout

@@ -5,7 +5,7 @@
 #include "yae.hpp"
 #include "useful_func.hpp"
 
-void buy_masks(City& playground)
+inline void buy_masks(City& playground)
 {  // lowers mobility by the same ammount for all
   int quantity;
   std::string anti_bug;
@@ -40,7 +40,7 @@ void buy_masks(City& playground)
   }
 }
 
-void close_restaurants(City& playground)
+inline void close_restaurants(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += -5;
@@ -62,7 +62,7 @@ void close_restaurants(City& playground)
   std::cout << "Decision registered! Restaurants have been closed." << '\n';
 }
 
-void close_theatres(City& playground)  // different from close_restaurants,
+inline void close_theatres(City& playground)  // different from close_restaurants,
                                        // lesser economic impact but people are
                                        // sadder. affects "mixed" encounters
 {
@@ -85,7 +85,7 @@ void close_theatres(City& playground)  // different from close_restaurants,
   std::cout << "Decision registered! Theatres have been closed." << '\n';
 }
 
-void close_schools(
+inline void close_schools(
     City& playground)  // affects young greatly and elders(because they have to
                        // stay with their kids)
 {
@@ -108,7 +108,7 @@ void close_schools(
   std::cout << "Decision registered! Schools have been closed." << '\n';
 }
 
-void close_churches(City& playground)
+inline void close_churches(City& playground)
 {
   Age other_young = playground.Young();
 
@@ -127,7 +127,7 @@ void close_churches(City& playground)
   std::cout << "Decision registered! Churches have been closed." << '\n';
 }
 
-void curfew(City& playground)
+inline void curfew(City& playground)
 {
   std::cout << "By how many hours would you like to increase the curfew? "
                "(Insert a positive value)"
@@ -159,7 +159,7 @@ void curfew(City& playground)
             << replacer.curfew_hours << " hours." << '\n';
 }
 
-void lockdown(City& playground)
+inline void lockdown(City& playground)
 {
   std::cout << "Decision registered! Lockdown will be enforced immediatly."
             << '\n';
@@ -169,7 +169,7 @@ void lockdown(City& playground)
   close_churches(playground);
 }
 // Open functions
-void open_restaurants(City& playground)
+inline void open_restaurants(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += 3;
@@ -190,7 +190,7 @@ void open_restaurants(City& playground)
   playground.Set_status(replacer);
   std::cout << "Decision registered! Restaurants have been reopend." << '\n';
 }
-void open_theatres(City& playground)
+inline void open_theatres(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += 1;
@@ -211,7 +211,7 @@ void open_theatres(City& playground)
   playground.Set_status(replacer);
   std::cout << "Decision registered! Theaters have been reopend." << '\n';
 }
-void open_schools(City& playground)
+inline void open_schools(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += 1;
@@ -231,7 +231,7 @@ void open_schools(City& playground)
   playground.Set_status(replacer);
   std::cout << "Decision registered! Schools have been reopend." << '\n';
 }
-void open_churches(City& playground)
+inline void open_churches(City& playground)
 {
   Age other_young = playground.Young();
 
@@ -251,7 +251,7 @@ void open_churches(City& playground)
   std::cout << "Decision registered! Churches have been reopend." << '\n';
 }
 
-void alleviate_curfew(City& playground)
+inline void alleviate_curfew(City& playground)
 {
   std::cout << "By how many hours would you like to decrease the curfew? "
                "(Insert a positive value)"
@@ -283,7 +283,7 @@ void alleviate_curfew(City& playground)
             << replacer.curfew_hours << " hours." << '\n';
 }
 
-void invest_in_research(City& playground)
+inline void invest_in_research(City& playground)
 {
   int scale_factor = playground.knowledge();
   if (scale_factor < 0) {
@@ -309,7 +309,7 @@ void invest_in_research(City& playground)
   }
 }
 
-void invest_in_digital(City& playground)
+inline void invest_in_digital(City& playground)
 {  // helps people transition to remote working
 
   int cost = -5000;
@@ -343,7 +343,7 @@ void invest_in_digital(City& playground)
   }
 }
 
-void terrorize_with_media(
+inline void terrorize_with_media(
     City& playground)  // changes perception of the dangerousness of the virus
 {
   Age other_young = playground.Young();
@@ -364,7 +364,7 @@ void terrorize_with_media(
             << '\n';
 }
 
-void tranquillize_with_media(City& playground)  // shouldn't be a good option
+inline void tranquillize_with_media(City& playground)  // shouldn't be a good option
 {
   Age other_young = playground.Young();
   other_young.morale += 1;
@@ -384,7 +384,7 @@ void tranquillize_with_media(City& playground)  // shouldn't be a good option
             << '\n';
 }
 
-void modernize_hospitals(City& playground)
+inline void modernize_hospitals(City& playground)
 {
   int upgrade_cost = (playground.Get_hospitals()).n_beds *
                      (playground.Get_hospitals()).level * 1000;
@@ -414,7 +414,7 @@ void modernize_hospitals(City& playground)
   }
 }
 
-void build_beds(City& playground)
+inline void build_beds(City& playground)
 {
   int amount;
   std::string anti_bug;
@@ -449,7 +449,7 @@ void build_beds(City& playground)
   }
 }
 
-void vaccinate_young(City& playground)
+inline void vaccinate_young(City& playground)
 {
   int price = 1000;
   int vaccines;
@@ -489,7 +489,7 @@ void vaccinate_young(City& playground)
   }
 }
 
-void vaccinate_adults(City& playground)
+inline void vaccinate_adults(City& playground)
 {
   int price = 1000;
   int vaccines;
@@ -528,7 +528,7 @@ void vaccinate_adults(City& playground)
     std::cout << "You did not proceed" << '\n';
   }
 }
-void vaccinate_elders(City& playground)
+inline void vaccinate_elders(City& playground)
 {
   int price = 1000;
   int vaccines;
