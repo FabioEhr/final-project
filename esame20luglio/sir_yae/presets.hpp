@@ -3,24 +3,24 @@
 #include "yae.hpp"
 
 // Virus presets
-Virus Covid()
+inline Virus Covid()
 {
   Virus covid = {0.4, 0.05, 0.08, 0.08};  // beta gamma delta crit_chance
   return covid;
 }
-Virus Flu()
+inline Virus Flu()
 {
   Virus flu = {0.6, 0.1, 0.0, 0.0};
   return flu;
 }
-Virus Ebola()
+inline Virus Ebola()
 {
   Virus ebola = {0.4, 0.02, 0.15, 0.1};
   return ebola;
 }
 
 // City presets
-City Bologna(Virus& new_virus)
+inline City Bologna(Virus& new_virus)
 {
   // beta gamma delta
 
@@ -66,7 +66,7 @@ City Bologna(Virus& new_virus)
   return bologna;
 }
 
-City Milano(Virus& new_virus)
+inline City Milano(Virus& new_virus)
 {
   // beta gamma delta
 
@@ -108,7 +108,7 @@ City Milano(Virus& new_virus)
   return milano;
 }
 
-City Matera(Virus& new_virus)
+inline City Matera(Virus& new_virus)
 {
   Age Young = {
       0.999,
