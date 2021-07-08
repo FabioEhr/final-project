@@ -85,7 +85,7 @@ Grid makeGrid(){
       continue;
     }
   }
-  //troppi dati non va bene inizializzare così
+  //troppi dati non va bene inizializzare così, 3 non sono troppi secondo me
   int sus = 0;
   int inf = 0;
   int rec = 0;

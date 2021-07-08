@@ -486,7 +486,7 @@ inline std::vector<char> get_map(Grid const& board)
         if (pieces[j].Get_Condition() == PersonState::Infected) {
             map[position_in_map] = '!';
         }  // infected-sus is more important than inf-inc
-        }
+        
     }  // closes switch
   }    // closes for
 
