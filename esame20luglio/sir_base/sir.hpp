@@ -127,19 +127,11 @@ Condition Get_condition(){
 // controlla anche che i valori inseriti siano corretti
  Pandemic createVirus(); //defined in sir.cpp
 
- inline void Print(Pandemic& a)
-{
-  std::cout << '\n'
-            << " S= " << a.Get_condition().suscettibles
-            << " I=" << a.Get_condition().infected
-            << " R=" << a.Get_condition().recovered;
-}
+void Print(Pandemic& a);
 
-inline void Print(Condition& a)
-{
-  std::cout << " S= " << a.suscettibles << " I=" << a.infected
-            << " R=" << a.recovered << '\n';
-}
+
+void Print(Condition& a);
+
 }  // namespace sir
 
 #endif

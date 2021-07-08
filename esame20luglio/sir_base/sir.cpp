@@ -86,4 +86,16 @@ namespace sir{
 
   return generated;
 }
+ void Print(Pandemic& a)
+{
+  std::cout << '\n'
+            << " S= " << a.Get_condition().suscettibles
+            << " I=" << a.Get_condition().infected
+            << " R=" << a.Get_condition().recovered;
+}
+void Print(Condition& a)
+{
+  std::cout << " S= " << a.suscettibles << " I=" << a.infected
+            << " R=" << a.recovered << '\n';
+}
 }
