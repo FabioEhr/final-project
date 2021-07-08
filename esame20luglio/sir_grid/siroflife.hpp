@@ -212,7 +212,7 @@ class Grid
     return ((susceptible + infected + recovered) == population && peoplesize == population);
   }
 
-  void sus_evolve(Virus e_virus)
+  void sus_evolve(Virus e_virus) 
   {
     // evolves the grid (handles the "sus to infected" part)
     // everyone in the same coordinates can infect and be infected, as they're
@@ -426,13 +426,13 @@ inline std::vector<char> get_map(Grid const& board)
         if (pieces[j].Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = 'S';
         }
-        if (pieces[j].Get_Condition() == PersonState::Infected) {
+        else if (pieces[j].Get_Condition() == PersonState::Infected) {
           map[position_in_map] = 'I';
         }
-        if (pieces[j].Get_Condition() == PersonState::Recovered) {
+        else if (pieces[j].Get_Condition() == PersonState::Recovered) {
           map[position_in_map] = 'R';
         }
-        if (pieces[j].Get_Condition() == PersonState::Incubating) {
+        else if (pieces[j].Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = 'F';  // incubating inFection
         }
         break;
@@ -440,12 +440,12 @@ inline std::vector<char> get_map(Grid const& board)
         if (pieces[j].Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = 'S';  // susceptible-rec cluster
         }
-        if (pieces[j].Get_Condition() == PersonState::Infected) {
+        else if (pieces[j].Get_Condition() == PersonState::Infected) {
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
                     // infected who didn't manage to infect a susceptible
         }
-        if (pieces[j].Get_Condition() == PersonState::Incubating) {
+        else if (pieces[j].Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = '#';  // incubating-sus encounter
         }
         // all other cases are of lower priority
@@ -454,38 +454,38 @@ inline std::vector<char> get_map(Grid const& board)
         if (pieces[j].Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
-                    // infected who didn't manage to infect a susceptible
-          if (pieces[j].Get_Condition() == PersonState::Infected) {
+        }           // infected who didn't manage to infect a susceptible
+        else if (pieces[j].Get_Condition() == PersonState::Infected) {
             map[position_in_map] =
                 'I';  // infected cluster, an I stands for one or more infected
-          }
-          break;
-          case 'R':
-            if (pieces[j].Get_Condition() == PersonState::Susceptible) {
-              map[position_in_map] = 'S';  // sus are higher priority
-            }
-            if (pieces[j].Get_Condition() == PersonState::Infected) {
+        }
+        break;
+      case 'R':
+        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
+            map[position_in_map] = 'S';  // sus are higher priority
+        }
+        else if (pieces[j].Get_Condition() == PersonState::Infected) {
               map[position_in_map] = 'I';  // inf are higher priority
-            }
-            if (pieces[j].Get_Condition() == PersonState::Incubating) {
-              map[position_in_map] = 'F';  // inc are higher priority
-            }
-            break;
-          case 'F':
-            if (pieces[j].Get_Condition() == PersonState::Susceptible) {
-              map[position_in_map] = '#';
-            }  // sus-inc cluster, at least a sus and inc in tile
-            if (pieces[j].Get_Condition() == PersonState::Infected) {
-              map[position_in_map] = 'I';
-            }  // infected are higher priority
-            break;
+        }
+        if (pieces[j].Get_Condition() == PersonState::Incubating) {
+            map[position_in_map] = 'F';  // inc are higher priority
+        }
+        break;
+      case 'F':
+        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
+            map[position_in_map] = '#';
+        }  // sus-inc cluster, at least a sus and inc in tile
+        if (pieces[j].Get_Condition() == PersonState::Infected) {
+            map[position_in_map] = 'I';
+        }  // infected are higher priority
+        break;
 
-          case '!':
-            break;  // highest priority
-          case '#':
-            if (pieces[j].Get_Condition() == PersonState::Infected) {
-              map[position_in_map] = '!';
-            }  // infected-sus is more important than inf-inc
+      case '!':
+        break;  // highest priority
+      case '#':
+        if (pieces[j].Get_Condition() == PersonState::Infected) {
+            map[position_in_map] = '!';
+        }  // infected-sus is more important than inf-inc
         }
     }  // closes switch
   }    // closes for
