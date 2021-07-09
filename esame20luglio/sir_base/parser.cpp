@@ -1,11 +1,11 @@
+#include "parser.hpp"
 #include <cassert>
 #include <iostream>
-#include "useful_func.hpp"
 #include "sir.hpp"
-#include "parser.hpp"
+#include "useful_func.hpp"
 
-namespace sir{
- Pandemic createVirus() 
+namespace sir {
+Pandemic createVirus()
 {
   double Contagiousness = -1.;
   double Recovery_rate = -1.;
@@ -55,7 +55,7 @@ namespace sir{
                  "percentage of infected: ";
 
     std::cin >> antibug;
-    std::cout<<antibug<<'\n';
+    std::cout << antibug << '\n';
     if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
         antibug == "1.00" || antibug == "1.000") {
       Infected = 1.;
@@ -88,7 +88,7 @@ namespace sir{
 
   return generated;
 }
- void Print(Pandemic& a)
+void Print(Pandemic& a)
 {
   std::cout << '\n'
             << " S= " << a.Get_condition().suscettibles
@@ -100,4 +100,4 @@ void Print(Condition& a)
   std::cout << " S= " << a.suscettibles << " I=" << a.infected
             << " R=" << a.recovered << '\n';
 }
-}
+}  // namespace sir

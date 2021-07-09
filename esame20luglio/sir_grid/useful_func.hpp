@@ -58,7 +58,7 @@ inline bool valid_string(std::string& input)
 {
   int size = input.size();
   bool a = true;
-  
+
   int dots = 0;
   for (int i = 0; i < size; ++i) {
     if (a == false) {

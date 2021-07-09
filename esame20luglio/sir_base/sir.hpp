@@ -1,7 +1,6 @@
+#include <cassert>
 #include <stdexcept>
 #include <vector>
-#include <iostream>
-#include <cassert>
 #include "useful_func.hpp"
 #ifndef SIR_HPP
 #define SIR_HPP
@@ -36,8 +35,8 @@ class Pandemic
   Pandemic(Virus& vir, Condition& cond) : virus{vir}, condition{cond}
   {
     // nel costruttore verifichiamo che i termini inseriti dall'utente siano
-    // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i catch
-    // nel main
+    // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i
+    // catch nel main
     if (!d_comp(virus.contagiousness, 0., 1.)) {
       throw std::runtime_error{
           "Contagiousnees must be a positive value between 0 and 1"};
@@ -54,24 +53,27 @@ class Pandemic
     if (!d_comp(condition.recovered, 0., 1.)) {
       throw std::runtime_error{"The recovered must be between 0 and 1  "};
     }
-    if (!d_comp(condition.infected + condition.suscettibles + condition.recovered,
-              0.99,
-              1.01)) {
+    if (!d_comp(
+            condition.infected + condition.suscettibles + condition.recovered,
+            0.99,
+            1.01)) {
       throw std::runtime_error
 
           {" The percentage of infected, susceptible and recovered people must "
            "add up to 1"};
     }
   };
-  //getter functions
-  Virus Get_virus(){
+  // getter functions
+  Virus Get_virus()
+  {
     return virus;
   }
 
-Condition Get_condition(){
-  return condition;
-}
-  
+  Condition Get_condition()
+  {
+    return condition;
+  }
+
   // questo metodo fa evolvere la classe Pandemic di un giorno
   void evolve()
   {
@@ -102,8 +104,8 @@ Condition Get_condition(){
     }
 
     condition = next;
-    assert(double_compare(condition.infected + condition.recovered + condition.suscettibles, 1.));
-    
+    assert(double_compare(
+        condition.infected + condition.recovered + condition.suscettibles, 1.));
   }
   // questo metodo fa evolvere la classe Pandemic di N step e poi ritorna un
   // vector di Pandemic di lunghezza N+1 la lunghezza non è N perchè ho inserito
