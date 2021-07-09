@@ -24,9 +24,9 @@ int main()
         << '\n';
 
     char a;
-    if (a == 'm') {
-      Behaviour = grid::makeBehaviour();
-    }
     std::cin >> a;
+    if(a=='m'){
+      Behaviour=grid::makeBehaviour();
+    }
   }
 }
