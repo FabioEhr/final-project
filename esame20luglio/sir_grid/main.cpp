@@ -1,12 +1,12 @@
-#include "siroflife.hpp"
+// #include "siroflife.hpp"
 #include "useful_func.hpp"
 #include "parser.hpp"
 
 int main()
 {
-  pippo::Virus vir=pippo::makeVirus();
-  pippo::Grid city = pippo::makeGrid();
-  pippo::Behaviour Behaviour=pippo::makeBehaviour();
+  grid::Virus vir=grid::makeVirus();
+  grid::Grid city = grid::makeGrid();
+  grid::Behaviour Behaviour=grid::makeBehaviour();
 
 
   while (true) {
@@ -21,9 +21,9 @@ int main()
     std::cout << "If you want to change the mobility or the speed press m, otherwise press any other charachter and the simulation will go on"  << '\n';
 
     char a;
-    if(a=='m'){
-      Behaviour=pippo::makeBehaviour();
-    }
     std::cin >> a;
+    if(a=='m'){
+      Behaviour=grid::makeBehaviour();
+    }
   }
 }

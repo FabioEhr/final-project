@@ -27,9 +27,9 @@ Virus makeVirus(){
   while (!d_comp(Recovery_rate, 0., 1.) || !valid_string(antibug)) {
     std::cout << '\n'
 
-              << " Write a double between 0 and 1 that represents the recovery "
+              << " Write a double between 0 and 1 that represents the "
 
-                 "rate of the virus: ";
+                 " recovery rate of the virus: ";
 
     std::cin >> antibug;
     Recovery_rate = string_to_decimal(antibug);
