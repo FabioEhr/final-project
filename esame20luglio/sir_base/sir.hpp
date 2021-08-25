@@ -64,12 +64,12 @@ class Pandemic
     }
   };
   // getter functions
-  Virus Get_virus()
+  Virus Get_virus() const
   {
     return virus;
   }
 
-  Condition Get_condition()
+  Condition Get_condition() const
   {
     return condition;
   }
@@ -113,15 +113,22 @@ class Pandemic
   std::vector<Condition> evolveNTimes(int N)
   {
     std::vector<Condition> development;
+    //std::generate(development.begin(), development.end(), [&](){ return new Object(); });
 
-    development.push_back(condition);
+    /*std::fill(development.begin(), development.begin()+N+1,
+     [&] () {
+     
+      this->evolve();
+     return this->condition;
+      }
+      );*/
 
-    for (int i = 1; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
-      evolve();
+    for (int i = 0; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
+      
 
       development.push_back(condition);
+      evolve();
     }
-
     return development;
   }
 };

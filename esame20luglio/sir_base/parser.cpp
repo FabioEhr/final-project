@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include "sir.hpp"
-#include "useful_func.hpp"
+//#include "useful_func.hpp"
 
 namespace sir {
 Pandemic createVirus()
@@ -12,10 +12,40 @@ Pandemic createVirus()
   double Infected = -1;
   double Suscettibles = -1.;
   double Recovered = -1.;
-  std::string antibug = "14";
+  std::cout << '\n'
+
+              << " Write a double between 0 and 1 that represents the "
+
+                 "contagiousness of the virus: ";
+  std::cin>>Contagiousness;
+  std::cout << '\n'
+
+              << " write a double between 0 and 1 that represents the recovery "
+
+                 "rate of the virus: ";
+
+    std::cin >> Recovery_rate;
+    std::cout << '\n'
+
+              << " write a double between 0 and 1 that represents the "
+
+                 "percentage of infected: ";
+
+    std::cin >> Infected;
+        std::cout << '\n'
+
+              << " write a double between 0 and 1 that represents the "
+
+                 "percentage of recovered(remember recovered+infected<1): ";
+
+
+    std::cin >> Recovered;
+    
+    
+ // std::string antibug = "14";
   // attraverso questa condizione il programma non procede fino a quando
   // l'utente non inserisce dei valori allowed
-  while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
+ /* while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
     std::cout << '\n'
 
               << " Write a double between 0 and 1 that represents the "
@@ -77,25 +107,26 @@ Pandemic createVirus()
     Recovered = string_to_decimal(antibug);
   }
   std::cout << "Percentage of Recovered has been set to: " << Recovered << '\n';
+  */
   // sia per alleggerire il lavoro dell'utente finale che per evitare che
   // inserisca dei valori tali per cui le percentuali infetti suscettibili e
   // guariti sia diversa da 1 calcoliamo i suscettibili
   Suscettibles = 1. - Infected - Recovered;
-
+  Virus nuovo{Contagiousness, Recovery_rate};
   Condition now{Suscettibles, Infected, Recovered, 0};
 
   Pandemic generated{nuovo, now};
 
   return generated;
 }
-void Print(Pandemic& a)
+void Print(Pandemic const& a)
 {
   std::cout << '\n'
             << " S= " << a.Get_condition().suscettibles
             << " I=" << a.Get_condition().infected
             << " R=" << a.Get_condition().recovered;
 }
-void Print(Condition& a)
+void Print(Condition const& a)
 {
   std::cout << " S= " << a.suscettibles << " I=" << a.infected
             << " R=" << a.recovered << '\n';

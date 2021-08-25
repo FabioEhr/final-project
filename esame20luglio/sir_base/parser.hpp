@@ -6,7 +6,7 @@ Pandemic createVirus();  // defined in sir.cpp
 
 void Print(Pandemic& a);
 
-void Print(Condition& a);
+void Print(Condition const& a);
 
 }  // namespace sir
 
