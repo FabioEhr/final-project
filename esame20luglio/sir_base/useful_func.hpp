@@ -58,7 +58,8 @@ inline bool valid_string(std::string& input)
 {
   int size = input.size();
   bool a = true;
-
+  
+  
   int dots = 0;
   for (int i = 0; i < size; ++i) {
     if (a == false) {
@@ -138,5 +139,6 @@ inline bool d_comp(double value, double exl, double exr)
 {
   return value >= exl && value <= exr;
 }
+
 
 #endif

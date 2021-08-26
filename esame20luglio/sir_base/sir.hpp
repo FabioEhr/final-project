@@ -1,8 +1,8 @@
-#include <cassert>
+#include <cmath>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
-#include "useful_func.hpp"
+#include<cassert>
 #ifndef SIR_HPP
 #define SIR_HPP
 namespace sir {
@@ -38,26 +38,24 @@ class Pandemic
     // nel costruttore verifichiamo che i termini inseriti dall'utente siano
     // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i
     // catch nel main
-    if (!d_comp(virus.contagiousness, 0., 1.)) {
+    if (0.>virus.contagiousness || virus.contagiousness>1) {
       throw std::runtime_error{
           "Contagiousnees must be a positive value between 0 and 1"};
     }
-    if (!d_comp(virus.recovery_rate, 0., 1.)) {
+    if (0.>virus.recovery_rate || virus.recovery_rate>1) {
       throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
     }
-    if (!d_comp(condition.infected, 0., 1.)) {
-      throw std::runtime_error{"The infected must be between 0 and 1  "};
+    if (0.>condition.infected || condition.infected>1) {
+      throw std::runtime_error{"The percentage of infected must be between 0 and 1  "};
     }
-    if (!d_comp(condition.suscettibles, 0., 1.)) {
-      throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
+    if (0.>condition.suscettibles || condition.suscettibles>1) {
+      throw std::runtime_error{"The percentage of suscettibles must be between 0 and 1  "};
     }
-    if (!d_comp(condition.recovered, 0., 1.)) {
-      throw std::runtime_error{"The recovered must be between 0 and 1  "};
+    if (0.>condition.recovered || condition.recovered>1) {
+      throw std::runtime_error{"The percentage of recovered must be between 0 and 1  "};
     }
-    if (!d_comp(
-            condition.infected + condition.suscettibles + condition.recovered,
-            0.99,
-            1.01)) {
+    if (!(0.99<
+            condition.infected + condition.suscettibles + condition.recovered && condition.infected + condition.suscettibles + condition.recovered<1.01)) {
       throw std::runtime_error
 
           {" The percentage of infected, susceptible and recovered people must "
@@ -105,8 +103,7 @@ class Pandemic
     }
 
     condition = next;
-    assert(double_compare(
-        condition.infected + condition.recovered + condition.suscettibles, 1.));
+    assert(0.99< condition.infected + condition.recovered + condition.suscettibles && 1.01> condition.infected + condition.recovered + condition.suscettibles);
   }
   // questo metodo fa evolvere la classe Pandemic di N step e poi ritorna un
   // vector di Pandemic di lunghezza N+1 la lunghezza non è N perchè ho inserito
@@ -117,24 +114,65 @@ class Pandemic
     *development.begin()=condition;
     std::generate_n(development.begin()+1, N, [&] () {
      
-      this->evolve();
-     return this->condition;
+      evolve();
+     return condition;
       });
 
-    /*std::fill(development.begin(), development.begin()+N+1,
-     [&] () {
+
+    return development;
+  }
+
+  //faccio l'overload delle funzioni per visualizzare correttamente i risultati 
+  //anche se si vogliono visualizzare al posto  delle percentuali di infetti il numero di infetti
+  void evolve(double const tot)
+  {
+    Condition next;
+
+    next.infected =
+        condition.infected +
+
+        virus.contagiousness * condition.infected * condition.suscettibles -
+
+        condition.infected * virus.recovery_rate;
+
+    next.recovered =
+
+        condition.recovered + condition.infected * virus.recovery_rate;
+
+    next.time = condition.time + 1;
+
+    next.suscettibles =
+
+        condition.suscettibles -
+        virus.contagiousness * condition.infected * condition.suscettibles;
+
+    if (next.suscettibles < 0) {
+      next.suscettibles = 0.;
+
+      next.infected = 1 - next.recovered;
+    }
+    if(std::round(next.infected*tot)<1){
+      next.recovered+=next.infected;
+      next.infected=0.;
+    }
+
+    condition = next;
+    assert(0.99< condition.infected + condition.recovered + condition.suscettibles && 1.01> condition.infected + condition.recovered + condition.suscettibles);
+  }
+  // questo metodo fa evolvere la classe Pandemic di N step e poi ritorna un
+  // vector di Pandemic di lunghezza N+1 la lunghezza non è N perchè ho inserito
+  // alla posizione 0 del vector la condizione da cui si parte
+  std::vector<Condition> evolveNTimes(int const N, double const tot)
+  {
+    std::vector<Condition> development(N+1);
+    *development.begin()=condition;
+    std::generate_n(development.begin()+1, N, [&] () {
      
-      this->evolve();
-     return this->condition;
-      }
-      );
+      evolve(tot);
+     return condition;
+      });
 
-    for (int i = 0; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
-      
 
-      development.push_back(condition); 
-      evolve();
-    }*/
     return development;
   }
 };
