@@ -23,7 +23,7 @@ int main()
     
     for (auto const& i: history) {
       sir::Print(i);
-    };
+    }
   } catch (std::runtime_error const& e) {
     std::cerr <<'\n'<< e.what() << '\n';
   }

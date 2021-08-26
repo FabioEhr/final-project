@@ -1,6 +1,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
 #include "useful_func.hpp"
 #ifndef SIR_HPP
 #define SIR_HPP
@@ -62,7 +63,7 @@ class Pandemic
           {" The percentage of infected, susceptible and recovered people must "
            "add up to 1"};
     }
-  };
+  }
   // getter functions
   Virus Get_virus() const
   {
@@ -110,10 +111,15 @@ class Pandemic
   // questo metodo fa evolvere la classe Pandemic di N step e poi ritorna un
   // vector di Pandemic di lunghezza N+1 la lunghezza non è N perchè ho inserito
   // alla posizione 0 del vector la condizione da cui si parte
-  std::vector<Condition> evolveNTimes(int N)
+  std::vector<Condition> evolveNTimes(int const N)
   {
-    std::vector<Condition> development;
-    //std::generate(development.begin(), development.end(), [&](){ return new Object(); });
+    std::vector<Condition> development(N+1);
+    *development.begin()=condition;
+    std::generate_n(development.begin()+1, N, [&] () {
+     
+      this->evolve();
+     return this->condition;
+      });
 
     /*std::fill(development.begin(), development.begin()+N+1,
      [&] () {
@@ -121,14 +127,14 @@ class Pandemic
       this->evolve();
      return this->condition;
       }
-      );*/
+      );
 
     for (int i = 0; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
       
 
-      development.push_back(condition);
+      development.push_back(condition); 
       evolve();
-    }
+    }*/
     return development;
   }
 };
