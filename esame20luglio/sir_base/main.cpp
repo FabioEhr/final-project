@@ -7,16 +7,9 @@
 int main()
 {
   try {
-    std::cout << "How many people should live in simulation?";
-    double Tot=-1;
-    std::cin>>Tot;
-    Tot=std::round(Tot);
-    if (Tot<=0) {
-      throw std::runtime_error{
-          "the number of people must be a positive quantity"};
-    }
+    
 
-    sir::Pandemic play = sir::createVirus(Tot);
+    sir::Pandemic play = sir::createVirus();
 
     
     std::cout << "How many days should the simulation run?";
@@ -30,10 +23,10 @@ int main()
           "the days must be a positive quantity"};
     }
     
-    std::vector<sir::Condition> history = play.evolveNTimes(N, Tot);
+    std::vector<sir::Condition> history = play.evolveNTimes(N);
     
     for (auto const& i: history) {
-      sir::Print(i, Tot);
+      sir::Print(i);
     }
   } catch (std::runtime_error const& e) {
     std::cerr <<'\n'<< e.what() << '\n';
