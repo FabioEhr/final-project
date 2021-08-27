@@ -163,15 +163,7 @@ inline std::string cond_to_string(PersonState cond)
     return "error: unknown condition";
     break;
   }
-  
-  /* if (cond == PersonState::Susceptible) {
-    return "susceptible";
-  } else if (cond == PersonState::Infected) {
-    return "infected";
-  } else if (cond == PersonState::Recovered) {
-    return "recovered";
-  } else
-    return "incubating"; */
+
 };
 
 
@@ -465,7 +457,6 @@ class Grid
     map.push_back('-');
   }
 
-  int n_pieces = people.size();
   int row = 0;
   int column = 0;
   // information priority is: INFECTED, SUSCEPTIBLE, INCUBATING, RECOVERED,
@@ -479,17 +470,6 @@ class Grid
 
     switch (cluster) {
       case '-':  // if the space is empty, it is overwritten by the condition
-
-        /*if (a_person.Get_Condition() == PersonState::Susceptible) {
-          map[position_in_map] = 'S';
-        } else if (a_person.Get_Condition() == PersonState::Infected) {
-          map[position_in_map] = 'I';
-        } else if (a_person.Get_Condition() == PersonState::Recovered) {
-          map[position_in_map] = 'R';
-        } else if (a_person.Get_Condition() == PersonState::Incubating) {
-          map[position_in_map] = 'F';  // incubating inFection
-        }
-        break; */
 
         switch (a_person.Get_Condition()) {
           case PersonState::Susceptible : 
@@ -510,15 +490,6 @@ class Grid
       break;
 
       case 'S':  // if it's suceptible
-        /* if (a_person.Get_Condition() == PersonState::Infected) {
-          map[position_in_map] =
-              '!';  // risky encounter, it means that there is at least an
-                    // infected who didn't manage to infect a susceptible
-        } else if (a_person.Get_Condition() == PersonState::Incubating) {
-          map[position_in_map] = '#';  // incubating-sus encounter
-        }
-        // all other cases are of lower priority
-        break; */
 
         switch (a_person.Get_Condition()) {
           case PersonState::Infected : 
@@ -543,13 +514,7 @@ class Grid
         break;
 
       case 'R':
-        /*if (a_person.Get_Condition() == PersonState::Susceptible) {
-          map[position_in_map] = 'S';  // sus are higher priority
-        } else if (a_person.Get_Condition() == PersonState::Infected) {
-          map[position_in_map] = 'I';  // inf are higher priority
-        } else if (a_person.Get_Condition() == PersonState::Incubating) {
-          map[position_in_map] = 'F';  // inc are higher priority
-        } */
+
         switch (a_person.Get_Condition()) {
           case PersonState::Susceptible :
             map[position_in_map] = 'S';
