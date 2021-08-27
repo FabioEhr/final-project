@@ -1,24 +1,34 @@
+#include <iostream>
+#include "parser.hpp"
 #include "sir.hpp"
-#include"parser.hpp"
-#include "useful_func.hpp"
-#include<iostream>
+#include<cmath>
+//#include "useful_func.hpp"
 
 int main()
 {
   try {
+    
+
     sir::Pandemic play = sir::createVirus();
 
-   
-    std::string a;
+    
     std::cout << "How many days should the simulation run?";
-
-    std::cin >> a;
-    int N = string_to_int(a);
-
+ /*   std::string a;
+    std::cin >> a; 
+    int N = string_to_int(a);*/
+    int N=-1;
+    std::cin>>N;
+    if (N<=0) {
+      throw std::runtime_error{
+          "the days must be a positive quantity"};
+    }
+    
     std::vector<sir::Condition> history = play.evolveNTimes(N);
-
-    for (int i = 0; i <= N; ++i) Print(history[i]);
+    
+    for (auto const& i: history) {
+      sir::Print(i);
+    }
   } catch (std::runtime_error const& e) {
-    std::cerr << e.what() << '\n';
+    std::cerr <<'\n'<< e.what() << '\n';
   }
 }

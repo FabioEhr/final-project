@@ -2009,7 +2009,7 @@ int registerReporter(const char* name, int priority, bool isReporter) {
     DOCTEST_ASSERT_LOG_AND_REACT(_DOCTEST_RB)                                                      \
     DOCTEST_CLANG_SUPPRESS_WARNING_POP
 
-#define DOCTEST_ASSERT_IMPLEMENT_1(assert_type, ...);                                               \
+#define DOCTEST_ASSERT_IMPLEMENT_1(assert_type, ...)                                               \
     do {                                                                                           \
         DOCTEST_ASSERT_IMPLEMENT_2(assert_type, __VA_ARGS__);                                      \
     } while(false)

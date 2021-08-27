@@ -1,26 +1,28 @@
 #ifndef SIROFLIFE_HPP
 #define SIROFLIFE_HPP
 
-#include <stdlib.h>
 #include <cassert>
 #include <iostream>
 #include <random>
 #include <set>
 #include <string>
-
+#include <vector>
 namespace grid {
-
 struct Behaviour
 {
   int mob = 0;
   int speed = 0;
 };
-
 struct Virus
 {
   double contagiousness;
   double recovery_rate;
   int incubation_time;
+
+  Virus(double m_cont = 0, double m_rec = 0, int m_incub = 1)
+      : contagiousness{m_cont}, recovery_rate{m_rec}, incubation_time{m_incub}
+  {
+  }
 };
 
 struct Cell
@@ -56,15 +58,11 @@ struct Cell
 
 enum class PersonState { Susceptible, Incubating, Infected, Recovered };
 
-// used in class Person for random movement
-std::random_device person_device;
-std::default_random_engine person_generator{person_device()};
-
 class Person
 {
   Cell P_cell;
   PersonState condition;
-  int incub_day = 0;
+  int incub_day = 0;  // counter for days of incubation
 
  public:
   Person(int m_r = 1,
@@ -77,19 +75,18 @@ class Person
 
     // r+= a random number between -speed and +speed
     // c+= a random number between -speed and +speed
-
+    std::random_device r1;
+    std::default_random_engine generator1{r1()};
     std::uniform_int_distribution<int> distr_r(-speed, speed);
-    int walk_r = distr_r(person_generator);
+    int walk_r = distr_r(r1);
     P_cell.r += walk_r;
 
-    int walk_c = distr_r(person_generator);
+    int walk_c = distr_r(r1);
     P_cell.c += walk_c;
 
     // if r>rndmove_width r=rndmove_width, if r<1 r=1 and same for c -->Imposing
     // boundaries (walls)
     /// if a person would exit the grid, it stays on the border instead
-    // this creates a bias towards staying on the borders when the grid is small
-    // and the speed is high
 
     if (P_cell.r > rndmove_height) {
       P_cell.r = rndmove_height;
@@ -113,13 +110,13 @@ class Person
   }
 
   void Set_P_Cell(Cell set_cell)
-  {
+  {  // not used
     P_cell.r = set_cell.r;
     P_cell.c = set_cell.c;
   }
 
   void Set_P_Cell(int set_r, int set_c)
-  {
+  {  // not used
     P_cell.r = set_r;
     P_cell.c = set_c;
   }
@@ -157,16 +154,6 @@ inline std::string cond_to_string(PersonState cond)
     return "incubating";
 };
 
-// used in class Grid below for setting a random initial position
-std::random_device grid_device;
-std::default_random_engine generator_grid{grid_device()};
-// used in class Grid below for probability of getting infected
-std::random_device sus_evolve_device;
-std::default_random_engine generator_sus_evolve{sus_evolve_device()};
-// used in class Grid below for probability of recovering
-std::random_device grid_evolve_device;
-std::default_random_engine generator_grid_evolve{grid_evolve_device()};
-
 class Grid
 {
   int height;
@@ -182,9 +169,6 @@ class Grid
 
   int day = 0;
 
-  bool grid_verbose = false;
-
- public:
  public:
   Grid(int m_h = 1, int m_w = 1, int m_sus = 1, int m_inf = 0, int m_rec = 0)
       : height{m_h}
@@ -212,16 +196,16 @@ class Grid
     std::default_random_engine generator_grid1{grid_r1()};
     std::uniform_int_distribution<int> grid_r(1, height);
 
-    std::uniform_int_distribution<int> grid_distr_r(1, height);
-    std::uniform_int_distribution<int> grid_distr_c(1, width);
+    std::random_device grid_r2;
+    std::default_random_engine generator_grid2{grid_r2()};
+    std::uniform_int_distribution<int> grid_c(1, width);
 
-    for (int i = 0; i < population; ++i) {  // taking all the people from (1,1)
-                                            // to a random starting position
-
+    for (int i = 0; i < population; ++i) {
+      // taking all the people from (1,1) to a random starting position
       // (people[i]).r = a_random_number between 1 and  height
       // (people[i]).c = a_random_number between 1 and  width
-      people[i].Set_P_Cell(grid_distr_r(generator_grid),
-                           grid_distr_c(generator_grid));
+
+      people[i].Set_P_Cell(grid_r(grid_r1), grid_c(grid_r2));
     }
   }
 
@@ -257,39 +241,37 @@ class Grid
 
     int person_index = 1;
 
-    if (susceptible != 0 && inf_cells.begin() != inf_cells.end()) {
-      std::uniform_real_distribution<double> sus_evolve_distr(0, 1);
+    if (inf_cells.begin() != inf_cells.end()) {
+      std::random_device grid_evolve_r2;
+      std::default_random_engine generator_grid_evolve2{grid_evolve_r2()};
+      std::uniform_real_distribution<double> grid_evolve_distr2(0, 1);
 
       for (Person& sus_person : people) {
         if (sus_person.Get_Condition() == PersonState::Susceptible &&
             (inf_cells.find(sus_person.Get_P_Cell()) !=
              inf_cells.end())) {  // find a sus person in an infected cell.
-
           // find returns an iterator to the end of the vector if it doesn't
           // find anything
-
           // if it finds it then sus_person.condition=1  based on a probability
           // (random number between 0 and 1, if number<= virus contagiousness it
           // gets infected)
-          if ((sus_evolve_distr(generator_sus_evolve)) <=
-              e_virus.contagiousness) {
+
+          if ((grid_evolve_distr2(grid_evolve_r2)) <= e_virus.contagiousness) {
             sus_person.Set_Condition(PersonState::Incubating);
             --susceptible;
             ++infected;  // infected people and incubating count as "infected"
                          // in general
 
-            if (grid_verbose) {
-              std::cout << "person " << person_index << " infected in cell ("
-                        << sus_person.Get_P_Cell().r << ","
-                        << sus_person.Get_P_Cell().c << ")"
-                        << '\n';  // optional, it's for debugging purposes
-            }
-          }
-        }
+            std::cout << "person " << person_index << " infected in cell ("
+                      << sus_person.Get_P_Cell().r << ","
+                      << sus_person.Get_P_Cell().c << ")"
+                      << '\n';  // optional, it's for debugging purposes
+          };
+        };
 
         ++person_index;
-      }
-    }
+      };
+    };
 
     assert(invariant() == true);
   }
@@ -297,27 +279,27 @@ class Grid
   void move_and_evolve(int mobility, int grid_speed, Virus mne_virus)
   {
     for (int i = 0; i < mobility;
-         ++i) {  // mobility indicates how many times in a day each person moves
-      // and thus has the same amount of chances to be infected in a day
+         ++i) {  // mobility indicates how many times in a day each person
+                 // moves, so it can be infected up to the same amount of times
 
       for (int j = 0; j < population; ++j) {  // making each person move
 
         (people[j]).rndmove(grid_speed, width, height);
       };
 
-      sus_evolve(mne_virus);
+      (*this).sus_evolve(mne_virus);
     };
 
     // infection can happen multiple times because of mobility but recovery
     // isn't affected
-
-    std::uniform_real_distribution<double> grid_evolve_distr(0, 1);
+    std::random_device grid_evolve_r1;
+    std::default_random_engine generator_grid_evolve1{grid_evolve_r1()};
+    std::uniform_real_distribution<double> grid_evolve_distr1(0, 1);
 
     for (Person& inf_or_incub : people) {
       // making infected people recover based on recovery_rate.
       if (inf_or_incub.Get_Condition() == PersonState::Infected) {
-        if (grid_evolve_distr(generator_grid_evolve) <=
-            mne_virus.recovery_rate) {
+        if (grid_evolve_distr1(grid_evolve_r1) <= mne_virus.recovery_rate) {
           inf_or_incub.Set_Condition(PersonState::Recovered);
           --infected;
           ++recovered;
@@ -536,15 +518,6 @@ inline void draw_map(std::vector<char> const& map, Grid const& board)
       std::cout << '\n';
     }
     std::cout << map[i] << " ";
-    /*    switch (map[i]) {
-          case '-':
-          system("Color 02");
-          std::cout << " ";
-          break;
-          default:
-          break;
-        }
-        system("Color 70"); */
   }
 }
 inline void get_n_draw(Grid const& board)

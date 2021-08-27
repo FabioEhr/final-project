@@ -1,3 +1,4 @@
+#include <iostream>
 #include "parser.hpp"
 #include "siroflife.hpp"
 #include "useful_func.hpp"
@@ -24,9 +25,9 @@ int main()
         << '\n';
 
     char a;
-    std::cin >> a;
-    if(a=='m'){
-      Behaviour=grid::makeBehaviour();
+    if (a == 'm') {
+      Behaviour = grid::makeBehaviour();
     }
+    std::cin >> a;
   }
 }

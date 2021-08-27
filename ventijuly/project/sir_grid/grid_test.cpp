@@ -115,10 +115,6 @@ TEST_CASE("Testing get_map")
   people_test_4.push_back(grid::Person{1, 1, grid::PersonState::Susceptible});
   people_test_4.push_back(grid::Person{1, 1, grid::PersonState::Incubating});
   test_4.Set_People(people_test_4);
-  // test_4.Get_People_Ref()[0].Set_Condition(static_cast<grid::PersonState>(0));
-  // // sus
-  // test_4.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));
-  // // inc
   t = grid::get_map(test_4);
   CHECK(t[0] == '#');
 
@@ -127,10 +123,6 @@ TEST_CASE("Testing get_map")
   people_test_5.push_back(grid::Person{1, 1, grid::PersonState::Infected});
   people_test_5.push_back(grid::Person{1, 1, grid::PersonState::Incubating});
   test_5.Set_People(people_test_5);
-  // test_5.Get_People_Ref()[0].Set_Condition(static_cast<grid::PersonState>(2));
-  // // inf
-  // test_5.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));
-  // // inc
   t = grid::get_map(test_5);
   CHECK(t[0] == 'I');
 

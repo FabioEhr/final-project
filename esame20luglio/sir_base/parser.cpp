@@ -1,103 +1,83 @@
+#include "parser.hpp"
 #include <cassert>
 #include <iostream>
-#include "useful_func.hpp"
 #include "sir.hpp"
-#include "parser.hpp"
+#include <cmath>
 
-namespace sir{
- Pandemic createVirus() 
+//#include "useful_func.hpp"
+
+namespace sir {
+
+//overload di create pandemic nel caso non si voglliano utilizzare le percentuali
+
+Pandemic createVirus()
 {
+  double tot=-1;
   double Contagiousness = -1.;
   double Recovery_rate = -1.;
   double Infected = -1;
   double Suscettibles = -1.;
   double Recovered = -1.;
-  std::string antibug = "14";
-  // attraverso questa condizione il programma non procede fino a quando
-  // l'utente non inserisce dei valori allowed
-  while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
-    std::cout << '\n'
+  std::cout << '\n'
 
               << " Write a double between 0 and 1 that represents the "
 
                  "contagiousness of the virus: ";
-
-    std::cin >> antibug;
-    if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
-        antibug == "1.00" || antibug == "1.000") {
-      Contagiousness = 1;
-      break;
-    }
-    Contagiousness = string_to_decimal(antibug);
-  }
-  std::cout << '\n';
-  std::cout << "Contagiousness has been set to: " << Contagiousness << '\n';
-  while (!d_comp(Recovery_rate, 0., 1.) || !valid_string(antibug)) {
-    std::cout << '\n'
+  std::cin>>Contagiousness;
+  std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the recovery "
 
                  "rate of the virus: ";
 
-    std::cin >> antibug;
-    Recovery_rate = string_to_decimal(antibug);
-  }
-  std::cout << '\n';
-  std::cout << "Recovery rate has been set to: " << Recovery_rate << '\n';
-
-  Virus nuovo{Contagiousness, Recovery_rate};
-
-  while (!d_comp(Infected, 0., 1.) || !valid_string(antibug)) {
+    std::cin >> Recovery_rate;
+    std::cout << "How many people should live in simulation?";
+    std::cin>>tot;
+    tot=std::round(tot);
     std::cout << '\n'
 
-              << " write a double between 0 and 1 that represents the "
+              << " write the "
 
-                 "percentage of infected: ";
+                 "number of infected (that has to be lower than "<<tot<<"):";
 
-    std::cin >> antibug;
-    std::cout<<antibug<<'\n';
-    if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
-        antibug == "1.00" || antibug == "1.000") {
-      Infected = 1.;
-      break;
-    }
-    Infected = string_to_decimal(antibug);
-  }
-  std::cout << "Percentage of Infected has been set to: " << Infected << '\n';
+    std::cin >> Infected;
+    Infected=std::round(Infected);
 
-  while (!d_comp(Recovered, 0., 1.) || !d_comp(Recovered + Infected, 0., 1.) ||
-         !valid_string(antibug)) {
-    std::cout << '\n'
+        std::cout << '\n'
+               << " write the "
 
-              << " write a double between 0 and 1 that represents the "
+                 "number of recovered (that has to be lower than "<<tot<<" and remember recovered+infected<"<<tot<<"):";
 
-                 "percentage of recovered(remember recovered+infected<1): ";
 
-    std::cin >> antibug;
-    Recovered = string_to_decimal(antibug);
-  }
-  std::cout << "Percentage of Recovered has been set to: " << Recovered << '\n';
+    std::cin >> Recovered;
+    Recovered=std::round(Recovered);
+    
+    
+
   // sia per alleggerire il lavoro dell'utente finale che per evitare che
   // inserisca dei valori tali per cui le percentuali infetti suscettibili e
   // guariti sia diversa da 1 calcoliamo i suscettibili
-  Suscettibles = 1. - Infected - Recovered;
-
-  Condition now{Suscettibles, Infected, Recovered, 0};
-
+  Suscettibles = tot - Infected - Recovered;
+  
+  Virus nuovo{Contagiousness, Recovery_rate};
+  
+  Condition now{Suscettibles, Infected, Recovered, tot, 0};
+  Print(now);
   Pandemic generated{nuovo, now};
 
   return generated;
 }
- void Print(Pandemic& a)
+
+void Print(Pandemic const& a)
 {
   std::cout << '\n'
-            << " S= " << a.Get_condition().suscettibles
-            << " I=" << a.Get_condition().infected
-            << " R=" << a.Get_condition().recovered;
+            << " S= " << std::round(a.Get_condition().suscettibles)
+            << " I=" << std::round(a.Get_condition().infected)
+            << " R=" << std::round(a.Get_condition().population)-std::round(a.Get_condition().infected)-std::round(a.Get_condition().suscettibles);
 }
-void Print(Condition& a)
+void Print(Condition const& a)
 {
-  std::cout << " S= " << a.suscettibles << " I=" << a.infected
-            << " R=" << a.recovered << '\n';
+  std::cout << " S= " << std::round(a.suscettibles) << " I=" << std::round(a.infected)
+            << " R=" << std::round(a.population)-std::round(a.infected)-std::round(a.suscettibles) << '\n';
 }
-}
+}  // namespace sir

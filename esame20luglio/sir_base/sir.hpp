@@ -1,8 +1,8 @@
+#include <cmath>
 #include <stdexcept>
 #include <vector>
-#include <iostream>
-#include <cassert>
-#include "useful_func.hpp"
+#include <algorithm>
+#include<cassert>
 #ifndef SIR_HPP
 #define SIR_HPP
 namespace sir {
@@ -14,15 +14,53 @@ struct Condition
   double infected;
 
   double recovered;
+  double population;
+  
+  int time=0;
+  Condition (double const sus=0., double const inf=0., double const rec=0., double const pop=0., int const tim=0): suscettibles{sus}, infected{inf}, recovered{rec}, population{pop}, time{tim}
+  {
+      // nel costruttore verifichiamo che i termini inseriti dall'utente siano
+    // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i
+    // catch nel main
+    if (0>infected || infected>population) {
+      throw std::runtime_error{"The number of infected must be between 0 and population  "};
+    }
+    if (0.>suscettibles || suscettibles>population) {
+      throw std::runtime_error{"The number of suscettibles must be between 0 and population  "};
+    }
+    if (0.>recovered || recovered>population) {
+      throw std::runtime_error{"The number of recovered must be between 0 and population  "};
+    }
+    if (!(population-0.01<
+            infected + suscettibles + recovered && infected + suscettibles + recovered<population+0.01)) {
+      throw std::runtime_error
 
-  int time;
+          {" The number of infected, susceptible and recovered people must "
+           "add up to population"};
+    }
+
+  }
 };
 
 struct Virus
 {
+    // nel costruttore verifichiamo che i termini inseriti dall'utente siano
+    // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i
+    // catch nel main
   double contagiousness;
-
   double recovery_rate;
+
+
+  Virus (double const cont=0., double const rec=0.): contagiousness{cont}, recovery_rate{rec}
+  {
+    if (0.>contagiousness || contagiousness>1) {
+      throw std::runtime_error{
+          "Contagiousnees must be a positive value between 0 and 1"};
+    }
+    if (0.>recovery_rate || recovery_rate>1) {
+      throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
+  }
+  }
 };
 
 class Pandemic
@@ -35,93 +73,78 @@ class Pandemic
  public:
   Pandemic(Virus& vir, Condition& cond) : virus{vir}, condition{cond}
   {
-    // nel costruttore verifichiamo che i termini inseriti dall'utente siano
-    // permessi e se non lo sono lanciamo delle eccezioni di cui facciamo i catch
-    // nel main
-    if (!d_comp(virus.contagiousness, 0., 1.)) {
-      throw std::runtime_error{
-          "Contagiousnees must be a positive value between 0 and 1"};
+  
+    
     }
-    if (!d_comp(virus.recovery_rate, 0., 1.)) {
-      throw std::runtime_error{"Recovery rate must be between 0 and 1 "};
-    }
-    if (!d_comp(condition.infected, 0., 1.)) {
-      throw std::runtime_error{"The infected must be between 0 and 1  "};
-    }
-    if (!d_comp(condition.suscettibles, 0., 1.)) {
-      throw std::runtime_error{"The suscettibles must be between 0 and 1  "};
-    }
-    if (!d_comp(condition.recovered, 0., 1.)) {
-      throw std::runtime_error{"The recovered must be between 0 and 1  "};
-    }
-    if (!d_comp(condition.infected + condition.suscettibles + condition.recovered,
-              0.99,
-              1.01)) {
-      throw std::runtime_error
-
-          {" The percentage of infected, susceptible and recovered people must "
-           "add up to 1"};
-    }
-  };
-  //getter functions
-  Virus Get_virus(){
+    
+  // getter functions
+  Virus Get_virus() const
+  {
     return virus;
   }
 
-Condition Get_condition(){
-  return condition;
-}
-  
+  Condition Get_condition() const
+  {
+    return condition;
+  }
+
   // questo metodo fa evolvere la classe Pandemic di un giorno
   void evolve()
   {
     Condition next;
 
+    next.population=condition.population;
+
     next.infected =
         condition.infected +
 
-        virus.contagiousness * condition.infected * condition.suscettibles -
+        virus.contagiousness * condition.infected * condition.suscettibles/condition.population -
 
         condition.infected * virus.recovery_rate;
+        
 
     next.recovered =
 
         condition.recovered + condition.infected * virus.recovery_rate;
+    
 
     next.time = condition.time + 1;
 
     next.suscettibles =
 
-        condition.suscettibles -
-        virus.contagiousness * condition.infected * condition.suscettibles;
+        condition.population -next.infected-next.recovered;
 
     if (next.suscettibles < 0) {
       next.suscettibles = 0.;
 
-      next.infected = 1 - next.recovered;
+      next.infected = next.population - next.recovered;
     }
+    if(std::round(next.infected)<1){
+      next.recovered+=next.infected;
+      next.infected=0;
+    }
+    
 
     condition = next;
-    assert(double_compare(condition.infected + condition.recovered + condition.suscettibles, 1.));
-    
+    assert(condition.population-0.01< condition.infected + condition.recovered + condition.suscettibles && condition.population+0.01> condition.infected + condition.recovered + condition.suscettibles);
   }
   // questo metodo fa evolvere la classe Pandemic di N step e poi ritorna un
   // vector di Pandemic di lunghezza N+1 la lunghezza non è N perchè ho inserito
   // alla posizione 0 del vector la condizione da cui si parte
-  std::vector<Condition> evolveNTimes(int N)
+  std::vector<Condition> evolveNTimes(int const N)
   {
-    std::vector<Condition> development;
-
-    development.push_back(condition);
-
-    for (int i = 1; i <= N; i++) {  // perchè in 0 c'è  la condizione iniziale
+    std::vector<Condition> development(N+1);
+    *development.begin()=condition;
+    std::generate_n(development.begin()+1, N, [&] () {
+     
       evolve();
+     return condition;
+      });
 
-      development.push_back(condition);
-    }
 
     return development;
   }
+
 };
 // questa classe se chiamata permette di creare una oggetto di Pandemic e
 // controlla anche che i valori inseriti siano corretti

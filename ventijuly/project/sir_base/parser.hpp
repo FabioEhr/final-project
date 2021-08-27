@@ -3,9 +3,10 @@
 #include "sir.hpp"
 namespace sir {
 Pandemic createVirus();  // defined in sir.cpp
+
 void Print(Pandemic& a);
 
-void Print(Condition const& a);
+void Print(Condition& a);
 
 }  // namespace sir
 
