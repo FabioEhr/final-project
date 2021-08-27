@@ -11,7 +11,7 @@ int main()
   while (true) {
     std::cout << '\n';
     city.move_and_evolve(Behaviour.mob, Behaviour.speed, vir);
-    get_n_draw(city);
+    city.draw_map(city.get_map());
     std::cout << '\n';
     std::cout << "Day: " << city.Get_Day() << '\n';
     std::cout << "Number of susceptibles: " << city.Get_Susceptible() << '\n';

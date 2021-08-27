@@ -126,7 +126,7 @@ class Person
     P_cell.c = set_c;
   }
 
-  PersonState Get_Condition()
+  PersonState Get_Condition() const
   {
     return condition;
   }
@@ -136,7 +136,7 @@ class Person
     condition = set_condition;
   }
 
-  int Get_Incub_Day()
+  int Get_Incub_Day() const 
   {
     return incub_day;
   }
@@ -424,7 +424,7 @@ class Grid
     recovered = set_recovered;
   }
 
-  int Get_Population()
+  int Get_Population() const 
   {
     return population;
   }
@@ -455,12 +455,9 @@ class Grid
   {
     day = set_day;
   }
-};
 
-inline std::vector<char> get_map(Grid const& board)
+  std::vector<char> get_map()
 {
-  int height = board.Get_Height();
-  int width = board.Get_Width();
   int area = width * height;
 
   std::vector<char> map;
@@ -468,66 +465,111 @@ inline std::vector<char> get_map(Grid const& board)
     map.push_back('-');
   }
 
-  std::vector<Person> pieces = board.Get_People();
-
-  int n_pieces = pieces.size();
+  int n_pieces = people.size();
   int row = 0;
   int column = 0;
   // information priority is: INFECTED, SUSCEPTIBLE, INCUBATING, RECOVERED,
   // EMPTY SPACE
-  for (int j = 0; j < n_pieces; ++j) {
-    row = (pieces[j]).Get_P_Cell().r;
-    column = (pieces[j]).Get_P_Cell().c;
+  for (Person const& a_person : people) {
+    row = a_person.Get_P_Cell().r;
+    column = a_person.Get_P_Cell().c;
 
     int position_in_map = (row - 1) * width + column - 1;
     char cluster = map[position_in_map];
 
     switch (cluster) {
       case '-':  // if the space is empty, it is overwritten by the condition
-        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
+
+        /*if (a_person.Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = 'S';
-        } else if (pieces[j].Get_Condition() == PersonState::Infected) {
+        } else if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] = 'I';
-        } else if (pieces[j].Get_Condition() == PersonState::Recovered) {
+        } else if (a_person.Get_Condition() == PersonState::Recovered) {
           map[position_in_map] = 'R';
-        } else if (pieces[j].Get_Condition() == PersonState::Incubating) {
+        } else if (a_person.Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = 'F';  // incubating inFection
         }
-        break;
+        break; */
+
+        switch (a_person.Get_Condition()) {
+          case PersonState::Susceptible : 
+            map[position_in_map] = 'S';
+            break;
+          case PersonState::Infected : 
+            map[position_in_map] = 'I';
+            break;
+          case PersonState::Recovered : 
+            map[position_in_map] = 'R';
+            break;
+          case PersonState::Incubating : 
+            map[position_in_map] = 'F';
+            break;
+          default : 
+            break;
+        }
+      break;
 
       case 'S':  // if it's suceptible
-        if (pieces[j].Get_Condition() == PersonState::Infected) {
+        /* if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
                     // infected who didn't manage to infect a susceptible
-        } else if (pieces[j].Get_Condition() == PersonState::Incubating) {
+        } else if (a_person.Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = '#';  // incubating-sus encounter
         }
         // all other cases are of lower priority
-        break;
+        break; */
+
+        switch (a_person.Get_Condition()) {
+          case PersonState::Infected : 
+            map[position_in_map] = '!';  
+            // risky encounter, it means that there is at least an
+            // infected who didn't manage to infect a susceptible
+            break;
+          case PersonState::Incubating :
+            map[position_in_map] = '#';  // incubating-sus encounter
+            break;
+            //all other cases are lower priority
+          default : 
+            break;
+        }
+      break;
 
       case 'I':
-        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
+        if (a_person.Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
         }           // infected who didn't manage to infect a susceptible
         break;
 
       case 'R':
-        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
+        /*if (a_person.Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = 'S';  // sus are higher priority
-        } else if (pieces[j].Get_Condition() == PersonState::Infected) {
+        } else if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] = 'I';  // inf are higher priority
-        } else if (pieces[j].Get_Condition() == PersonState::Incubating) {
+        } else if (a_person.Get_Condition() == PersonState::Incubating) {
           map[position_in_map] = 'F';  // inc are higher priority
+        } */
+        switch (a_person.Get_Condition()) {
+          case PersonState::Susceptible :
+            map[position_in_map] = 'S';
+            break;
+          case PersonState::Infected :
+            map[position_in_map] = 'I';
+            break;
+          case PersonState::Incubating :
+            map[position_in_map] = 'F';
+            break;
+          default : 
+            break;
         }
         break;
 
       case 'F':
-        if (pieces[j].Get_Condition() == PersonState::Susceptible) {
+        if (a_person.Get_Condition() == PersonState::Susceptible) {
           map[position_in_map] = '#';
         }  // sus-inc cluster, at least a sus and inc in tile
-        if (pieces[j].Get_Condition() == PersonState::Infected) {
+        if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] = 'I';
         }  // infected are higher priority
         break;
@@ -536,7 +578,7 @@ inline std::vector<char> get_map(Grid const& board)
         break;  // highest priority
 
       case '#':
-        if (pieces[j].Get_Condition() == PersonState::Infected) {
+        if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] = '!';
         }  // infected-sus is more important than inf-inc
 
@@ -545,30 +587,21 @@ inline std::vector<char> get_map(Grid const& board)
 
   return map;
 }
-inline void draw_map(std::vector<char> const& map, Grid const& board)
+
+ void draw_map(std::vector<char> const& map)
 {
   int size = map.size();
-  int width = board.Get_Width();
+  //int width = board.Get_Width();
   for (int i = 0; i < size; ++i) {
     if (i % width == 0) {
       std::cout << '\n';
     }
     std::cout << map[i] << " ";
-    /*    switch (map[i]) {
-          case '-':
-          system("Color 02");
-          std::cout << " ";
-          break;
-          default:
-          break;
-        }
-        system("Color 70"); */
   }
 }
-inline void get_n_draw(Grid const& board)
-{
-  draw_map(get_map(board), board);
-}
+
+}; //end of class grid
+
 }  // namespace grid
 
 #endif
