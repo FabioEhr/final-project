@@ -1,15 +1,10 @@
-#ifndef YAE_HPP
-#define YAE_HPP
+#include "yae.hpp"
 #include <cassert>
 #include "useful_func.hpp"
 #include <iostream>
-struct Virus
-{
-  double b;  // contagiosità
-  double g;  // recovery rate
-  double d;  // mortalità
-  double h;  // hosp chance
-  bool valid()
+
+
+bool Virus::valid()
   {
     bool a = true;
     if (b <= 0 && b > 1) {
@@ -29,20 +24,8 @@ struct Virus
     }
     return a;
   }
-};
-
-struct Transmatrix
-{
-  double yy;  // yy ya ye
-  double aa;  // ya aa ae
-  double ee;  // ye ae ye
-  double ya;
-  double ye;
-  double ae;
-};
-
-inline bool operator==(Transmatrix left, Transmatrix right)  // what is this needed
-                                                      // for?
+  
+  bool operator==(Transmatrix left, Transmatrix right)  
 {
   if (double_compare(left.yy, right.yy) && double_compare(left.aa, right.aa) &&
       double_compare(left.ee, right.ee) && double_compare(left.ya, right.ya) &&
@@ -53,22 +36,7 @@ inline bool operator==(Transmatrix left, Transmatrix right)  // what is this nee
   }
 }
 
-struct Age
-{
-  double sus;
-  double inf;
-  double rec;
-  double hosp;  // percentage of people of the age group in critical conditions
-  double ded;
-
-  int income;
-  int morale;
-
-  double d_mod;  // modifies death chance based on age
-  double h_mod;  // modifier of critical condition chance
-
-  // made it a member function
-  void invariant()
+void Age::invariant()
   {
     assert(sus >= 0);
     assert(inf >= 0);
@@ -77,142 +45,73 @@ struct Age
     assert(ded >= 0);
     assert(double_compare(sus + rec + inf + ded + hosp, 1, 0.05));
   }
-};
 
-struct Hospitals
-{
-  int patients;
-  int n_beds;
-  int level;
-  double r_chance_mod;
-  double d_chance_mod;
-};
-
-struct state_function  // used for keeping track of what's open and what's
-                       // closed
-{
-  bool restaurants;  // true means open
-  bool theatres;
-  bool schools;
-  bool churches;
-  int curfew_hours;
-  bool perceived_danger;
-  bool vaccines;
-};
-
-class City
-{
-  int population;  // total population
-  double y_per;    // percentage of young people
-  Age y;
-  double a_per;  // percentage of adults
-  Age a;
-  double e_per;  // percentage of elders
-  Age e;
-  Virus vir;
-  Transmatrix mob;
-  int treasure;         // treasure
-  int know = 0;         // knowledge, used for vaccines
-  Hospitals h;          // sistema sanitario
-  state_function stat;  // info on measures
-  int turns=0;
-  void invariant()
+//City methods
+void City::invariant()
   {
     assert(double_compare((y_per + a_per + e_per), 1));
   }
-
- public:
-  City(int number,
-       double percentage_young,
-       Age young,
-       double percentage_adults,
-       Age adults,
-       double percentage_elders,
-       Age elders,
-       Virus virus,
-       Transmatrix mobility,
-       int m_treasure,
-       Hospitals hosp,
-       state_function status)
-      : population{number}
-      , y_per{percentage_young}
-      , y{young}
-      , a_per{percentage_adults}
-      , a{adults}
-      , e_per{percentage_elders}
-      , e{elders}
-      , vir{virus}
-      , mob{mobility}
-      , treasure{m_treasure}
-      , h{hosp}
-      , stat{status}
-  {
-    invariant();
-  }
-
-  // getter functions
-  int N()
+int City::N()
   {
     return population;
   }
-  double Y_per()
+  double City::Y_per()
   {
     return y_per;
   }
-  double A_per()
+  double City::A_per()
   {
     return a_per;
   }
-  double E_per()
+  double City::E_per()
   {
     return e_per;
   }
-  Age const& Young()
+  Age const& City::Young()
   {
     return y;
   }
-  Age const& Adults()
+  Age const& City::Adults()
   {
     return a;
   }
-  Age const& Elders()
+  Age const& City::Elders()
   {
     return e;
   }
-  Transmatrix const& Mobility()
+  Transmatrix const& City::Mobility()
   {
     return mob;
   }
-  int $()
+  int City::$()
   {
     return treasure;
   }
-  int knowledge()
+  int City::knowledge()
   {
     return know;
   }
-  Hospitals const& Get_hospitals()
+  Hospitals const& City::Get_hospitals()
   {
     return h;
   }
-  state_function Get_status()
+  state_function const& City::Get_status()
   {
     return stat;
   }
-  Virus Get_virus()
+  Virus const& City::Get_virus()
   {
     return vir;
   }
-  int Get_turns(){
+  int City::Get_turns(){
     return turns;
   }
-
-  // add functions
-  void add_$(int amount)
+//add functions
+ void City::add_$(int amount)
   {
     treasure += amount;
   }
-  void mob_fixer()
+  void City::mob_fixer()
   {
     if (mob.yy < 0) {
       mob.yy = 0;
@@ -234,7 +133,7 @@ class City
     }
   }
 
-  void add_mob(double yy, double aa, double ee, double ya, double ye, double ae)
+  void City::add_mob(double yy, double aa, double ee, double ya, double ye, double ae)
   {
     // modifying values
     mob.yy += yy;
@@ -247,7 +146,7 @@ class City
     mob_fixer();
   }
 
-  void multiply_mob(double xyy = 1,
+  void City::multiply_mob(double xyy = 1,
                     double xaa = 1,
                     double xee = 1,
                     double xya = 1,
@@ -268,51 +167,51 @@ class City
     mob.ae = mob.ae * xae;
   }
 
-  void add_know(int amount)
+  void City::add_know(int amount)
   {
     know += amount;
   }
 
-  // replacing functions
-  void Set_ages(Age& other_young, Age& other_adult, Age& other_elder)
+// replacing functions
+  void City::Set_ages(Age& other_young, Age& other_adult, Age& other_elder)
   {
     y = other_young;
     a = other_adult;
     e = other_elder;
   }
 
-  void replace_mob(Transmatrix& replacer)
+  void City::replace_mob(Transmatrix& replacer)
   {
     mob = replacer;
   }
-  void Set_status(state_function& replacer)
+  void City::Set_status(state_function& replacer)
   {
     stat = replacer;
   }
 
-  void Set_virus(Virus& replacer)
+  void City::Set_virus(Virus& replacer)
   {
     vir = replacer;
   }
-  void Set_hospital(Hospitals& hosp)
+  void City::Set_hospital(Hospitals& hosp)
   {
     h = hosp;
   }
   // GetRef functions
-  Hospitals& GetRef_hospitals()
+  Hospitals& City::GetRef_hospitals()
   {
     return h;
   }
 
-  int& GetRef_treasure()
+  int& City::GetRef_treasure()
   {
     return treasure;
   }
- //next functions
- void next_turn(){
+  //next functions
+ void City::next_turn(){
    ++turns;
  }
-  void next_treasury()
+  void City::next_treasury()
   {
     // income change (infected people don't work?)
     int $_y = population * y_per * (y.sus + y.rec) * y.income;
@@ -324,14 +223,14 @@ class City
     int sum = $_y + $_a + $_e + $_osp;
     treasure += sum;
   }
-  void next_treasury_n_times(int n)
+  void City::next_treasury_n_times(int n)
   {
     for (int i = 0; i < n; ++i) {
       next_treasury();
     }
   }
-  // mod fixers
-  void mod_fixer(Age& t)
+// mod fixers
+  void City::mod_fixer(Age& t)
   {
     if (vir.h + t.h_mod < 0) {
       t.h_mod = -vir.h;
@@ -356,7 +255,7 @@ class City
     // 1 is the maximum, it means that all infected turn into rec, dead or hops
     // virus values are handeled by vir.valid(), which is asserted in evolve
   }
-  void hosp_mod_fixer()
+  void City::hosp_mod_fixer()
   {
     // vir.g+vir.h+h_r_mod+h_d_mod=1 all hosp heal or die
     if (vir.g + h.r_chance_mod + vir.d + h.d_chance_mod > 1) {
@@ -377,9 +276,10 @@ class City
       h.r_chance_mod = 1. - vir.g;  // all heal
       h.d_chance_mod = -vir.d;      // no one dies
     }
-  }
+  }  
+  
   //functions to evaluate probability of inf-sus encounter for various ages
-  double y_sus_inf_encounter(){
+  double City::y_sus_inf_encounter(){
     double p_y_1 = (mob.yy * y.inf + mob.ya * a.inf + mob.ye * e.inf);
     double p_y_2 = -mob.yy * y.inf * mob.ya * a.inf -
                    mob.yy * y.inf * mob.ye * e.inf -
@@ -387,7 +287,7 @@ class City
     double p_y_3 = mob.yy * mob.ya * mob.ye * y.inf * a.inf * e.inf;
 return p_y_1+p_y_2+p_y_3;
   }
-  double a_sus_inf_encounter(){
+  double City::a_sus_inf_encounter(){
  double p_a_1 = mob.ya * y.inf + mob.aa * a.inf + mob.ae * e.inf;
     double p_a_2 = -mob.ya * y.inf * mob.aa * a.inf -
                    mob.ya * y.inf * mob.ae * e.inf -
@@ -395,7 +295,7 @@ return p_y_1+p_y_2+p_y_3;
     double p_a_3 = mob.ya * y.inf * mob.aa * a.inf * mob.ae * e.inf;
     return p_a_1+p_a_2+p_a_3;
   }
-  double e_sus_inf_encounter(){
+  double City::e_sus_inf_encounter(){
 double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     double p_e_2 = -mob.ye * y.inf * mob.ae * a.inf -
                    mob.ye * y.inf * mob.ee * e.inf -
@@ -403,9 +303,8 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     double p_e_3 = mob.ye * y.inf * mob.ae * a.inf * mob.ee * e.inf;
     return p_e_1+p_e_2+p_e_3;
   }
-
   // functions to display deltas in game-loop, they do the same things as evolve 
-  double D_inf_y()
+  double City::D_inf_y()
   {  // percentage delta inside of young
     
     double D_y = vir.b * y.sus * (y_sus_inf_encounter());
@@ -415,7 +314,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
 
     return D_y;
   }
-  double D_inf_a()
+  double City::D_inf_a()
   {
    
     double D_a = vir.b * a.sus * (a_sus_inf_encounter());
@@ -425,7 +324,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
 
     return D_a;
   }
-  double D_inf_e()
+  double City::D_inf_e()
   {
     
     double D_e = vir.b * e.sus * (e_sus_inf_encounter());
@@ -436,7 +335,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     return D_e;
   }
 
-  int next_turn_inf()
+  int City::next_turn_inf()
   {
     // young
     double D_y = D_inf_y();
@@ -446,7 +345,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     double D_e = D_inf_e();
     return population * (y_per * D_y + a_per * D_a + e_per * D_e);
   }
-  int next_turn_crit()
+  int City::next_turn_crit()
   {
     mod_fixer(y);
     mod_fixer(a);
@@ -460,7 +359,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
                       e_per * (vir.h + e.h_mod) * current_elder_inf);
     return new_patients;
   }
-  int next_turn_ovrfl()
+  int City::next_turn_ovrfl()
   {
     int new_patients = next_turn_crit();
     int delta = -h.n_beds + h.patients + new_patients;
@@ -470,7 +369,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     }
     return result;
   }
-  int next_turn_dismissed()
+  int City::next_turn_dismissed()
   {  // people leaving hospitals alive
     hosp_mod_fixer();
 
@@ -501,7 +400,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     return result;
   }
 
-  int next_turn_deaths()
+  int City::next_turn_deaths()
   {
     hosp_mod_fixer();
     mod_fixer(y);
@@ -531,7 +430,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
                  next_turn_ovrfl();
     return reaper;
   }
-  int next_turn_rec()
+  int City::next_turn_rec()
   {
     hosp_mod_fixer();
     mod_fixer(y);
@@ -548,9 +447,9 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
         next_turn_dismissed();
     return miracle;
   }
-
+  //evolves
   // main function: handles infections, deaths, recoveries and critical cases
-  void evolve()
+  void City::evolve()
   {
     assert(vir.valid());
     /*yy ya ye
@@ -680,7 +579,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     e.invariant();
   }
   // used for testing, remember to include iostream
-  void evolve_n_print()
+  void City::evolve_n_print()
   {
     assert(vir.valid());
 
@@ -853,13 +752,14 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     a.invariant();
     e.invariant();
   }
-  void evolve_n_times(int n)
+  void City::evolve_n_times(int n)
   {
     for (int i = 0; i < n; ++i) {
       evolve();
     }
   }
-  int turn_income()
+  //economy and morale
+  int City::turn_income()
   {
     int $_y = population * y_per * (y.sus + y.rec) * y.income;
     int $_a = population * a_per * (a.sus + a.rec) * a.income;
@@ -870,49 +770,39 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     int sum = $_y + $_a + $_e + $_osp;
     return sum;
   }
-  int cumulative_morale()
+  int City::cumulative_morale()
   {
     int y_m = population * y_per * y.morale;
     int a_m = population * a_per * a.morale;
     int e_m = population * e_per * e.morale;
     return y_m + a_m + e_m;
   }
-
-  double total_per_susceptibles()
+  //totals
+  double City::total_per_susceptibles()
   {
     return (y.sus * y_per + a.sus * a_per +
             e.sus * e_per);  // returna la percentuale di popolazione
                              // suscettibile (sul totale)
   }
-  double total_per_infected()
+  double City::total_per_infected()
   {
     return (y.inf * y_per + a.inf * a_per +
             e.inf * e_per);  // percentuale di popolazione infetta
   }
-  double total_per_recovered()
+  double City::total_per_recovered()
   {
     return (y.rec * y_per + a.rec * a_per + e.rec * e_per);  // ecc.
   }
-  double total_per_dead()
+  double City::total_per_dead()
   {
     return (y.ded * y_per + a.ded * a_per + e.ded * e_per);
   }
-  double total_per_hosp()
+  double City::total_per_hosp()
   {
     return (y.hosp * y_per + a.hosp * a_per + e.hosp * e_per);
   }
-};
-//used for a cleaner code
-struct Deltas
-{ 
- int D_inf = 0;      // aumento di contagi
-  int D_crit = 0;     // aumento di casi critici
-  int D_rec = 0;      // aumento di recoveries
-  int D_deaths = 0;   // aumento di morti
-  int D_dismmis = 0;  // aumento di persone guarite in ospedale
-  int D_ovrfl = 0;  // aumento di persone a cui è negato l'accesso in ospedale
-  //must be run before evolve!!
-  void update(City & playground){
+  //Deltas
+  void Deltas::update(City & playground){
     D_inf = playground.next_turn_inf();
     D_crit = playground.next_turn_crit();
     D_rec = playground.next_turn_rec();
@@ -920,6 +810,9 @@ struct Deltas
     D_dismmis = playground.next_turn_dismissed();
     D_ovrfl = playground.next_turn_ovrfl();
   }
-};
 
-#endif
+
+
+
+
+

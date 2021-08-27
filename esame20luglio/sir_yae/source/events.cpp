@@ -147,11 +147,11 @@ void illegal_parties(City& playground)
   std::random_device r1;
   std::default_random_engine generator1{r1()};
   std::uniform_int_distribution<int> ntot(0, playground.N() / 2);
-  int lucky = ntot(r1);
+  int lucky = ntot(generator1);
   int unlucky = playground.total_per_infected() * playground.N();
   if (unlucky > lucky) {
     std::uniform_int_distribution<int> three(0, 2);
-    int which_one = three(r1);
+    int which_one = three(generator1);
     if (which_one == 0) {
       mutate_contagiousness(playground);
     }
@@ -168,9 +168,8 @@ void illegal_parties(City& playground)
     if (mor_ < 0) {
       mor_ = 0;
     }
-    std::default_random_engine generator2{r1()};
     std::uniform_int_distribution<int> morale_dist(0, mor_ + 5);
-    int event = morale_dist(r1);
+    int event = morale_dist(generator1);
     if (event < 3) {
       if (!current.restaurants || !current.theatres || !current.churches ||
           !current.schools) {
@@ -200,7 +199,7 @@ void illegal_parties(City& playground)
     e = 1.;
   }
   std::uniform_real_distribution<double> science(0., 1. / e);
-  double eureker = science(r1);
+  double eureker = science(generator1);
   if (eureker < 0.009 && e < 51) {
     eureka(playground);
   }

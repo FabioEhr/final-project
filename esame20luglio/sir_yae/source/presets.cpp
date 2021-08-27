@@ -1,26 +1,23 @@
-#ifndef PRESETS_HPP
-#define PRESETS_HPP
-#include "yae.hpp"
-
+#include "presets.hpp"
 // Virus presets
-inline Virus Covid()
+Virus Covid()
 {
   Virus covid = {0.4, 0.05, 0.08, 0.08};  // beta gamma delta crit_chance
   return covid;
 }
-inline Virus Flu()
+Virus Flu()
 {
   Virus flu = {0.6, 0.1, 0.0, 0.0};
   return flu;
 }
-inline Virus Ebola()
+Virus Ebola()
 {
   Virus ebola = {0.4, 0.02, 0.15, 0.1};
   return ebola;
 }
 
 // City presets
-inline City Bologna(Virus& new_virus)
+City Bologna(Virus& new_virus)
 {
   // beta gamma delta
 
@@ -66,7 +63,7 @@ inline City Bologna(Virus& new_virus)
   return bologna;
 }
 
-inline City Milano(Virus& new_virus)
+City Milano(Virus& new_virus)
 {
   // beta gamma delta
 
@@ -108,7 +105,7 @@ inline City Milano(Virus& new_virus)
   return milano;
 }
 
-inline City Matera(Virus& new_virus)
+City Matera(Virus& new_virus)
 {
   Age Young = {
       0.999,
@@ -147,5 +144,3 @@ inline City Matera(Virus& new_virus)
                  initial};
   return matera;
 }
-
-#endif

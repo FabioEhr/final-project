@@ -3,6 +3,7 @@
 #include "yae.hpp"
 #include "interface.hpp"
 #include "presets.hpp"
+#include "useful_func.hpp"
 
 
 int main()

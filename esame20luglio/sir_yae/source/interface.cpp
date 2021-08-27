@@ -1,11 +1,10 @@
-#ifndef INTERFACE_HPP
-#define INTERFACE_HPP
 #include <random>
 #include "decisions.hpp"
 #include "yae.hpp"
 #include "useful_func.hpp"
+#include <iostream>
 
-inline void print_opt(City& playground)
+ void print_opt(City& playground)
 {
   
   std::cout << "Current treasury: " << playground.$() << '\n';
@@ -75,7 +74,7 @@ inline void print_opt(City& playground)
   std::cout << "Skip N weeks (Type #)" << '\n';
 }
 
-inline void execute(City& playground, char order)
+ void execute(City& playground, char order)
 {
   state_function current = playground.Get_status();
   switch (order) {
@@ -162,7 +161,7 @@ inline void execute(City& playground, char order)
       break;
   }
 }
-inline std::string mood(Age const& person)
+ std::string mood(Age const& person)
 {
   std::string text = "Depressed";
 
@@ -185,7 +184,7 @@ inline std::string mood(Age const& person)
   return text;
 }
 
-inline void print_situation(City& playground,
+ void print_situation(City& playground,
                      Deltas& deltas)
 {std::cout<< "Weeks since start of simulation: " << playground.Get_turns() << '\n';
   int n = playground.N();
@@ -266,7 +265,7 @@ inline void print_situation(City& playground,
   }
 }
 
-inline std::string news_paper()
+ std::string news_paper()
 {
   std::string b;
   std::string name;
@@ -288,7 +287,7 @@ inline std::string news_paper()
   }
   return b;
 }
-inline std::string variant()
+ std::string variant()
 {
   std::string name;
   std::random_device r1;
@@ -315,7 +314,7 @@ inline std::string variant()
   }
   return name;
 }
-inline std::string groups(City& playground)
+ std::string groups(City& playground)
 {
   state_function alpha = playground.Get_status();
   std::string a = "Groups of so called 'no masks' ";
@@ -334,7 +333,7 @@ inline std::string groups(City& playground)
   return a;
 }
 
-inline void print_vir_opt()
+ void print_vir_opt()
 {
   std::cout << "Select a virus." << '\n';
   std::cout << "Type 1 for Flu. Contagious but not extremly deadly." << '\n';
@@ -344,7 +343,7 @@ inline void print_vir_opt()
   std::cout << "Type 3 for Ebola. Lowest recovery rate and highest letality."
             << '\n';
 }
-inline void print_city_opt()
+ void print_city_opt()
 {
   std::cout << "Select a City." << '\n';
   std::cout
@@ -357,5 +356,3 @@ inline void print_city_opt()
       << "Type 3 for Milano. Extremly high population, large portion of adults"
       << '\n';
 }
-
-#endif
