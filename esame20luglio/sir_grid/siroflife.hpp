@@ -36,7 +36,7 @@ struct Cell
       return (*this).c < rhs.c;
     } else {
       return (*this).r < rhs.r;
-    };
+    }
   }
 
   bool operator>(Cell const& rhs) const
@@ -45,7 +45,7 @@ struct Cell
       return (*this).c > rhs.c;
     } else {
       return (*this).r > rhs.r;
-    };
+    }
   }
 
   bool operator==(Cell const& rhs) const
@@ -57,14 +57,16 @@ struct Cell
 enum class PersonState { Susceptible, Incubating, Infected, Recovered };
 
 // used in class Person for random movement
-std::random_device person_device;
-std::default_random_engine person_generator{person_device()};
+
 
 class Person
 {
   Cell P_cell;
   PersonState condition;
   int incub_day = 0;
+
+  inline static std::random_device person_device; //c++17 required
+  inline static std::default_random_engine person_generator{person_device()};
 
  public:
   Person(int m_r = 1,
@@ -93,16 +95,16 @@ class Person
 
     if (P_cell.r > rndmove_height) {
       P_cell.r = rndmove_height;
-    };
+    }
     if (P_cell.r < 1) {
       P_cell.r = 1;
-    };
+    }
     if (P_cell.c > rndmove_width) {
       P_cell.c = rndmove_width;
-    };
+    }
     if (P_cell.c < 1) {
       P_cell.c = 1;
-    };
+    }
   }
 
   // getters and setters
@@ -147,25 +149,32 @@ class Person
 
 inline std::string cond_to_string(PersonState cond)
 {
-  if (cond == PersonState::Susceptible) {
+  switch (cond) {
+    case PersonState::Susceptible : 
+    return "susceptible";
+    break;
+    case PersonState::Infected : 
+    return "infected";
+    break;
+    case PersonState::Recovered : 
+    return "recovered";
+    break;
+    default :
+    return "error: unknown condition";
+    break;
+  }
+  
+  /* if (cond == PersonState::Susceptible) {
     return "susceptible";
   } else if (cond == PersonState::Infected) {
     return "infected";
   } else if (cond == PersonState::Recovered) {
     return "recovered";
   } else
-    return "incubating";
+    return "incubating"; */
 };
 
-// used in class Grid below for setting a random initial position
-std::random_device grid_device;
-std::default_random_engine generator_grid{grid_device()};
-// used in class Grid below for probability of getting infected
-std::random_device sus_evolve_device;
-std::default_random_engine generator_sus_evolve{sus_evolve_device()};
-// used in class Grid below for probability of recovering
-std::random_device grid_evolve_device;
-std::default_random_engine generator_grid_evolve{grid_evolve_device()};
+
 
 class Grid
 {
@@ -184,7 +193,16 @@ class Grid
 
   bool grid_verbose = false;
 
- public:
+  // used in class Grid below for setting a random initial position
+  inline static std::random_device grid_device;
+  inline static std::default_random_engine generator_grid{grid_device()};
+// used in class Grid below for probability of getting infected
+  inline static std::random_device sus_evolve_device;
+  inline static std::default_random_engine generator_sus_evolve{sus_evolve_device()};
+// used in class Grid below for probability of recovering
+  inline static std::random_device grid_evolve_device;
+  inline static std::default_random_engine generator_grid_evolve{grid_evolve_device()};
+
  public:
   Grid(int m_h = 1, int m_w = 1, int m_sus = 1, int m_inf = 0, int m_rec = 0)
       : height{m_h}
@@ -215,12 +233,12 @@ class Grid
     std::uniform_int_distribution<int> grid_distr_r(1, height);
     std::uniform_int_distribution<int> grid_distr_c(1, width);
 
-    for (int i = 0; i < population; ++i) {  // taking all the people from (1,1)
+    for (Person& individual : people) {  // taking all the people from (1,1)
                                             // to a random starting position
 
       // (people[i]).r = a_random_number between 1 and  height
       // (people[i]).c = a_random_number between 1 and  width
-      people[i].Set_P_Cell(grid_distr_r(generator_grid),
+      individual.Set_P_Cell(grid_distr_r(generator_grid),
                            grid_distr_c(generator_grid));
     }
   }
@@ -252,8 +270,8 @@ class Grid
         // sorted, improving efficiency
 
         inf_cells.insert(inf_person.Get_P_Cell());
-      };
-    };
+      }
+    }
 
     int person_index = 1;
 
@@ -303,10 +321,10 @@ class Grid
       for (int j = 0; j < population; ++j) {  // making each person move
 
         (people[j]).rndmove(grid_speed, width, height);
-      };
+      }
 
       sus_evolve(mne_virus);
-    };
+    }
 
     // infection can happen multiple times because of mobility but recovery
     // isn't affected
@@ -321,7 +339,7 @@ class Grid
           inf_or_incub.Set_Condition(PersonState::Recovered);
           --infected;
           ++recovered;
-        };
+        }
 
       } else if (inf_or_incub.Get_Condition() ==
                  PersonState::Incubating) {  // implemented incubation so that
@@ -335,11 +353,11 @@ class Grid
         } else {
           inf_or_incub.Set_Condition(PersonState::Infected);
           inf_or_incub.Set_Incub_Day(0);
-        };
-      };
+        }
+      }
 
       assert(invariant() == true);
-    };
+    }
 
     ++day;
   }
@@ -350,8 +368,8 @@ class Grid
                               int N)
   {
     for (int i = 0; i < N; ++i) {
-      (*this).move_and_evolve(Nmobility, Ngrid_speed, mnen_virus);
-    };
+      move_and_evolve(Nmobility, Ngrid_speed, mnen_virus);
+    }
   }
 
   // getters and setters

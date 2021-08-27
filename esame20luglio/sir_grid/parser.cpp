@@ -1,10 +1,11 @@
-#include <iostream>
 #include "siroflife.hpp"
 #include "useful_func.hpp"
-namespace grid {
-Virus makeVirus()
-{
-  double Contagiousness = -1;
+#include <iostream>
+
+namespace grid{
+  
+Virus makeVirus(){
+       double Contagiousness = -1;
   double Recovery_rate = -1;
   std::string antibug = "t";
   while (!d_comp(Contagiousness, 0., 1.001) || !valid_string(antibug)) {
@@ -15,7 +16,7 @@ Virus makeVirus()
                  "contagiousness of the virus: ";
 
     std::cin >> antibug;
-    // non va bene
+    //non va bene
     if (antibug == "1" || antibug == "1." || antibug == "1.0" ||
         antibug == "1.00" || antibug == "1.000") {
       Contagiousness = 1;
@@ -50,14 +51,16 @@ Virus makeVirus()
       break;
     }
   }
-  // nome con minuscola e maiuscola
-  Virus vir = {Contagiousness, Recovery_rate, incubation};
-  return vir;
-}
-Grid makeGrid()
-{
-  std::string antibug = "t";
+  //nome con minuscola e maiuscola
+   Virus vir = {Contagiousness, Recovery_rate, incubation};
+   return vir;
 
+}
+Grid makeGrid(){
+
+      std::string antibug = "t";
+
+ 
   int height = 1;
   while (true) {
     std::cout << "Insert Grid height (>=1)." << '\n';
@@ -84,7 +87,7 @@ Grid makeGrid()
       continue;
     }
   }
-  // troppi dati non va bene inizializzare così, 3 non sono troppi secondo me
+  //troppi dati non va bene inizializzare così, 3 non sono troppi secondo me
   int sus = 0;
   int inf = 0;
   int rec = 0;
@@ -102,13 +105,14 @@ Grid makeGrid()
   rec = string_to_int(antibug);
   std::cout << "The number of recovered has been set to " << rec << '\n';
 
+
   Grid city = {height, width, sus, inf, rec};
-  return city;
+  return city;  
 }
-Behaviour makeBehaviour()
-{
+Behaviour makeBehaviour(){
   Behaviour be;
   std::string antibug = "t";
+
 
   std::cout << "How many times should people move in a single day?" << '\n';
   std::cin >> antibug;
@@ -132,5 +136,10 @@ Behaviour makeBehaviour()
   }
   return be;
 }
+ 
+  
 
-}  // namespace grid
+
+
+
+}
