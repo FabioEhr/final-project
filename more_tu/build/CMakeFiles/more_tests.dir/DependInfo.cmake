@@ -4,12 +4,12 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lorenzo/final_project/more_tu/sir_yae/decisions.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir/decisions.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/events.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir/events.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/interface.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir/interface.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/more_tests.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir/more_tests.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/presets.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir/presets.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/yae.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir/yae.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/decisions.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir/decisions.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/events.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir/events.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/interface.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir/interface.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/more_tests.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir/more_tests.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/presets.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir/presets.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/yae.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir/yae.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

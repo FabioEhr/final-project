@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lorenzo/final_project/more_tu/sir_yae/decisions.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/yae_test.dir/decisions.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/presets.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/yae_test.dir/presets.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/test.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/yae_test.dir/test.cpp.o"
-  "/home/lorenzo/final_project/more_tu/sir_yae/yae.cpp" "/home/lorenzo/final_project/more_tu/build/CMakeFiles/yae_test.dir/yae.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/decisions.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/yae_test.dir/decisions.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/presets.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/yae_test.dir/presets.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/test.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/yae_test.dir/test.cpp.o"
+  "/home/stef/progettoinfo/final-project/more_tu/sir_yae/yae.cpp" "/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/yae_test.dir/yae.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

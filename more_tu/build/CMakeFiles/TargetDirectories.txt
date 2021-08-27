@@ -1,6 +1,6 @@
-/home/lorenzo/final_project/more_tu/build/CMakeFiles/rebuild_cache.dir
-/home/lorenzo/final_project/more_tu/build/CMakeFiles/edit_cache.dir
-/home/lorenzo/final_project/more_tu/build/CMakeFiles/test.dir
-/home/lorenzo/final_project/more_tu/build/CMakeFiles/more_tests.dir
-/home/lorenzo/final_project/more_tu/build/CMakeFiles/yae_test.dir
-/home/lorenzo/final_project/more_tu/build/CMakeFiles/play.dir
+/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/rebuild_cache.dir
+/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/edit_cache.dir
+/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/test.dir
+/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/more_tests.dir
+/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/yae_test.dir
+/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/play.dir

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lorenzo/final_project/more_tu/sir_yae
+CMAKE_SOURCE_DIR = /home/stef/progettoinfo/final-project/more_tu/sir_yae
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lorenzo/final_project/more_tu/build
+CMAKE_BINARY_DIR = /home/stef/progettoinfo/final-project/more_tu/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/play.dir/depend.make
@@ -58,82 +58,82 @@ include CMakeFiles/play.dir/progress.make
 include CMakeFiles/play.dir/flags.make
 
 CMakeFiles/play.dir/game_main.cpp.o: CMakeFiles/play.dir/flags.make
-CMakeFiles/play.dir/game_main.cpp.o: /home/lorenzo/final_project/more_tu/sir_yae/game_main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/play.dir/game_main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/game_main.cpp.o -c /home/lorenzo/final_project/more_tu/sir_yae/game_main.cpp
+CMakeFiles/play.dir/game_main.cpp.o: /home/stef/progettoinfo/final-project/more_tu/sir_yae/game_main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/play.dir/game_main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/game_main.cpp.o -c /home/stef/progettoinfo/final-project/more_tu/sir_yae/game_main.cpp
 
 CMakeFiles/play.dir/game_main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/game_main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lorenzo/final_project/more_tu/sir_yae/game_main.cpp > CMakeFiles/play.dir/game_main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/stef/progettoinfo/final-project/more_tu/sir_yae/game_main.cpp > CMakeFiles/play.dir/game_main.cpp.i
 
 CMakeFiles/play.dir/game_main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/game_main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lorenzo/final_project/more_tu/sir_yae/game_main.cpp -o CMakeFiles/play.dir/game_main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/stef/progettoinfo/final-project/more_tu/sir_yae/game_main.cpp -o CMakeFiles/play.dir/game_main.cpp.s
 
 CMakeFiles/play.dir/yae.cpp.o: CMakeFiles/play.dir/flags.make
-CMakeFiles/play.dir/yae.cpp.o: /home/lorenzo/final_project/more_tu/sir_yae/yae.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/play.dir/yae.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/yae.cpp.o -c /home/lorenzo/final_project/more_tu/sir_yae/yae.cpp
+CMakeFiles/play.dir/yae.cpp.o: /home/stef/progettoinfo/final-project/more_tu/sir_yae/yae.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/play.dir/yae.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/yae.cpp.o -c /home/stef/progettoinfo/final-project/more_tu/sir_yae/yae.cpp
 
 CMakeFiles/play.dir/yae.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/yae.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lorenzo/final_project/more_tu/sir_yae/yae.cpp > CMakeFiles/play.dir/yae.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/stef/progettoinfo/final-project/more_tu/sir_yae/yae.cpp > CMakeFiles/play.dir/yae.cpp.i
 
 CMakeFiles/play.dir/yae.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/yae.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lorenzo/final_project/more_tu/sir_yae/yae.cpp -o CMakeFiles/play.dir/yae.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/stef/progettoinfo/final-project/more_tu/sir_yae/yae.cpp -o CMakeFiles/play.dir/yae.cpp.s
 
 CMakeFiles/play.dir/decisions.cpp.o: CMakeFiles/play.dir/flags.make
-CMakeFiles/play.dir/decisions.cpp.o: /home/lorenzo/final_project/more_tu/sir_yae/decisions.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/play.dir/decisions.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/decisions.cpp.o -c /home/lorenzo/final_project/more_tu/sir_yae/decisions.cpp
+CMakeFiles/play.dir/decisions.cpp.o: /home/stef/progettoinfo/final-project/more_tu/sir_yae/decisions.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/play.dir/decisions.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/decisions.cpp.o -c /home/stef/progettoinfo/final-project/more_tu/sir_yae/decisions.cpp
 
 CMakeFiles/play.dir/decisions.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/decisions.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lorenzo/final_project/more_tu/sir_yae/decisions.cpp > CMakeFiles/play.dir/decisions.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/stef/progettoinfo/final-project/more_tu/sir_yae/decisions.cpp > CMakeFiles/play.dir/decisions.cpp.i
 
 CMakeFiles/play.dir/decisions.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/decisions.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lorenzo/final_project/more_tu/sir_yae/decisions.cpp -o CMakeFiles/play.dir/decisions.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/stef/progettoinfo/final-project/more_tu/sir_yae/decisions.cpp -o CMakeFiles/play.dir/decisions.cpp.s
 
 CMakeFiles/play.dir/events.cpp.o: CMakeFiles/play.dir/flags.make
-CMakeFiles/play.dir/events.cpp.o: /home/lorenzo/final_project/more_tu/sir_yae/events.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/play.dir/events.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/events.cpp.o -c /home/lorenzo/final_project/more_tu/sir_yae/events.cpp
+CMakeFiles/play.dir/events.cpp.o: /home/stef/progettoinfo/final-project/more_tu/sir_yae/events.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/play.dir/events.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/events.cpp.o -c /home/stef/progettoinfo/final-project/more_tu/sir_yae/events.cpp
 
 CMakeFiles/play.dir/events.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/events.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lorenzo/final_project/more_tu/sir_yae/events.cpp > CMakeFiles/play.dir/events.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/stef/progettoinfo/final-project/more_tu/sir_yae/events.cpp > CMakeFiles/play.dir/events.cpp.i
 
 CMakeFiles/play.dir/events.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/events.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lorenzo/final_project/more_tu/sir_yae/events.cpp -o CMakeFiles/play.dir/events.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/stef/progettoinfo/final-project/more_tu/sir_yae/events.cpp -o CMakeFiles/play.dir/events.cpp.s
 
 CMakeFiles/play.dir/interface.cpp.o: CMakeFiles/play.dir/flags.make
-CMakeFiles/play.dir/interface.cpp.o: /home/lorenzo/final_project/more_tu/sir_yae/interface.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/play.dir/interface.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/interface.cpp.o -c /home/lorenzo/final_project/more_tu/sir_yae/interface.cpp
+CMakeFiles/play.dir/interface.cpp.o: /home/stef/progettoinfo/final-project/more_tu/sir_yae/interface.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/play.dir/interface.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/interface.cpp.o -c /home/stef/progettoinfo/final-project/more_tu/sir_yae/interface.cpp
 
 CMakeFiles/play.dir/interface.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/interface.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lorenzo/final_project/more_tu/sir_yae/interface.cpp > CMakeFiles/play.dir/interface.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/stef/progettoinfo/final-project/more_tu/sir_yae/interface.cpp > CMakeFiles/play.dir/interface.cpp.i
 
 CMakeFiles/play.dir/interface.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/interface.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lorenzo/final_project/more_tu/sir_yae/interface.cpp -o CMakeFiles/play.dir/interface.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/stef/progettoinfo/final-project/more_tu/sir_yae/interface.cpp -o CMakeFiles/play.dir/interface.cpp.s
 
 CMakeFiles/play.dir/presets.cpp.o: CMakeFiles/play.dir/flags.make
-CMakeFiles/play.dir/presets.cpp.o: /home/lorenzo/final_project/more_tu/sir_yae/presets.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/play.dir/presets.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/presets.cpp.o -c /home/lorenzo/final_project/more_tu/sir_yae/presets.cpp
+CMakeFiles/play.dir/presets.cpp.o: /home/stef/progettoinfo/final-project/more_tu/sir_yae/presets.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/play.dir/presets.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/play.dir/presets.cpp.o -c /home/stef/progettoinfo/final-project/more_tu/sir_yae/presets.cpp
 
 CMakeFiles/play.dir/presets.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/presets.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lorenzo/final_project/more_tu/sir_yae/presets.cpp > CMakeFiles/play.dir/presets.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/stef/progettoinfo/final-project/more_tu/sir_yae/presets.cpp > CMakeFiles/play.dir/presets.cpp.i
 
 CMakeFiles/play.dir/presets.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/presets.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lorenzo/final_project/more_tu/sir_yae/presets.cpp -o CMakeFiles/play.dir/presets.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/stef/progettoinfo/final-project/more_tu/sir_yae/presets.cpp -o CMakeFiles/play.dir/presets.cpp.s
 
 # Object files for target play
 play_OBJECTS = \
@@ -155,7 +155,7 @@ play: CMakeFiles/play.dir/interface.cpp.o
 play: CMakeFiles/play.dir/presets.cpp.o
 play: CMakeFiles/play.dir/build.make
 play: CMakeFiles/play.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/lorenzo/final_project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable play"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable play"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/play.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -168,6 +168,6 @@ CMakeFiles/play.dir/clean:
 .PHONY : CMakeFiles/play.dir/clean
 
 CMakeFiles/play.dir/depend:
-	cd /home/lorenzo/final_project/more_tu/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lorenzo/final_project/more_tu/sir_yae /home/lorenzo/final_project/more_tu/sir_yae /home/lorenzo/final_project/more_tu/build /home/lorenzo/final_project/more_tu/build /home/lorenzo/final_project/more_tu/build/CMakeFiles/play.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/stef/progettoinfo/final-project/more_tu/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/stef/progettoinfo/final-project/more_tu/sir_yae /home/stef/progettoinfo/final-project/more_tu/sir_yae /home/stef/progettoinfo/final-project/more_tu/build /home/stef/progettoinfo/final-project/more_tu/build /home/stef/progettoinfo/final-project/more_tu/build/CMakeFiles/play.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/play.dir/depend
 

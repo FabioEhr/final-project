@@ -1,0 +1,6 @@
+/home/stef/progettoinfo/final-project/more_tu/buildplay/CMakeFiles/rebuild_cache.dir
+/home/stef/progettoinfo/final-project/more_tu/buildplay/CMakeFiles/edit_cache.dir
+/home/stef/progettoinfo/final-project/more_tu/buildplay/CMakeFiles/test.dir
+/home/stef/progettoinfo/final-project/more_tu/buildplay/CMakeFiles/more_tests.dir
+/home/stef/progettoinfo/final-project/more_tu/buildplay/CMakeFiles/yae_test.dir
+/home/stef/progettoinfo/final-project/more_tu/buildplay/CMakeFiles/play.dir

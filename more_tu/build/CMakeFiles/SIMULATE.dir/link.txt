@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/SIMULATE.dir/game_main.cpp.o CMakeFiles/SIMULATE.dir/yae.cpp.o CMakeFiles/SIMULATE.dir/decisions.cpp.o CMakeFiles/SIMULATE.dir/events.cpp.o CMakeFiles/SIMULATE.dir/interface.cpp.o CMakeFiles/SIMULATE.dir/presets.cpp.o  -o SIMULATE 
