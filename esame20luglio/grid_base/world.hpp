@@ -1,4 +1,4 @@
-
+#include<useful_func.hpp>
 #include<algorithm>
 #include<iostream>
 #include<vector>
@@ -54,6 +54,11 @@ namespace grid_base {
             return m_grid;
         }
 
+        Grid& setGrid() {
+            return m_grid;
+        }
+
+
         int const& getSide_length() const{
             return side_length;
         }
@@ -108,6 +113,8 @@ namespace grid_base {
         });
         return next;
     }
+
+    
     
 
 }
