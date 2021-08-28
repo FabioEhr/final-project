@@ -5,7 +5,7 @@
 #include "useful_func.hpp"
 #include <iostream>
 
- void print_opt(City& playground)
+ void print_opt(City const& playground)
 {
   
   std::cout << "Current treasury: " << playground.$() << '\n';
@@ -75,7 +75,7 @@
   std::cout << "Skip N weeks (Type #)" << '\n';
 }
 
- void execute(City& playground, char order)
+ void execute(City& playground, char const order)
 {
   state_function current = playground.Get_status();
   switch (order) {

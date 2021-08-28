@@ -3,9 +3,9 @@
 #include <string>
 #include "yae.hpp"
 
- void print_opt(City& playground);
+ void print_opt(City const& playground);
 
- void execute(City& playground, char order);
+ void execute(City& playground, char const order);
  std::string mood(Age const& person);
 
  void print_situation(City& playground,Deltas& deltas);
