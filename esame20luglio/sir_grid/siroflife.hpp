@@ -56,15 +56,6 @@ struct Cell
 
 enum class PersonState { Susceptible, Incubating, Infected, Recovered };
 
-/*struct generators {
-
-std::default_random_engine person_generator;
-generators () : person_generator{} {
-  std::random_device person_device;
-  person_generator = std::default_random_engine {person_device()};   
-} 
-
-}; */
 
 class Person
 {
@@ -72,10 +63,11 @@ class Person
   PersonState condition;
   int incub_day = 0;
 
-  static std::default_random_engine make_generator();
-
-  //static std::random_device person_device; //c++17 required
-  //static std::default_random_engine person_generator{person_device()};
+  static std::default_random_engine& person_generator() { //static so we have only one generator for all the objects of class Person 
+    static std::random_device person_device;
+    static std::default_random_engine person_generator{person_device()};
+    return person_generator;
+  };
 
  public:
   Person(int m_r = 1,
@@ -90,10 +82,10 @@ class Person
     // c+= a random number between -speed and +speed
 
     std::uniform_int_distribution<int> distr_r(-speed, speed);
-    int walk_r = distr_r(make_generator());
+    int walk_r = distr_r(person_generator());
     P_cell.r += walk_r;
 
-    int walk_c = distr_r(make_generator());
+    int walk_c = distr_r(person_generator());
     P_cell.c += walk_c;
 
     // if r>rndmove_width r=rndmove_width, if r<1 r=1 and same for c -->Imposing
@@ -192,14 +184,24 @@ class Grid
   bool grid_verbose = false;
 
   // used for setting a random initial position
-  inline static std::random_device grid_device;
-  inline static std::default_random_engine generator_grid{grid_device()};
+  static std::default_random_engine& generator_grid() {
+    static std::random_device grid_device;
+    static std::default_random_engine generator_grid{grid_device()};
+    return generator_grid;
+  }
+  
   // used for probability of getting infected
-  inline static std::random_device sus_evolve_device;
-  inline static std::default_random_engine generator_sus_evolve{sus_evolve_device()};
+  static std::default_random_engine& generator_sus_evolve() {
+    static std::random_device sus_evolve_device;
+    static std::default_random_engine generator_sus_evolve{sus_evolve_device()};
+    return generator_sus_evolve;
+  }
   // used for probability of recovering
-  inline static std::random_device grid_evolve_device;
-  inline static std::default_random_engine generator_grid_evolve{grid_evolve_device()};
+  static std::default_random_engine& generator_grid_evolve() {
+    static std::random_device grid_evolve_device;
+    static std::default_random_engine generator_grid_evolve{grid_evolve_device()};
+    return generator_grid_evolve;
+  }
 
  public:
   Grid(int m_h = 1, int m_w = 1, int m_sus = 1, int m_inf = 0, int m_rec = 0)
@@ -222,10 +224,7 @@ class Grid
     for (int rec_i = 0; rec_i < recovered; ++rec_i) {
       people.push_back(Person{1, 1, PersonState::Recovered});
     }
-    // inserisco qui la dichiarazione dei random generator per non doverli
-    // dichiarare tutte le volte
-    std::random_device grid_r1;
-    std::default_random_engine generator_grid1{grid_r1()};
+
     std::uniform_int_distribution<int> grid_r(1, height);
 
     std::uniform_int_distribution<int> grid_distr_r(1, height);
@@ -236,8 +235,8 @@ class Grid
 
       // (people[i]).r = a_random_number between 1 and  height
       // (people[i]).c = a_random_number between 1 and  width
-      individual.Set_P_Cell(grid_distr_r(generator_grid),
-                           grid_distr_c(generator_grid));
+      individual.Set_P_Cell(grid_distr_r(generator_grid()),
+                           grid_distr_c(generator_grid()));
     }
   }
 
@@ -287,7 +286,7 @@ class Grid
           // if it finds it then sus_person.condition=1  based on a probability
           // (random number between 0 and 1, if number<= virus contagiousness it
           // gets infected)
-          if ((sus_evolve_distr(generator_sus_evolve)) <=
+          if ((sus_evolve_distr(generator_sus_evolve())) <=
               e_virus.contagiousness) {
             sus_person.Set_Condition(PersonState::Incubating);
             --susceptible;
@@ -332,7 +331,7 @@ class Grid
     for (Person& inf_or_incub : people) {
       // making infected people recover based on recovery_rate.
       if (inf_or_incub.Get_Condition() == PersonState::Infected) {
-        if (grid_evolve_distr(generator_grid_evolve) <=
+        if (grid_evolve_distr(generator_grid_evolve()) <=
             mne_virus.recovery_rate) {
           inf_or_incub.Set_Condition(PersonState::Recovered);
           --infected;
