@@ -32,25 +32,25 @@ struct Cell
 
   bool operator<(Cell const& rhs) const
   {  // needed for "set" operations
-    if ((*this).r == rhs.r) {
-      return (*this).c < rhs.c;
+    if (r == rhs.r) {
+      return c < rhs.c;
     } else {
-      return (*this).r < rhs.r;
+      return r < rhs.r;
     }
   }
 
   bool operator>(Cell const& rhs) const
   {
-    if ((*this).r == rhs.r) {
-      return (*this).c > rhs.c;
+    if (r == rhs.r) {
+      return c > rhs.c;
     } else {
-      return (*this).r > rhs.r;
+      return r > rhs.r;
     }
   }
 
   bool operator==(Cell const& rhs) const
   {
-    return ((*this).r == rhs.r && (*this).c == rhs.c);
+    return (r == rhs.r && c == rhs.c);
   }
 };
 

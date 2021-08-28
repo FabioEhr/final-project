@@ -8,10 +8,10 @@ Virus Flu();
 Virus Ebola();
 
 // City presets
-City Bologna(Virus& new_virus);
+City Bologna(Virus const& new_virus);
 
-City Milano(Virus& new_virus);
+City Milano(Virus const& new_virus);
 
-City Matera(Virus& new_virus);
+City Matera(Virus const& new_virus);
 
 #endif

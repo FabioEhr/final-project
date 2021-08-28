@@ -1,8 +1,6 @@
-#ifndef FUNC_HPP
-#define FUNC_HPP
-#include <string>
-#include<iostream>
-
+#ifndef USEFUL_FUNC_HPP
+#define USEFUL_FUNC_HPP
+#include <iostream>
 inline bool double_compare(double left, double right, double precision = 0.0001)
 {
   if ((right - left) > -precision && (right - left) < precision) {
@@ -16,19 +14,51 @@ inline bool d_comp(double value, double exl, double exr)
   return value >= exl && value <= exr;
 }
 
-inline int validate() {
-  int N=0;
+inline int validate_int() {
+  int N;
 
-
-  std::cin>> N;
-
-  if (std::cin.fail()) { // o anche semplicemente: if (!is)
-    std::cerr << "Not an int\n";
-    std::cin.clear();
-    std::cin.ignore(1000, '\n');
-  } else if (N < 0) {
-    std::cerr << "N must be greater than 0\n";
+  while (true) {
+    std::cin>> N;
+    if (std::cin.fail()) { 
+      std::cerr << "INPUT ERROR: Not an int, please retry\n";
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+    } else break;
   }
   return N;
 }
+
+
+inline double validate_d() {
+
+  double N;
+
+  while (true) {
+    std::cin>> N;
+    if (std::cin.fail()) { 
+      std::cerr << "INPUT ERROR: Not an double, please retry\n";
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+    } else break;
+}
+  return N;
+}
+
+inline char validate_char() {
+
+  std::string my_string;
+  
+  while (true) {
+    std::cin>> my_string;
+    if (my_string.size()>1) {
+      std::cerr << "INPUT ERROR: too many letters/symbols. Need only one, please retry\n";
+    } else if (std::cin.fail()) { 
+      std::cerr << "INPUT ERROR: Not a char, please retry\n";
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+    } else break;
+}
+  return my_string[0];
+}
+
 #endif

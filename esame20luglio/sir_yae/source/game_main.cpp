@@ -14,18 +14,22 @@ int main()
   while (true) {  // vir selection loop
     print_vir_opt();
     char choice;
-    std::cin >> choice;
+    choice = validate_char();
     switch(choice){
       case '1':
         vir = Flu();
+        std::cout << '\n';
         break;
       case '2':
         vir = Covid();
+        std::cout << '\n';
         break;
       case '3':
         vir = Ebola();
+        std::cout << '\n';
         break;
       default:
+        std::cerr << "INPUT ERROR: invalid number, please try again\n\n";
         continue;
     }
     break;
@@ -36,18 +40,22 @@ int main()
   while (true) {  // city selection loop
     print_city_opt();
     char choice_2;
-    std::cin >> choice_2;
+    choice_2 = validate_char();
         switch(choice_2){
       case '1':
         playground = Matera(vir);
+        std::cout << '\n';
         break;
       case '2':
         playground = Bologna(vir);
+        std::cout << '\n';
         break;
       case '3':
         playground = Milano(vir);
+        std::cout << '\n';
         break;
       default:
+        std::cerr << "INPUT ERROR: invalid number, please try again\n\n";
         continue;
     }
     break;
@@ -73,22 +81,28 @@ int main()
       no_beds(playground);
     }
 
-    print_situation(
-        playground, delta);
+    print_situation(playground, delta);
 
     char input;
     while (true) {  // choices loop
       print_opt(playground);
-      std::cin >> input;
+      input = validate_char();
       if (input == 'n') {
+        std::cout << '\n';
         break;
       }
       
       if (input == '#') {  
         std::cout << "How many weeks would you like to skip?" << '\n';
-        int n = validate();
+        int n_weeks;
+        while (true) {
+          n_weeks = validate_int();
+          if (n_weeks<0) {
+          std::cerr << "ERROR: value must be >=0, please retry\n";
+          } else break;
+        }
 
-        for (int i = 0; i < n - 1; ++i) {
+        for (int i = 0; i < n_weeks - 1; ++i) {
           delta.update(playground);
           playground.evolve();
           playground.next_treasury();
@@ -102,7 +116,7 @@ int main()
 
                                     playground.total_per_hosp());
           if (omega == 0) {
-            i = n;
+            i = n_weeks;
           }
         }
         break;
@@ -136,7 +150,7 @@ int main()
             << " / " << d_e << '\n';
   std::cout << "Press 'i' for more informations, anything else to quit" << '\n';
   char last_decision;
-  std::cin >> last_decision;
+  last_decision = validate_char();
   if (last_decision == 'i') {
     print_situation(playground, delta);
   }
