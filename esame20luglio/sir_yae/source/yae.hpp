@@ -7,7 +7,7 @@ struct Virus
   double g;  // recovery rate
   double d;  // mortalità
   double h;  // hosp chance
-  bool valid();
+  bool valid() const;
 };
 
 struct Transmatrix
@@ -20,7 +20,7 @@ struct Transmatrix
   double ae;
 };
 
-bool operator==(Transmatrix left, Transmatrix right);  
+bool operator==(Transmatrix const& left, Transmatrix const& right);  
 
 struct Age
 {
@@ -37,7 +37,7 @@ struct Age
   double h_mod;  // modifier of critical condition chance
 
   // made it a member function
-  void invariant();
+  void invariant() const;
   
 };
 
@@ -78,7 +78,7 @@ class City
   Hospitals h;          // sistema sanitario
   state_function stat;  // info on measures
   int turns=0;
-  void invariant();
+  void invariant() const;
 
  public:
   City(int number,
@@ -139,18 +139,18 @@ class City
   int Get_turns() const;
 
   // add functions
-  void add_$(int amount);
+  void add_$(int const amount);
   void mob_fixer();
 
-  void add_mob(double yy, double aa, double ee, double ya, double ye, double ae);
+  void add_mob(double const yy, double const aa, double const ee, double const ya, double const ye, double const ae);
 
-  void multiply_mob(double xyy ,
-                    double xaa ,
-                    double xee ,
-                    double xya ,
-                    double xye ,
-                    double xae );
-  void add_know(int amount);
+  void multiply_mob(double const xyy ,
+                    double const xaa ,
+                    double const xee ,
+                    double const xya ,
+                    double const xye ,
+                    double const xae );
+  void add_know(int const amount);
 
   // replacing functions
   void Set_ages(Age const& other_young, Age const& other_adult, Age const& other_elder);
@@ -167,22 +167,22 @@ class City
  //next functions
  void next_turn();
   void next_treasury();
-  void next_treasury_n_times(int n);
+  void next_treasury_n_times(int const n);
   // mod fixers
   void mod_fixer(Age& t);
   void hosp_mod_fixer();
 
   //functions to evaluate probability of inf-sus encounter for various ages
-  double y_sus_inf_encounter();
-  double a_sus_inf_encounter();
-  double e_sus_inf_encounter();
+  double y_sus_inf_encounter() const;
+  double a_sus_inf_encounter() const;
+  double e_sus_inf_encounter() const;
 
   // functions to display deltas in game-loop, they do the same things as evolve 
-  double D_inf_y();
-  double D_inf_a();
-  double D_inf_e();
+  double D_inf_y() const;
+  double D_inf_a() const;
+  double D_inf_e() const;
 
-  int next_turn_inf();
+  int next_turn_inf() const;
   int next_turn_crit();
   int next_turn_ovrfl();
   int next_turn_dismissed();
@@ -192,16 +192,16 @@ class City
   void evolve();
   // used for testing, remember to include iostream
   void evolve_n_print();
-  void evolve_n_times(int n);
+  void evolve_n_times(int const n);
   //economy and morale
-  int turn_income();
-  int cumulative_morale();
+  int turn_income() const;
+  int cumulative_morale() const;
   //totals
-  double total_per_susceptibles();
-  double total_per_infected();
-  double total_per_recovered();
-  double total_per_dead();
-  double total_per_hosp();
+  double total_per_susceptibles() const;
+  double total_per_infected() const;
+  double total_per_recovered() const;
+  double total_per_dead() const;
+  double total_per_hosp() const;
 };
 //used for a cleaner code
 struct Deltas

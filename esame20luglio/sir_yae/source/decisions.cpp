@@ -16,7 +16,7 @@ void buy_masks(City& playground)
   char decision;
   std::cin >> decision;
   if (decision == 'y' || decision == 'Y') {
-    if (playground.$() >= cost * quantity) {
+    if (playground.$() >= (cost * quantity)) {
       playground.add_$(-cost * quantity);
       double m_change = -0.000001 * quantity;
       playground.add_mob(m_change,
@@ -282,19 +282,19 @@ void buy_masks(City& playground)
   if (scale_factor < 0) {
     scale_factor = 0;
   }
-  int cost = -50000 * scale_factor - 5000;
-  std::cout << "The cost of investment is: " << -cost << " "
+  int cost = 50000 * scale_factor + 5000;
+  std::cout << "The cost of investment is: " << cost << " "
             << "Do you want to proceede? (y for yes, n for no)" << '\n';
   char decision;
   std::cin >> decision;
 
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() > cost) {
-      playground.add_$(cost);
+      playground.add_$(-cost);
       playground.add_know(5);
       std::cout << "Decision registered!" << '\n';
     } else {
-      std::cout << "Not enough funds! (" << playground.$() << "/" << -cost
+      std::cout << "Not enough funds! (" << playground.$() << "/" << cost
                 << ") \n";
     }
   } else {
@@ -305,15 +305,15 @@ void buy_masks(City& playground)
  void invest_in_digital(City& playground)
 {  // helps people transition to remote working
 
-  int cost = -5000;
-  std::cout << "The cost of investment is: " << -cost << " "
+  int cost = 5000;
+  std::cout << "The cost of investment is: " << cost << " "
             << "Do you want to proceede? (y for yes, n for no)" << '\n';
   char decision;
   std::cin >> decision;
 
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() > cost) {
-      playground.add_$(cost);
+      playground.add_$(-cost);
 
       Age other_young = playground.Young();
 
@@ -324,11 +324,11 @@ void buy_masks(City& playground)
       Age other_el = playground.Elders();
 
       playground.Set_ages(other_young, other_adu, other_el);
-      std::cout << "Decision registered! You invested " << -cost
+      std::cout << "Decision registered! You invested " << cost
                 << " to modernize web related infrastructures." << '\n';
 
     } else {
-      std::cout << "Not enough funds! (" << playground.$() << "/" << -cost
+      std::cout << "Not enough funds! (" << playground.$() << "/" << cost
                 << ") \n";
     }
   } else {
