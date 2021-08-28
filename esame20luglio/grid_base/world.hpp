@@ -1,9 +1,12 @@
-#include<useful_func.hpp>
-#include<algorithm>
-#include<iostream>
-#include<vector>
-#include<cassert>
-#include<random>
+#ifndef WORLD_HPP
+#define WORLD_HPP
+
+#include "useful_func.hpp"
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <cassert>
+#include <random>
 namespace grid_base {
     enum class Cell {Suscettible, Infected, Recovered};
 
@@ -21,6 +24,7 @@ namespace grid_base {
         World(int const len):side_length{len}
         {
             Grid temporary(side_length*side_length, Cell::Suscettible);
+            m_grid=temporary;
         }
 
         Cell const& cell(int const r, int const c) const{
@@ -28,7 +32,7 @@ namespace grid_base {
         }
 
         Cell& cell(int const r, int const c){
-            assert(!(r>=0&&r<side_length&&c>=0&&c<side_length));
+            assert(r>=0&&r<side_length&&c>=0&&c<side_length);
             auto& a=m_grid[r*side_length+c];
             return a;
         }
@@ -79,25 +83,28 @@ namespace grid_base {
 
         int sum=0;
         std::default_random_engine gen{std::random_device{}()};
-        std::uniform_real_distribution<double> dis(0. , 1.);
+        std::uniform_real_distribution<double> dis(0.0 , 1.0);
         World next=current;
-        std::generate_n(next.getGrid().begin(), next.getSide_length()*next.getSide_length(), [&, current, virus](){
-            switch (next.cell(sum))
+        std::generate_n(next.setGrid().begin(), next.getSide_length()*next.getSide_length(), [&, current, virus](){
+            switch (current.cell(sum))
             {
             case Cell::Suscettible:
                 for(int c=-1; c<2; ++c){
                     //prova a sostituire con un algoritmo
                     for(int r=-1; r<2; ++r)
                     {
-                        if(current.cell(sum +r*current.getSide_length()+c)==Cell::Infected && dis(gen)<virus.contagiousness)
+                        if(current.cell((sum-(sum%current.getSide_length()))/current.getSide_length()+r , sum%current.getSide_length()+c)==Cell::Infected && dis(gen)<virus.contagiousness)
                         {
                             next.cell(sum)=Cell::Infected;
+                            
                         }
                     }
                 }
+                break;
             case Cell::Infected:
                     if(dis(gen)<virus.recovery_rate)
                         next.cell(sum)=Cell::Recovered;
+
                 break;
 
 
@@ -109,7 +116,8 @@ namespace grid_base {
                 std::cerr<<"there was a problem";
                 break;
             }
-            ++sum;            
+            ++sum;
+            return next.cell(sum-1);            
         });
         return next;
     }
@@ -118,3 +126,5 @@ namespace grid_base {
     
 
 }
+
+#endif

@@ -31,17 +31,17 @@ inline int validate_int() {
   }
   return N;
 }
-inline int validate_double() {
+inline double validate_double() {
   double N=-1;
 
 
   std::cin>> N;
-
   if (std::cin.fail()) { // o anche semplicemente: if (!is)
     std::cin.clear();
     std::cin.ignore(1000, '\n');
     throw std::runtime_error{"Not a double"};
-  } else if (N < 0) {
+  } 
+  else if (N < 0) {
     std::cerr << "N must be greater than 0\n";
     throw std::runtime_error{"the inserted number should be positive"};
   }
