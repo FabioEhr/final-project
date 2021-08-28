@@ -17,7 +17,7 @@ Virus Ebola()
 }
 
 // City presets
-City Bologna(Virus& new_virus)
+City Bologna(Virus const& new_virus)
 {
   // beta gamma delta
 
@@ -63,7 +63,7 @@ City Bologna(Virus& new_virus)
   return bologna;
 }
 
-City Milano(Virus& new_virus)
+City Milano(Virus const& new_virus)
 {
   // beta gamma delta
 
@@ -105,7 +105,7 @@ City Milano(Virus& new_virus)
   return milano;
 }
 
-City Matera(Virus& new_virus)
+City Matera(Virus const& new_virus)
 {
   Age Young = {
       0.999,
