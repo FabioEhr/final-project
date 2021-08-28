@@ -8,13 +8,22 @@ void buy_masks(City& playground)
   int quantity;
   std::cout << "How many masks would you like to buy? (Insert a natural number)"
             << '\n';
-  quantity = validate();
-  // if (quantity<0) {quantity= quantity *(-1);} should be done by string_to int
+  while (true) {
+    quantity = validate_int();
+    if (quantity<0) {
+      std::cerr << "ERROR: value must be >=0, retry";
+    } else {
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+      break;
+    }
+  }
   int cost = 5;
-  std::cout << "The cost of investment is: " << quantity * cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+  std::cout << "trying to buy" << quantity << "masks, ";
+  std::cout << "The cost is: " << quantity * cost << ". "
+            << "Do you want to proceed? (press y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= (cost * quantity)) {
       playground.add_$(-cost * quantity);
@@ -130,7 +139,12 @@ void buy_masks(City& playground)
             << '\n';
   int hours;
   
-  hours = validate();
+  while (true) {
+    hours = validate_int();
+    if (hours<0) {
+      std::cerr << "ERROR: value must be >=0, please retry\n";
+    } else break;
+  }
 
   state_function replacer = playground.Get_status();
   if (replacer.curfew_hours + hours > 24) {
@@ -252,7 +266,12 @@ void buy_masks(City& playground)
                "(Insert a positive value)"
             << '\n';
   int hours;
-  hours = validate();
+  while (true) {
+    hours = validate_int();
+    if (hours<0) {
+      std::cerr << "ERROR: value must be >=0, please retry\n";
+    } else break;
+  }
 
   state_function replacer = playground.Get_status();
   if (replacer.curfew_hours - hours < 0) {
@@ -282,19 +301,19 @@ void buy_masks(City& playground)
   if (scale_factor < 0) {
     scale_factor = 0;
   }
-  int cost = 50000 * scale_factor + 5000;
-  std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+  int cost = -50000 * scale_factor - 5000;
+  std::cout << "The cost of investment is: " << -cost << " "
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
 
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() > cost) {
-      playground.add_$(-cost);
+      playground.add_$(cost);
       playground.add_know(5);
       std::cout << "Decision registered!" << '\n';
     } else {
-      std::cout << "Not enough funds! (" << playground.$() << "/" << cost
+      std::cout << "Not enough funds! (" << playground.$() << "/" << -cost
                 << ") \n";
     }
   } else {
@@ -305,15 +324,15 @@ void buy_masks(City& playground)
  void invest_in_digital(City& playground)
 {  // helps people transition to remote working
 
-  int cost = 5000;
-  std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+  int cost = -5000;
+  std::cout << "The cost of investment is: " << -cost << " "
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
 
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() > cost) {
-      playground.add_$(-cost);
+      playground.add_$(cost);
 
       Age other_young = playground.Young();
 
@@ -324,11 +343,11 @@ void buy_masks(City& playground)
       Age other_el = playground.Elders();
 
       playground.Set_ages(other_young, other_adu, other_el);
-      std::cout << "Decision registered! You invested " << cost
+      std::cout << "Decision registered! You invested " << -cost
                 << " to modernize web related infrastructures." << '\n';
 
     } else {
-      std::cout << "Not enough funds! (" << playground.$() << "/" << cost
+      std::cout << "Not enough funds! (" << playground.$() << "/" << -cost
                 << ") \n";
     }
   } else {
@@ -383,9 +402,9 @@ void buy_masks(City& playground)
                      (playground.Get_hospitals()).level * 1000;
 
   std::cout << "The cost of investment is: " << upgrade_cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
 
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= upgrade_cost) {
@@ -415,14 +434,19 @@ void buy_masks(City& playground)
                "natural number)"
             << '\n';
   
-  amount = validate();
+  while (true) {
+    amount = validate_int();
+    if (amount<0) {
+      std::cerr << "ERROR: value must be >=0, retry";
+    } else break;
+  }
 
   int build_cost = (playground.Get_hospitals()).level * amount * 1000;
 
   std::cout << "The cost of investment is: " << build_cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= build_cost) {
       Hospitals replacer = playground.Get_hospitals();
@@ -452,16 +476,21 @@ void buy_masks(City& playground)
             << " Young people who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
   
-  vaccines = validate();
+  while (true) {
+    vaccines = validate_int();
+    if (vaccines<0) {
+      std::cerr << "ERROR: value must be >=0, retry";
+    } else break;
+  }
   if (vaccines > n_young) {
     vaccines = n_young;
   }
 
   int cost = price * vaccines;
   std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= cost) {
       Age rep_y = playground.Young();
@@ -490,16 +519,21 @@ void buy_masks(City& playground)
   std::cout << "There are " << n_adults
             << " Adults who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
-  vaccines = validate();
+  while (true) {
+    vaccines = validate_int();
+    if (vaccines<0) {
+      std::cerr << "ERROR: value must be >=0, retry";
+    } else break;
+  }
   if (vaccines > n_adults) {
     vaccines = n_adults;
   }
 
   int cost = price * vaccines;
   std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= cost) {
       Age rep_y = playground.Young();
@@ -527,16 +561,21 @@ void buy_masks(City& playground)
   std::cout << "There are " << n_elders
             << " Elders who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
-  vaccines = validate();
+  while (true) {
+    vaccines = validate_int();
+    if (vaccines<0) {
+      std::cerr << "ERROR: value must be >=0, retry";
+    } else break;
+  }
   if (vaccines > n_elders) {
     vaccines = n_elders;
   }
 
   int cost = price * vaccines;
   std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceede? (y for yes, n for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
   char decision;
-  std::cin >> decision;
+  decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
     if (playground.$() >= cost) {
       Age rep_y = playground.Young();

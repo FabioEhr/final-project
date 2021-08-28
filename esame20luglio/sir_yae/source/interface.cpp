@@ -119,7 +119,7 @@
     case 'e':
       if (!current.vaccines) {
         invest_in_research(playground);
-      }
+      } else std::cout << "vaccines already discovered, research suspended\n";
       break;
     case 'd':
       if (!current.schools) {
@@ -143,12 +143,12 @@
       if (current.restaurants && current.theatres && current.schools &&
           current.churches) {
         lockdown(playground);
-      }
+      } else std::cout << "already in partial or full lockdown\n";
       break;
     case 'v':
       if (current.vaccines) {
         vaccinate_elders(playground);
-      }
+      } else std::cout << "vaccines not discovered\n";
       break;
     case 'x':
       if (current.vaccines) {
@@ -158,9 +158,13 @@
     case 'z':
       if (current.vaccines) {
         vaccinate_young(playground);
-      }
+      } 
       break;
+    default :
+    std::cerr << "INPUT ERROR: a choice corresponding to the written char does not exist \n";
+    break;
   }
+  std::cout << '\n';
 }
  std::string mood(Age const& person)
 {
@@ -215,12 +219,12 @@
   std::cout << "Number of pandemic related deaths :" << dead << '\n';
  /* std::cout << "Sum: " << sus + inf + n_hospitalized + rec + dead
             << '\n';*/  // usefull  for testing
-  std::cout << "Current treasury :" << playground.$()
-            << "  Income per week :" << playground.turn_income() << '\n';
+  std::cout << "Current treasury :" << playground.$() << '\n'
+            << "Income per week :" << playground.turn_income() << '\n';
   char input;
-  std::cout << "If you want more detailed information press 'i', else press 'n'"
+  std::cout << "If you want more detailed information press 'i', or any other char to skip"
             << '\n';
-  std::cin >> input;
+  input = validate_char();
   if (input == 'i') {
     std::cout << '\n';
     std::cout << "Percentage of population classified as 'Young' :"
@@ -264,6 +268,8 @@
               << mood(playground.Elders()) << '\n';
     std::cout << '\n';
   }
+
+  std::cout << '\n';
 }
 
  std::string news_paper()
