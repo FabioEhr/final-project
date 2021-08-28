@@ -31,4 +31,19 @@ inline int validate() {
   }
   return N;
 }
+inline double validate_d() {
+  double N=0;
+
+
+  std::cin>> N;
+
+  if (std::cin.fail()) { // o anche semplicemente: if (!is)
+    std::cerr << "Not an double\n";
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
+  } else if (N < 0) {
+    std::cerr << "N must be greater than 0\n";
+  }
+  return N;
+}
 #endif
