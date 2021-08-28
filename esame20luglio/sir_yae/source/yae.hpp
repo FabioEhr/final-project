@@ -110,32 +110,33 @@ class City
   }
 
   // getter functions
-  int N(); //population
+  int N() const; //population
   
-  double Y_per(); //percentage of young people
+  double Y_per() const; //percentage of young people
   
-  double A_per();
+  double A_per() const;
 
-  double E_per();
+  double E_per() const;
   
-  Age const& Young();
+  Age Young() const;
 
-  Age const& Adults();
+  Age Adults() const;
   
-  Age const& Elders();
+  Age Elders() const;
 
-  Transmatrix const& Mobility();
-  int $();
+  Transmatrix Mobility() const;
+  
+  int $() const;
 
-  int knowledge();
+  int knowledge() const;
 
-  Hospitals const& Get_hospitals();
+  Hospitals Get_hospitals() const;
 
-  state_function const& Get_status();
+  state_function Get_status() const;
 
-  Virus const& Get_virus();
+  Virus Get_virus() const;
 
-  int Get_turns();
+  int Get_turns() const;
 
   // add functions
   void add_$(int amount);
@@ -152,13 +153,13 @@ class City
   void add_know(int amount);
 
   // replacing functions
-  void Set_ages(Age& other_young, Age& other_adult, Age& other_elder);
+  void Set_ages(Age const& other_young, Age const& other_adult, Age const& other_elder);
 
-  void replace_mob(Transmatrix& replacer);
-  void Set_status(state_function& replacer);
+  void Set_mob(Transmatrix const& replacer);
+  void Set_status(state_function const& replacer);
 
-  void Set_virus(Virus& replacer);
-  void Set_hospital(Hospitals& hosp);
+  void Set_virus(Virus const& replacer);
+  void Set_hospital(Hospitals const& hosp);
   // GetRef functions
   Hospitals& GetRef_hospitals();
 
@@ -212,7 +213,7 @@ struct Deltas
   int D_dismmis = 0;  // aumento di persone guarite in ospedale
   int D_ovrfl = 0;  // aumento di persone a cui è negato l'accesso in ospedale
   //must be run before evolve!!
-  void update(City & playground);
+  void update(City& playground);
 };
 
 #endif

@@ -152,7 +152,21 @@ void illegal_parties(City& playground)
   if (unlucky > lucky) {
     std::uniform_int_distribution<int> three(0, 2);
     int which_one = three(generator1);
-    if (which_one == 0) {
+    switch(which_one){
+      case 0:
+     mutate_contagiousness(playground);
+     panic(playground);
+     break;
+     case 1:
+     mutate_recovery(playground);
+     panic(playground);
+     break;
+     case 2:
+     mutate_deadliness(playground);
+     panic(playground);
+     break;
+    }
+    /*if (which_one == 0) {
       mutate_contagiousness(playground);
     }
     if (which_one == 1) {
@@ -161,7 +175,7 @@ void illegal_parties(City& playground)
     if (which_one == 2) {
       mutate_deadliness(playground);
     }
-    panic(playground);
+    panic(playground);*/
   }
   if (playground.total_per_infected() < 0.05) {  // punishes early closures
     int mor_ = playground.cumulative_morale() / playground.N();  // starts at 20

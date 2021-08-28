@@ -4,6 +4,12 @@
 
 namespace grid{
   
+std::default_random_engine  Person::make_generator() {
+    static std::random_device person_device;
+    static std::default_random_engine person_generator{person_device()};
+    return person_generator;
+  };
+
 Virus makeVirus(){
        double Contagiousness = -1;
   double Recovery_rate = -1;

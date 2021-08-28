@@ -1,3 +1,4 @@
+#include "interface.hpp"
 #include <random>
 #include "decisions.hpp"
 #include "yae.hpp"
@@ -273,6 +274,11 @@
   std::default_random_engine generator1{r1()};
   std::uniform_int_distribution<int> distr(0, 3);
   int a = distr(r1);
+ /* switch(a)
+    case 0:
+      b = "'Republic'";
+      break;
+    case 1*/
   if (a == 0) {
     b = "'Republic'";
   }

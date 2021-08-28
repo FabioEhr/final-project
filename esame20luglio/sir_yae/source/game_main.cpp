@@ -15,38 +15,42 @@ int main()
     print_vir_opt();
     char choice;
     std::cin >> choice;
-    if (choice == '1') {
-      vir = Flu();
-      break;
+    switch(choice){
+      case '1':
+        vir = Flu();
+        break;
+      case '2':
+        vir = Covid();
+        break;
+      case '3':
+        vir = Ebola();
+        break;
+      default:
+        continue;
     }
-    if (choice == '2') {
-      vir = Covid();
-      break;
-    }
-    if (choice == '3') {
-      vir = Ebola();
-      break;
-    }
+    break;
 
-    continue;
+
+
   }               // end of vir selection loop
   while (true) {  // city selection loop
     print_city_opt();
     char choice_2;
     std::cin >> choice_2;
-    if (choice_2 == '1') {
-      playground = Matera(vir);
-      break;
+        switch(choice_2){
+      case '1':
+        playground = Matera(vir);
+        break;
+      case '2':
+        playground = Bologna(vir);
+        break;
+      case '3':
+        playground = Milano(vir);
+        break;
+      default:
+        continue;
     }
-    if (choice_2 == '2') {
-      playground = Bologna(vir);
-      break;
-    }
-    if (choice_2 == '3') {
-      playground = Milano(vir);
-      break;
-    }
-    continue;
+    break;
   }  // end of city selection loop
  
   Deltas delta; //includes various deltas i.e. number of new infected this week
@@ -82,9 +86,7 @@ int main()
       
       if (input == '#') {  
         std::cout << "How many weeks would you like to skip?" << '\n';
-        std::string number;
-        std::cin >> number;
-        int n = string_to_int(number);
+        int n = validate();
 
         for (int i = 0; i < n - 1; ++i) {
           delta.update(playground);

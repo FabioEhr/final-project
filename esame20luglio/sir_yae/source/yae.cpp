@@ -51,59 +51,60 @@ void City::invariant()
   {
     assert(double_compare((y_per + a_per + e_per), 1));
   }
-int City::N()
+int City::N() const
   {
     return population;
   }
-  double City::Y_per()
+  double City::Y_per() const
   {
     return y_per;
   }
-  double City::A_per()
+  double City::A_per() const
   {
     return a_per;
   }
-  double City::E_per()
+  double City::E_per() const
   {
     return e_per;
   }
-  Age const& City::Young()
+  Age City::Young() const
   {
     return y;
   }
-  Age const& City::Adults()
+  Age City::Adults() const
   {
     return a;
   }
-  Age const& City::Elders()
+  Age City::Elders() const
   {
     return e;
   }
-  Transmatrix const& City::Mobility()
+  Transmatrix City::Mobility() const
   {
     return mob;
   }
-  int City::$()
+  int City::$() const
   {
     return treasure;
   }
-  int City::knowledge()
+  int City::knowledge() const
   {
     return know;
   }
-  Hospitals const& City::Get_hospitals()
+  Hospitals City::Get_hospitals() const
   {
     return h;
   }
-  state_function const& City::Get_status()
+  state_function City::Get_status() const
   {
     return stat;
   }
-  Virus const& City::Get_virus()
+  Virus City::Get_virus() const
   {
     return vir;
   }
-  int City::Get_turns(){
+  int City::Get_turns() const 
+  {
     return turns;
   }
 //add functions
@@ -173,27 +174,27 @@ int City::N()
   }
 
 // replacing functions
-  void City::Set_ages(Age& other_young, Age& other_adult, Age& other_elder)
+  void City::Set_ages(Age const& other_young, Age const& other_adult, Age const& other_elder)
   {
     y = other_young;
     a = other_adult;
     e = other_elder;
   }
 
-  void City::replace_mob(Transmatrix& replacer)
+  void City::Set_mob(Transmatrix const& replacer)
   {
     mob = replacer;
   }
-  void City::Set_status(state_function& replacer)
+  void City::Set_status(state_function const& replacer)
   {
     stat = replacer;
   }
 
-  void City::Set_virus(Virus& replacer)
+  void City::Set_virus(Virus const& replacer)
   {
     vir = replacer;
   }
-  void City::Set_hospital(Hospitals& hosp)
+  void City::Set_hospital(Hospitals const& hosp)
   {
     h = hosp;
   }
@@ -802,7 +803,7 @@ double p_e_1 = mob.ye * y.inf + mob.ae * a.inf + mob.ee * e.inf;
     return (y.hosp * y_per + a.hosp * a_per + e.hosp * e_per);
   }
   //Deltas
-  void Deltas::update(City & playground){
+  void Deltas::update(City& playground){
     D_inf = playground.next_turn_inf();
     D_crit = playground.next_turn_crit();
     D_rec = playground.next_turn_rec();

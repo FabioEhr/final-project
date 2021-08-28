@@ -56,8 +56,15 @@ struct Cell
 
 enum class PersonState { Susceptible, Incubating, Infected, Recovered };
 
-// used in class Person for random movement
+/*struct generators {
 
+std::default_random_engine person_generator;
+generators () : person_generator{} {
+  std::random_device person_device;
+  person_generator = std::default_random_engine {person_device()};   
+} 
+
+}; */
 
 class Person
 {
@@ -65,8 +72,10 @@ class Person
   PersonState condition;
   int incub_day = 0;
 
-  inline static std::random_device person_device; //c++17 required
-  inline static std::default_random_engine person_generator{person_device()};
+  static std::default_random_engine make_generator();
+
+  //static std::random_device person_device; //c++17 required
+  //static std::default_random_engine person_generator{person_device()};
 
  public:
   Person(int m_r = 1,
@@ -81,10 +90,10 @@ class Person
     // c+= a random number between -speed and +speed
 
     std::uniform_int_distribution<int> distr_r(-speed, speed);
-    int walk_r = distr_r(person_generator);
+    int walk_r = distr_r(make_generator());
     P_cell.r += walk_r;
 
-    int walk_c = distr_r(person_generator);
+    int walk_c = distr_r(make_generator());
     P_cell.c += walk_c;
 
     // if r>rndmove_width r=rndmove_width, if r<1 r=1 and same for c -->Imposing
@@ -163,10 +172,7 @@ inline std::string cond_to_string(PersonState cond)
     return "error: unknown condition";
     break;
   }
-
 };
-
-
 
 class Grid
 {
@@ -185,13 +191,13 @@ class Grid
 
   bool grid_verbose = false;
 
-  // used in class Grid below for setting a random initial position
+  // used for setting a random initial position
   inline static std::random_device grid_device;
   inline static std::default_random_engine generator_grid{grid_device()};
-// used in class Grid below for probability of getting infected
+  // used for probability of getting infected
   inline static std::random_device sus_evolve_device;
   inline static std::default_random_engine generator_sus_evolve{sus_evolve_device()};
-// used in class Grid below for probability of recovering
+  // used for probability of recovering
   inline static std::random_device grid_evolve_device;
   inline static std::default_random_engine generator_grid_evolve{grid_evolve_device()};
 

@@ -1,6 +1,7 @@
 #ifndef INTERFACE_HPP
 #define INTERFACE_HPP
 #include <string>
+#include "yae.hpp"
 
  void print_opt(City& playground);
 

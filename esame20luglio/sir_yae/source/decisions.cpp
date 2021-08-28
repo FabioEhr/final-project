@@ -6,11 +6,9 @@
 void buy_masks(City& playground)
 {  // lowers mobility by the same ammount for all
   int quantity;
-  std::string anti_bug;
   std::cout << "How many masks would you like to buy? (Insert a natural number)"
             << '\n';
-  std::cin >> anti_bug;
-  quantity = string_to_int(anti_bug);
+  quantity = validate();
   // if (quantity<0) {quantity= quantity *(-1);} should be done by string_to int
   int cost = 5;
   std::cout << "The cost of investment is: " << quantity * cost << " "
@@ -131,9 +129,8 @@ void buy_masks(City& playground)
                "(Insert a positive value)"
             << '\n';
   int hours;
-  std::string anti_bug;
-  std::cin >> anti_bug;
-  hours = string_to_int(anti_bug);
+  
+  hours = validate();
 
   state_function replacer = playground.Get_status();
   if (replacer.curfew_hours + hours > 24) {
@@ -255,9 +252,7 @@ void buy_masks(City& playground)
                "(Insert a positive value)"
             << '\n';
   int hours;
-  std::string anti_bug;
-  std::cin >> anti_bug;
-  hours = string_to_int(anti_bug);
+  hours = validate();
 
   state_function replacer = playground.Get_status();
   if (replacer.curfew_hours - hours < 0) {
@@ -415,12 +410,12 @@ void buy_masks(City& playground)
  void build_beds(City& playground)
 {
   int amount;
-  std::string anti_bug;
+  
   std::cout << "How many new hospital beds would you like to buy? (Insert a "
                "natural number)"
             << '\n';
-  std::cin >> anti_bug;
-  amount = string_to_int(anti_bug);
+  
+  amount = validate();
 
   int build_cost = (playground.Get_hospitals()).level * amount * 1000;
 
@@ -451,13 +446,13 @@ void buy_masks(City& playground)
 {
   int price = 1000;
   int vaccines;
-  std::string anti_bug;
+  
   int n_young = playground.Young().sus * playground.N() * playground.Y_per();
   std::cout << "There are " << n_young
             << " Young people who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
-  std::cin >> anti_bug;
-  vaccines = string_to_int(anti_bug);
+  
+  vaccines = validate();
   if (vaccines > n_young) {
     vaccines = n_young;
   }
@@ -491,13 +486,11 @@ void buy_masks(City& playground)
 {
   int price = 1000;
   int vaccines;
-  std::string anti_bug;
   int n_adults = playground.Adults().sus * playground.N() * playground.A_per();
   std::cout << "There are " << n_adults
             << " Adults who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
-  std::cin >> anti_bug;
-  vaccines = string_to_int(anti_bug);
+  vaccines = validate();
   if (vaccines > n_adults) {
     vaccines = n_adults;
   }
@@ -530,13 +523,11 @@ void buy_masks(City& playground)
 {
   int price = 1000;
   int vaccines;
-  std::string anti_bug;
   int n_elders = playground.Elders().sus * playground.N() * playground.E_per();
   std::cout << "There are " << n_elders
             << " Elders who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
-  std::cin >> anti_bug;
-  vaccines = string_to_int(anti_bug);
+  vaccines = validate();
   if (vaccines > n_elders) {
     vaccines = n_elders;
   }
