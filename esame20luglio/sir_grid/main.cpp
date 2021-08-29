@@ -1,5 +1,4 @@
 #include "parser.hpp"
-#include "siroflife.hpp"
 #include "useful_func.hpp"
 
 int main()
