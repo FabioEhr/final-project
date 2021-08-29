@@ -37,18 +37,22 @@ class World {
   }
 
   Cell const& cell(int const r, int const c) const {
+    //attraverso un operatore ternario esprimo il fatto che se chiedo lo stato di una cella fuori dal vettore
+    //questa risulterà recovered in modo che non influisca
     return (r >= 0 && r < side_length && c >= 0 && c < side_length)
                ? m_grid[r * side_length + c]
                : recovered_cell;
   }
 
   Cell& cell(int const r, int const c) {
+    //controllo che non cerchi di modificare una cella fuori dal vettore
     assert(r >= 0 && r < side_length && c >= 0 && c < side_length);
     auto& a = m_grid[r * side_length + c];
     return a;
   }
 
   Cell& cell(int const sum) {
+    //trasforma sum in una coppia di coordinate in modo da chiamare il cell precedente
     int c = sum % side_length;
     int r = (sum - c) / side_length;
     Cell& a = this->cell(r, c);
@@ -56,6 +60,7 @@ class World {
   }
 
   Cell const& cell(int const sum) const {
+    //trasforma sum in una coppia di coordinate in modo da chiamare il cell precedente
     int c = sum % side_length;
     int r = (sum - c) / side_length;
     Cell const& a = this->cell(r, c);

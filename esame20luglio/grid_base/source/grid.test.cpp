@@ -112,26 +112,3 @@ TEST_CASE("testing insertGrid") {
   CHECK(std::count(block.getGrid().begin(), block.getGrid().end(),
                    Cell::Suscettible) == 0);
 }
-
-/*
-TEST_CASE("Testing oscillators")
-{
-  life::World blinker{5};
-  blinker.cell(1,2) = life::Cell::Alive;
-  blinker.cell(2,2) = life::Cell::Alive;
-  blinker.cell(3,2) = life::Cell::Alive;
-
-  auto next = evolve(blinker);
-
-  life::World expected{blinker.side()};
-  expected.cell(2,1) = life::Cell::Alive;
-  expected.cell(2,2) = life::Cell::Alive;
-  expected.cell(2,3) = life::Cell::Alive;
-
-  CHECK(next == expected);
-
-  next = evolve(next);
-
-  CHECK(next == blinker);
-}
-*/

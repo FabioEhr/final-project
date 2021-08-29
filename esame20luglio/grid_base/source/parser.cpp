@@ -18,9 +18,11 @@ Virus createVirus() {
 }
 void insertGrid(World& world, int const inf, int const rec) {
   World next{world.getSide_length()};
+  //creo un vettore di soli suscettibili
   world = next;
   Cell infec = Cell::Infected;
   Cell recov = Cell::Recovered;
+  // imposto il numero corretto di infetti e suscttibili
   std::fill_n(world.setGrid().begin(), inf, infec);
   std::fill_n(world.setGrid().begin() + inf, rec, recov);
   std::random_shuffle(world.setGrid().begin(), world.setGrid().end());
@@ -47,9 +49,8 @@ World initializeGrid() {
   return world;
 }
 void printGrid(World const& world) {
-  // std::cout<<"\033[2J";
   int sum = 0;
-
+// for_each che stampa la griglia
   std::for_each(
       world.getGrid().begin(), world.getGrid().begin() + world.getGrid().size(),
       [&](const Cell& actual) {
