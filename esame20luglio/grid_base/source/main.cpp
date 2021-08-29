@@ -6,12 +6,13 @@
 #include "parser.hpp"
 #include "world.hpp"
 
-int main() {
+int main()
+{
   try {
     grid_base::Virus virus = grid_base::createVirus();
     grid_base::World mondo = grid_base::initializeGrid();
 
-    //il while funziona fino a quando l'utente digita ctrl+c
+    // il while funziona fino a quando l'utente digita ctrl+c
     while (true) {
       grid_base::printGrid(mondo);
       mondo = grid_base::evolve(mondo, virus);
