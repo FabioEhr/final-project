@@ -2,6 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include "sir.hpp"
+#include"useful_func.hpp"
 #include <cmath>
 
 //#include "useful_func.hpp"
@@ -23,35 +24,30 @@ Pandemic createVirus()
               << " Write a double between 0 and 1 that represents the "
 
                  "contagiousness of the virus: ";
-  std::cin>>Contagiousness;
+  Contagiousness=validate_double();
   std::cout << '\n'
 
               << " write a double between 0 and 1 that represents the recovery "
 
                  "rate of the virus: ";
 
-    std::cin >> Recovery_rate;
+    Recovery_rate=validate_double();
     std::cout << "How many people should live in simulation?";
-    std::cin>>tot;
-    tot=std::round(tot);
+    tot=validate_int();
     std::cout << '\n'
 
               << " write the "
 
                  "number of infected (that has to be lower than "<<tot<<"):";
 
-    std::cin >> Infected;
-    Infected=std::round(Infected);
-
+    Infected=validate_int();
         std::cout << '\n'
                << " write the "
 
                  "number of recovered (that has to be lower than "<<tot<<" and remember recovered+infected<"<<tot<<"):";
 
 
-    std::cin >> Recovered;
-    Recovered=std::round(Recovered);
-    
+    Recovered=validate_int();    
     
 
   // sia per alleggerire il lavoro dell'utente finale che per evitare che

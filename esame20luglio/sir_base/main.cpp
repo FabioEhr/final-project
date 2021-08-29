@@ -2,6 +2,7 @@
 #include "parser.hpp"
 #include "sir.hpp"
 #include<cmath>
+#include "useful_func.hpp"
 //#include "useful_func.hpp"
 
 int main()
@@ -13,15 +14,7 @@ int main()
 
     
     std::cout << "How many days should the simulation run?";
- /*   std::string a;
-    std::cin >> a; 
-    int N = string_to_int(a);*/
-    int N=-1;
-    std::cin>>N;
-    if (N<=0) {
-      throw std::runtime_error{
-          "the days must be a positive quantity"};
-    }
+    int N=validate_int();
     
     std::vector<sir::Condition> history = play.evolveNTimes(N);
     
