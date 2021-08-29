@@ -37,13 +37,13 @@ TEST_CASE("Testing different contagiousness")
   CHECK(test_1.Get_condition().suscettibles >
         test_2.Get_condition().suscettibles);
   CHECK(doctest::Approx{test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered}==test_1.Get_condition().population
-               );
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered} ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
 }
 
 TEST_CASE("Testing recovery rates")
@@ -58,13 +58,13 @@ TEST_CASE("Testing recovery rates")
   CHECK(test_1.Get_condition().infected > test_2.Get_condition().infected);
   CHECK(test_1.Get_condition().recovered < test_2.Get_condition().recovered);
   CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
 }
 TEST_CASE("Testing that totals always add up to the population")
 {
@@ -72,7 +72,7 @@ TEST_CASE("Testing that totals always add up to the population")
   sir::Virus beta_var = {0.4, 0.05};
   sir::Virus gamma_var = {0., 1.};
   sir::Virus delta_var = {1., 0.};
-  sir::Condition same = {100000., 0., 0.,100000., 0};
+  sir::Condition same = {100000., 0., 0., 100000., 0};
   sir::Pandemic test_1 = {alpha_var, same};
   sir::Pandemic test_2 = {beta_var, same};
   sir::Pandemic test_3 = {gamma_var, same};
@@ -82,120 +82,120 @@ TEST_CASE("Testing that totals always add up to the population")
   test_3.evolveNTimes(5);
   test_4.evolveNTimes(5);
   CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
- CHECK(doctest::Approx(test_3.Get_condition().infected +
-                   test_3.Get_condition().suscettibles +
-                   test_3.Get_condition().recovered)==test_3.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
+  CHECK(doctest::Approx(test_3.Get_condition().infected +
+                        test_3.Get_condition().suscettibles +
+                        test_3.Get_condition().recovered) ==
+        test_3.Get_condition().population);
   CHECK(doctest::Approx(test_4.Get_condition().infected +
-                   test_4.Get_condition().suscettibles +
-                   test_4.Get_condition().recovered)==test_4.Get_condition().population
-               );
+                        test_4.Get_condition().suscettibles +
+                        test_4.Get_condition().recovered) ==
+        test_4.Get_condition().population);
 
   test_1.evolveNTimes(5);
   test_2.evolveNTimes(5);
   test_3.evolveNTimes(5);
   test_4.evolveNTimes(5);
-CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+  CHECK(doctest::Approx(test_1.Get_condition().infected +
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
- CHECK(doctest::Approx(test_3.Get_condition().infected +
-                   test_3.Get_condition().suscettibles +
-                   test_3.Get_condition().recovered)==test_3.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
+  CHECK(doctest::Approx(test_3.Get_condition().infected +
+                        test_3.Get_condition().suscettibles +
+                        test_3.Get_condition().recovered) ==
+        test_3.Get_condition().population);
   CHECK(doctest::Approx(test_4.Get_condition().infected +
-                   test_4.Get_condition().suscettibles +
-                   test_4.Get_condition().recovered)==test_4.Get_condition().population
-               );
+                        test_4.Get_condition().suscettibles +
+                        test_4.Get_condition().recovered) ==
+        test_4.Get_condition().population);
   test_1.evolveNTimes(5);
   test_2.evolveNTimes(5);
   test_3.evolveNTimes(5);
   test_4.evolveNTimes(5);
-CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+  CHECK(doctest::Approx(test_1.Get_condition().infected +
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
- CHECK(doctest::Approx(test_3.Get_condition().infected +
-                   test_3.Get_condition().suscettibles +
-                   test_3.Get_condition().recovered)==test_3.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
+  CHECK(doctest::Approx(test_3.Get_condition().infected +
+                        test_3.Get_condition().suscettibles +
+                        test_3.Get_condition().recovered) ==
+        test_3.Get_condition().population);
   CHECK(doctest::Approx(test_4.Get_condition().infected +
-                   test_4.Get_condition().suscettibles +
-                   test_4.Get_condition().recovered)==test_4.Get_condition().population
-               );
+                        test_4.Get_condition().suscettibles +
+                        test_4.Get_condition().recovered) ==
+        test_4.Get_condition().population);
   test_1.evolveNTimes(5);
   test_2.evolveNTimes(5);
   test_3.evolveNTimes(5);
   test_4.evolveNTimes(5);
-CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+  CHECK(doctest::Approx(test_1.Get_condition().infected +
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
- CHECK(doctest::Approx(test_3.Get_condition().infected +
-                   test_3.Get_condition().suscettibles +
-                   test_3.Get_condition().recovered)==test_3.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
+  CHECK(doctest::Approx(test_3.Get_condition().infected +
+                        test_3.Get_condition().suscettibles +
+                        test_3.Get_condition().recovered) ==
+        test_3.Get_condition().population);
   CHECK(doctest::Approx(test_4.Get_condition().infected +
-                   test_4.Get_condition().suscettibles +
-                   test_4.Get_condition().recovered)==test_4.Get_condition().population
-               );
+                        test_4.Get_condition().suscettibles +
+                        test_4.Get_condition().recovered) ==
+        test_4.Get_condition().population);
   test_1.evolveNTimes(5);
   test_2.evolveNTimes(5);
   test_3.evolveNTimes(5);
   test_4.evolveNTimes(5);
-CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+  CHECK(doctest::Approx(test_1.Get_condition().infected +
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
- CHECK(doctest::Approx(test_3.Get_condition().infected +
-                   test_3.Get_condition().suscettibles +
-                   test_3.Get_condition().recovered)==test_3.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
+  CHECK(doctest::Approx(test_3.Get_condition().infected +
+                        test_3.Get_condition().suscettibles +
+                        test_3.Get_condition().recovered) ==
+        test_3.Get_condition().population);
   CHECK(doctest::Approx(test_4.Get_condition().infected +
-                   test_4.Get_condition().suscettibles +
-                   test_4.Get_condition().recovered)==test_4.Get_condition().population
-               );
+                        test_4.Get_condition().suscettibles +
+                        test_4.Get_condition().recovered) ==
+        test_4.Get_condition().population);
   test_1.evolveNTimes(5);
   test_2.evolveNTimes(5);
   test_3.evolveNTimes(5);
   test_4.evolveNTimes(5);
-CHECK(doctest::Approx(test_1.Get_condition().infected +
-                   test_1.Get_condition().suscettibles +
-                   test_1.Get_condition().recovered)==test_1.Get_condition().population
-               );
+  CHECK(doctest::Approx(test_1.Get_condition().infected +
+                        test_1.Get_condition().suscettibles +
+                        test_1.Get_condition().recovered) ==
+        test_1.Get_condition().population);
   CHECK(doctest::Approx(test_2.Get_condition().infected +
-                   test_2.Get_condition().suscettibles +
-                   test_2.Get_condition().recovered)==test_2.Get_condition().population
-               );
- CHECK(doctest::Approx(test_3.Get_condition().infected +
-                   test_3.Get_condition().suscettibles +
-                   test_3.Get_condition().recovered)==test_3.Get_condition().population
-               );
+                        test_2.Get_condition().suscettibles +
+                        test_2.Get_condition().recovered) ==
+        test_2.Get_condition().population);
+  CHECK(doctest::Approx(test_3.Get_condition().infected +
+                        test_3.Get_condition().suscettibles +
+                        test_3.Get_condition().recovered) ==
+        test_3.Get_condition().population);
   CHECK(doctest::Approx(test_4.Get_condition().infected +
-                   test_4.Get_condition().suscettibles +
-                   test_4.Get_condition().recovered)==test_4.Get_condition().population
-               );
+                        test_4.Get_condition().suscettibles +
+                        test_4.Get_condition().recovered) ==
+        test_4.Get_condition().population);
 }
