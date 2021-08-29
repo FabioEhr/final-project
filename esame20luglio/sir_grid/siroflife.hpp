@@ -62,7 +62,8 @@ class Person
   PersonState condition;
   int incub_day = 0;
 
-  static std::default_random_engine& person_generator() { 
+  static std::default_random_engine& person_generator()
+  {
     static std::random_device person_device;
     static std::default_random_engine person_generator{person_device()};
     return person_generator;
@@ -136,7 +137,7 @@ class Person
     condition = set_condition;
   }
 
-  int Get_Incub_Day() const 
+  int Get_Incub_Day() const
   {
     return incub_day;
   }
@@ -150,18 +151,18 @@ class Person
 inline std::string cond_to_string(PersonState cond)
 {
   switch (cond) {
-    case PersonState::Susceptible : 
-    return "susceptible";
-    break;
-    case PersonState::Infected : 
-    return "infected";
-    break;
-    case PersonState::Recovered : 
-    return "recovered";
-    break;
-    default :
-    return "error: unknown condition";
-    break;
+    case PersonState::Susceptible:
+      return "susceptible";
+      break;
+    case PersonState::Infected:
+      return "infected";
+      break;
+    case PersonState::Recovered:
+      return "recovered";
+      break;
+    default:
+      return "error: unknown condition";
+      break;
   }
 };
 
@@ -183,22 +184,26 @@ class Grid
   bool grid_verbose = false;
 
   // used for setting a random initial position
-  static std::default_random_engine& generator_grid() {
+  static std::default_random_engine& generator_grid()
+  {
     static std::random_device grid_device;
     static std::default_random_engine generator_grid{grid_device()};
     return generator_grid;
   }
-  
+
   // used for probability of getting infected
-  static std::default_random_engine& generator_sus_evolve() {
+  static std::default_random_engine& generator_sus_evolve()
+  {
     static std::random_device sus_evolve_device;
     static std::default_random_engine generator_sus_evolve{sus_evolve_device()};
     return generator_sus_evolve;
   }
   // used for probability of recovering
-  static std::default_random_engine& generator_grid_evolve() {
+  static std::default_random_engine& generator_grid_evolve()
+  {
     static std::random_device grid_evolve_device;
-    static std::default_random_engine generator_grid_evolve{grid_evolve_device()};
+    static std::default_random_engine generator_grid_evolve{
+        grid_evolve_device()};
     return generator_grid_evolve;
   }
 
@@ -228,12 +233,12 @@ class Grid
     std::uniform_int_distribution<int> grid_distr_c(1, width);
 
     for (Person& individual : people) {  // taking all the people from (1,1)
-                                            // to a random starting position
+                                         // to a random starting position
 
       // (people[i]).r = a_random_number between 1 and  height
       // (people[i]).c = a_random_number between 1 and  width
       individual.Set_P_Cell(grid_distr_r(generator_grid()),
-                           grid_distr_c(generator_grid()));
+                            grid_distr_c(generator_grid()));
     }
   }
 
@@ -418,7 +423,7 @@ class Grid
     recovered = set_recovered;
   }
 
-  int Get_Population() const 
+  int Get_Population() const
   {
     return population;
   }
@@ -451,148 +456,146 @@ class Grid
   }
 
   std::vector<char> get_map()
-{
-  int area = width * height;
+  {
+    int area = width * height;
 
-  std::vector<char> map;
-  for (int i = 0; i < area; ++i) {
-    map.push_back('-');
-  }
-
-  int row = 0;
-  int column = 0;
-  // information priority is: INFECTED, SUSCEPTIBLE, INCUBATING, RECOVERED,
-  // EMPTY SPACE
-  for (Person const& a_person : people) {
-    row = a_person.Get_P_Cell().r;
-    column = a_person.Get_P_Cell().c;
-
-    int position_in_map = (row - 1) * width + column - 1;
-    char cluster = map[position_in_map];
-
-    switch (cluster) {
-      
-      case '-':  // if the space is empty, it is overwritten by the condition
-
-        switch (a_person.Get_Condition()) {
-          case PersonState::Susceptible : 
-            map[position_in_map] = 'S';
-            break;
-          case PersonState::Infected : 
-            map[position_in_map] = 'I';
-            break;
-          case PersonState::Recovered : 
-            map[position_in_map] = 'R';
-            break;
-          case PersonState::Incubating : 
-            map[position_in_map] = 'F';
-            break;
-          default : 
-            break;
-        }
-      break;
-
-      case 'S':  // if it's suceptible
-
-        switch (a_person.Get_Condition()) {
-          case PersonState::Infected : 
-            map[position_in_map] = '!';  
-            // risky encounter, it means that there is at least an
-            // infected who didn't manage to infect a susceptible
-            break;
-          case PersonState::Incubating :
-            map[position_in_map] = '#';  // incubating-sus encounter
-            break;
-            //all other cases are lower priority
-          default : 
-            break;
-        }
-      break;
-
-      case 'I':
-        if (a_person.Get_Condition() == PersonState::Susceptible) {
-          map[position_in_map] =
-              '!';  // risky encounter, it means that there is at least an
-        }           // infected who didn't manage to infect a susceptible
-      break;
-
-      case 'R':
-
-        switch (a_person.Get_Condition()) {
-          case PersonState::Susceptible :
-            map[position_in_map] = 'S';
-            break;
-          case PersonState::Infected :
-            map[position_in_map] = 'I';
-            break;
-          case PersonState::Incubating :
-            map[position_in_map] = 'F';
-            break;
-          default : 
-            break;
-        }
-      break;
-
-      case 'F':
-        if (a_person.Get_Condition() == PersonState::Susceptible) {
-          map[position_in_map] = '#';
-        }  // sus-inc cluster, at least a sus and inc in tile
-        if (a_person.Get_Condition() == PersonState::Infected) {
-          map[position_in_map] = 'I';
-        }  // infected are higher priority
-      break;
-
-      case '!':
-      break;  // highest priority
-
-      case '#':
-        if (a_person.Get_Condition() == PersonState::Infected) {
-          map[position_in_map] = '!';
-        }  // infected-sus is more important than inf-inc
-      break;
-
-    }  // closes switch
-  }    // closes for
-
-  return map;
-}
-
- void draw_map(std::vector<char> const& map)
-{
-  int size = map.size();
-  //int width = board.Get_Width();
-  for (int i = 0; i < size; ++i) {
-    if (i % width == 0) {
-      std::cout << '\n';
+    std::vector<char> map;
+    for (int i = 0; i < area; ++i) {
+      map.push_back('-');
     }
 
-    switch (map[i]) {
-      case 'S' :
-      std::cout << termcolor::bright_blue;
-      break;
-      case 'I' :
-      std::cout << termcolor::bright_red;
-      break;
-      case 'R' :
-      std::cout << termcolor::bright_green;
-      break;
-      case 'F' :
-      std::cout << termcolor::yellow;
-      break;
-      case '#' : 
-      std::cout << termcolor::bright_magenta;
-      break;
-      case '!' :
-      std::cout << termcolor::on_red;
-      break;
-    }
+    int row = 0;
+    int column = 0;
+    // information priority is: INFECTED, SUSCEPTIBLE, INCUBATING, RECOVERED,
+    // EMPTY SPACE
+    for (Person const& a_person : people) {
+      row = a_person.Get_P_Cell().r;
+      column = a_person.Get_P_Cell().c;
 
-    std::cout << map[i] << termcolor::reset <<  " ";
-    
+      int position_in_map = (row - 1) * width + column - 1;
+      char cluster = map[position_in_map];
+
+      switch (cluster) {
+        case '-':  // if the space is empty, it is overwritten by the condition
+
+          switch (a_person.Get_Condition()) {
+            case PersonState::Susceptible:
+              map[position_in_map] = 'S';
+              break;
+            case PersonState::Infected:
+              map[position_in_map] = 'I';
+              break;
+            case PersonState::Recovered:
+              map[position_in_map] = 'R';
+              break;
+            case PersonState::Incubating:
+              map[position_in_map] = 'F';
+              break;
+            default:
+              break;
+          }
+          break;
+
+        case 'S':  // if it's suceptible
+
+          switch (a_person.Get_Condition()) {
+            case PersonState::Infected:
+              map[position_in_map] = '!';
+              // risky encounter, it means that there is at least an
+              // infected who didn't manage to infect a susceptible
+              break;
+            case PersonState::Incubating:
+              map[position_in_map] = '#';  // incubating-sus encounter
+              break;
+              // all other cases are lower priority
+            default:
+              break;
+          }
+          break;
+
+        case 'I':
+          if (a_person.Get_Condition() == PersonState::Susceptible) {
+            map[position_in_map] =
+                '!';  // risky encounter, it means that there is at least an
+          }           // infected who didn't manage to infect a susceptible
+          break;
+
+        case 'R':
+
+          switch (a_person.Get_Condition()) {
+            case PersonState::Susceptible:
+              map[position_in_map] = 'S';
+              break;
+            case PersonState::Infected:
+              map[position_in_map] = 'I';
+              break;
+            case PersonState::Incubating:
+              map[position_in_map] = 'F';
+              break;
+            default:
+              break;
+          }
+          break;
+
+        case 'F':
+          if (a_person.Get_Condition() == PersonState::Susceptible) {
+            map[position_in_map] = '#';
+          }  // sus-inc cluster, at least a sus and inc in tile
+          if (a_person.Get_Condition() == PersonState::Infected) {
+            map[position_in_map] = 'I';
+          }  // infected are higher priority
+          break;
+
+        case '!':
+          break;  // highest priority
+
+        case '#':
+          if (a_person.Get_Condition() == PersonState::Infected) {
+            map[position_in_map] = '!';
+          }  // infected-sus is more important than inf-inc
+          break;
+
+      }  // closes switch
+    }    // closes for
+
+    return map;
   }
-}
 
-}; //end of class grid
+  void draw_map(std::vector<char> const& map)
+  {
+    int size = map.size();
+    // int width = board.Get_Width();
+    for (int i = 0; i < size; ++i) {
+      if (i % width == 0) {
+        std::cout << '\n';
+      }
+
+      switch (map[i]) {
+        case 'S':
+          std::cout << termcolor::bright_blue;
+          break;
+        case 'I':
+          std::cout << termcolor::bright_red;
+          break;
+        case 'R':
+          std::cout << termcolor::bright_green;
+          break;
+        case 'F':
+          std::cout << termcolor::yellow;
+          break;
+        case '#':
+          std::cout << termcolor::bright_magenta;
+          break;
+        case '!':
+          std::cout << termcolor::on_red;
+          break;
+      }
+
+      std::cout << map[i] << termcolor::reset << " ";
+    }
+  }
+
+};  // end of class grid
 
 }  // namespace grid
 
