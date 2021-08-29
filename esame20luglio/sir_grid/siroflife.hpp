@@ -1,7 +1,6 @@
 #ifndef SIROFLIFE_HPP
 #define SIROFLIFE_HPP
 
-#include <stdlib.h>
 #include <cassert>
 #include <iostream>
 #include <random>
@@ -56,14 +55,13 @@ struct Cell
 
 enum class PersonState { Susceptible, Incubating, Infected, Recovered };
 
-
 class Person
 {
   Cell P_cell;
   PersonState condition;
   int incub_day = 0;
 
-  static std::default_random_engine& person_generator() { //static so we have only one generator for all the objects of class Person 
+  static std::default_random_engine& person_generator() { 
     static std::random_device person_device;
     static std::default_random_engine person_generator{person_device()};
     return person_generator;
@@ -224,8 +222,6 @@ class Grid
     for (int rec_i = 0; rec_i < recovered; ++rec_i) {
       people.push_back(Person{1, 1, PersonState::Recovered});
     }
-
-    std::uniform_int_distribution<int> grid_r(1, height);
 
     std::uniform_int_distribution<int> grid_distr_r(1, height);
     std::uniform_int_distribution<int> grid_distr_c(1, width);

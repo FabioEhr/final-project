@@ -5,9 +5,9 @@
 namespace grid{
 
 Virus makeVirus(){
-       double Contagiousness = -1;
+  double Contagiousness = -1;
   double Recovery_rate = -1;
-//  std::string antibug = "t";
+
   while (true) {
     std::cout << '\n'
 
@@ -46,9 +46,9 @@ Virus makeVirus(){
       continue;
     }
     std::cout << "Incubation time has been set to " << incubation
-              << ". Type y to continue, n to change incubation time." << '\n';
+              << ". Type y to continue, any other char to change incubation time" << '\n';
     char decision;
-    std::cin >> decision;
+    decision = validate_char();
     if (decision == 'y') {
       break;
     }
@@ -58,10 +58,8 @@ Virus makeVirus(){
    return vir;
 
 }
+
 Grid makeGrid(){
-
-      //std::string antibug = "t";
-
  
   int height = 1;
   while (true) {
@@ -93,31 +91,50 @@ Grid makeGrid(){
   int sus = 0;
   int inf = 0;
   int rec = 0;
-  //
-  std::cout << "Insert the number of susceptibles" << '\n';
-  //std::cin >> antibug;
-  sus = validate_int();
-  std::cout << "The number of susceptibles has been set to " << sus << '\n';
-  std::cout << "Insert the number of infected" << '\n';
-  //std::cin >> antibug;
-  inf = validate_int();
-  std::cout << "The number of infected has been set to " << inf << '\n';
-  std::cout << "Insert the number of recovered" << '\n';
-  //std::cin >> antibug;
-  rec = validate_int();
-  std::cout << "The number of recovered has been set to " << rec << '\n';
 
+  while (true) {
+    std::cout << "Insert the number of susceptibles" << '\n';
+    sus = validate_int();
+    if (sus<0) {
+      std::cerr << "ERROR: value must be >=0, please retry\n";
+    } else {
+      std::cout << "The number of susceptibles has been set to " << sus << '\n';
+      break;
+    }
+  }
+
+  while (true) {
+    std::cout << "Insert the number of infected" << '\n';
+    inf = validate_int();
+    if (sus<0) {
+      std::cerr << "ERROR: value must be >=0, please retry\n";
+    } else {
+      std::cout << "The number of infected has been set to " << inf << '\n';
+      break;
+    }
+  }
+
+  while (true) {
+    std::cout << "Insert the number of recovered" << '\n';
+    rec = validate_int();
+    if (rec<0) {
+      std::cerr << "ERROR: value must be >=0, please retry\n";
+    } else {
+      std::cout << "The number of recovered has been set to " << rec << '\n';
+      break;
+    }
+  }
 
   Grid city = {height, width, sus, inf, rec};
   return city;  
 }
-Behaviour makeBehaviour(){
-  Behaviour be;
-  //std::string antibug = "t";
 
+Behaviour makeBehaviour(){
+
+  Behaviour be;
 
   std::cout << "How many times should people move in a single day?" << '\n';
-  //std::cin >> antibug;
+
   be.mob = validate_int();
   if (be.mob < 1) {
     be.mob = 1;
@@ -128,7 +145,7 @@ Behaviour makeBehaviour(){
   std::cout << "How many maximum squares should people be able to move for in "
                "each direction?"
             << '\n';
-  //std::cin >> antibug;
+
   be.speed = validate_int();
   if (be.speed < 1) {
     be.speed = 1;
@@ -139,9 +156,4 @@ Behaviour makeBehaviour(){
   return be;
 }
  
-  
-
-
-
-
-}
+} //end of namespace grid

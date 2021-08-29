@@ -1,5 +1,6 @@
-#ifndef FUNC_HPP
-#define FUNC_HPP
+#ifndef USEFUL_FUNC_HPP
+#define USEFUL_FUNC_HPP
+#include <iostream>
 #include <string>
 inline bool double_compare(double left, double right, double precision = 0.0001)
 {
@@ -23,7 +24,11 @@ inline int validate_int() {
       std::cerr << "INPUT ERROR: Not an int, please retry\n";
       std::cin.clear();
       std::cin.ignore(1000, '\n');
-    } else break;
+    } else {
+      std::cin.clear();
+      std::cin.ignore (1000, '\n');
+      break;
+    }
   }
   return N;
 }
@@ -43,4 +48,22 @@ inline double validate_d() {
 }
   return N;
 }
+
+inline char validate_char() {
+
+  std::string my_string;
+  
+  while (true) {
+    std::cin>> my_string;
+    if (my_string.size()>1) {
+      std::cerr << "INPUT ERROR: too many letters/symbols. Need only one, please retry\n";
+    } else if (std::cin.fail()) { 
+      std::cerr << "INPUT ERROR: Not a char, please retry\n";
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+    } else break;
+}
+  return my_string[0];
+}
+
 #endif
