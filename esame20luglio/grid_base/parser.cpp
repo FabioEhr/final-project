@@ -1,7 +1,14 @@
 #include "parser.hpp"
+#include "world.hpp"
+#include "useful_func.hpp"
+#include"termcolor.hpp"
 
-namespace grid_base{
-    Virus createVirus(){
+
+namespace grid_base
+{
+
+    
+     Virus createVirus(){
         std::cout<<"write the contagiousness of the virus, it has to be a number between 0 and 1: ";
         double contagiousness=validate_double();
         std::cout<<"write the recovery_rate of the virus, it has to be a number between 0 and 1: ";
@@ -9,14 +16,14 @@ namespace grid_base{
         Virus virus{contagiousness,recovery_rate};
         return virus;
     }
-    void insertGrid(World& world, int const inf, int const rec){
+     void insertGrid(World& world, int const inf, int const rec){
             Cell infec=Cell::Infected;
             Cell recov=Cell::Recovered;
             std::fill_n(world.setGrid().begin(), inf, infec );
             std::fill_n(world.setGrid().begin()+inf, rec, recov);
             std::random_shuffle(world.setGrid().begin(), world.setGrid().end());
     }
-    World initializeGrid(){
+     World initializeGrid(){
         std::cout<<"write the length of the grid, it has to be a positive number : ";
         int length=validate_int();
         World world{length};
@@ -31,7 +38,7 @@ namespace grid_base{
         insertGrid(world, n_infected, n_recovered);
         return world;
     }
-    void printGrid(World const& world){
+     void printGrid(World const& world){
         //std::cout<<"\033[2J";
         int sum=0;
 
@@ -42,14 +49,14 @@ namespace grid_base{
             {
                 
             case Cell::Infected:
-                std::cout<<"I ";
+                std::cout<<termcolor::red<<"I ";
                 break;
             
             case Cell::Suscettible:
-                std::cout<<"S ";
+                std::cout<<termcolor::white<<"S ";
                 break;
             case Cell::Recovered:
-                std::cout<<"R ";
+                std::cout<<termcolor::green<<"R ";
                 break;
             
             default:
@@ -61,5 +68,4 @@ namespace grid_base{
         });
         std::cout<<'\n';
     }
-
 }
