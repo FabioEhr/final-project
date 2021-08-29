@@ -20,7 +20,7 @@ struct Transmatrix
   double ae;
 };
 
-bool operator==(Transmatrix const& left, Transmatrix const& right);  
+bool operator==(Transmatrix const& left, Transmatrix const& right);
 
 struct Age
 {
@@ -38,7 +38,6 @@ struct Age
 
   // made it a member function
   void invariant() const;
-  
 };
 
 struct Hospitals
@@ -77,7 +76,7 @@ class City
   int know = 0;         // knowledge, used for vaccines
   Hospitals h;          // sistema sanitario
   state_function stat;  // info on measures
-  int turns=0;
+  int turns = 0;
   void invariant() const;
 
  public:
@@ -110,22 +109,22 @@ class City
   }
 
   // getter functions
-  int N() const; //population
-  
-  double Y_per() const; //percentage of young people
-  
+  int N() const;  // population
+
+  double Y_per() const;  // percentage of young people
+
   double A_per() const;
 
   double E_per() const;
-  
+
   Age Young() const;
 
   Age Adults() const;
-  
+
   Age Elders() const;
 
   Transmatrix Mobility() const;
-  
+
   int $() const;
 
   int knowledge() const;
@@ -142,18 +141,25 @@ class City
   void add_$(int const amount);
   void mob_fixer();
 
-  void add_mob(double const yy, double const aa, double const ee, double const ya, double const ye, double const ae);
+  void add_mob(double const yy,
+               double const aa,
+               double const ee,
+               double const ya,
+               double const ye,
+               double const ae);
 
-  void multiply_mob(double const xyy ,
-                    double const xaa ,
-                    double const xee ,
-                    double const xya ,
-                    double const xye ,
-                    double const xae );
+  void multiply_mob(double const xyy,
+                    double const xaa,
+                    double const xee,
+                    double const xya,
+                    double const xye,
+                    double const xae);
   void add_know(int const amount);
 
   // replacing functions
-  void Set_ages(Age const& other_young, Age const& other_adult, Age const& other_elder);
+  void Set_ages(Age const& other_young,
+                Age const& other_adult,
+                Age const& other_elder);
 
   void Set_mob(Transmatrix const& replacer);
   void Set_status(state_function const& replacer);
@@ -164,20 +170,20 @@ class City
   Hospitals& GetRef_hospitals();
 
   int& GetRef_treasure();
- //next functions
- void next_turn();
+  // next functions
+  void next_turn();
   void next_treasury();
   void next_treasury_n_times(int const n);
   // mod fixers
   void mod_fixer(Age& t);
   void hosp_mod_fixer();
 
-  //functions to evaluate probability of inf-sus encounter for various ages
+  // functions to evaluate probability of inf-sus encounter for various ages
   double y_sus_inf_encounter() const;
   double a_sus_inf_encounter() const;
   double e_sus_inf_encounter() const;
 
-  // functions to display deltas in game-loop, they do the same things as evolve 
+  // functions to display deltas in game-loop, they do the same things as evolve
   double D_inf_y() const;
   double D_inf_a() const;
   double D_inf_e() const;
@@ -193,26 +199,26 @@ class City
   // used for testing, remember to include iostream
   void evolve_n_print();
   void evolve_n_times(int const n);
-  //economy and morale
+  // economy and morale
   int turn_income() const;
   int cumulative_morale() const;
-  //totals
+  // totals
   double total_per_susceptibles() const;
   double total_per_infected() const;
   double total_per_recovered() const;
   double total_per_dead() const;
   double total_per_hosp() const;
 };
-//used for a cleaner code
+// used for a cleaner code
 struct Deltas
-{ 
- int D_inf = 0;      // aumento di contagi
+{
+  int D_inf = 0;      // aumento di contagi
   int D_crit = 0;     // aumento di casi critici
   int D_rec = 0;      // aumento di recoveries
   int D_deaths = 0;   // aumento di morti
   int D_dismmis = 0;  // aumento di persone guarite in ospedale
   int D_ovrfl = 0;  // aumento di persone a cui è negato l'accesso in ospedale
-  //must be run before evolve!!
+  // must be run before evolve!!
   void update(City& playground);
 };
 

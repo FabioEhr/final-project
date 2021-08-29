@@ -1,13 +1,12 @@
 #include "interface.hpp"
+#include <iostream>
 #include <random>
 #include "decisions.hpp"
-#include "yae.hpp"
 #include "useful_func.hpp"
-#include <iostream>
+#include "yae.hpp"
 
- void print_opt(City const& playground)
+void print_opt(City const& playground)
 {
-  
   std::cout << "Current treasury: " << playground.$() << '\n';
   std::cout << "Here are your options :" << '\n';
   state_function current = playground.Get_status();
@@ -75,7 +74,7 @@
   std::cout << "Skip N weeks (Type #)" << '\n';
 }
 
- void execute(City& playground, char const order)
+void execute(City& playground, char const order)
 {
   state_function current = playground.Get_status();
   switch (order) {
@@ -119,7 +118,8 @@
     case 'e':
       if (!current.vaccines) {
         invest_in_research(playground);
-      } else std::cout << "vaccines already discovered, research suspended\n";
+      } else
+        std::cout << "vaccines already discovered, research suspended\n";
       break;
     case 'd':
       if (!current.schools) {
@@ -143,12 +143,14 @@
       if (current.restaurants && current.theatres && current.schools &&
           current.churches) {
         lockdown(playground);
-      } else std::cout << "already in partial or full lockdown\n";
+      } else
+        std::cout << "already in partial or full lockdown\n";
       break;
     case 'v':
       if (current.vaccines) {
         vaccinate_elders(playground);
-      } else std::cout << "vaccines not discovered\n";
+      } else
+        std::cout << "vaccines not discovered\n";
       break;
     case 'x':
       if (current.vaccines) {
@@ -158,15 +160,16 @@
     case 'z':
       if (current.vaccines) {
         vaccinate_young(playground);
-      } 
+      }
       break;
-    default :
-    std::cerr << "INPUT ERROR: a choice corresponding to the written char does not exist \n";
-    break;
+    default:
+      std::cerr << "INPUT ERROR: a choice corresponding to the written char "
+                   "does not exist \n";
+      break;
   }
   std::cout << '\n';
 }
- std::string mood(Age const& person)
+std::string mood(Age const& person)
 {
   std::string text = "Depressed";
 
@@ -189,11 +192,12 @@
   return text;
 }
 
- void print_situation(City const& playground,
-                     Deltas const& deltas)
-{std::cout<< "Weeks since start of simulation: " << playground.Get_turns() << '\n';
+void print_situation(City const& playground, Deltas const& deltas)
+{
+  std::cout << "Weeks since start of simulation: " << playground.Get_turns()
+            << '\n';
   int n = playground.N();
-  int sus = n * playground.total_per_susceptibles(); 
+  int sus = n * playground.total_per_susceptibles();
   int inf = n * playground.total_per_infected();
   int rec = n * playground.total_per_recovered();
   int n_hospitalized = n * (playground.total_per_hosp());
@@ -202,27 +206,29 @@
                               // approximations and display always the same sum.
                               // (else there is a +/- 1 person error)
   if (playground.Get_turns() > 0) {
-    std::cout << "This week " << deltas.D_inf << " new infections were registered, "
-              << '\n';
+    std::cout << "This week " << deltas.D_inf
+              << " new infections were registered, " << '\n';
     std::cout << "This week " << deltas.D_crit
               << " new people were in critical condition." << '\n';
     std::cout << "This week " << deltas.D_deaths
               << " new virus-related deaths were registered, " << deltas.D_ovrfl
               << " of which were due to the lack of hospitals' beds." << '\n';
-    std::cout << "This week " << deltas.D_rec << " people recovered from the virus, "
-              << deltas.D_dismmis << " of which thanks to our medical staff." << '\n';
+    std::cout << "This week " << deltas.D_rec
+              << " people recovered from the virus, " << deltas.D_dismmis
+              << " of which thanks to our medical staff." << '\n';
   }
   std::cout << "Number of susceptibles :" << sus << '\n';
   std::cout << "Number of infected :" << inf << '\n';
   std::cout << "Number of hospitalized :" << n_hospitalized << '\n';
   std::cout << "Number of recovered :" << rec << '\n';
   std::cout << "Number of pandemic related deaths :" << dead << '\n';
- /* std::cout << "Sum: " << sus + inf + n_hospitalized + rec + dead
-            << '\n';*/  // usefull  for testing
+  /* std::cout << "Sum: " << sus + inf + n_hospitalized + rec + dead
+             << '\n';*/  // usefull  for testing
   std::cout << "Current treasury :" << playground.$() << '\n'
             << "Income per week :" << playground.turn_income() << '\n';
   char input;
-  std::cout << "If you want more detailed information press 'i', or any other char to skip"
+  std::cout << "If you want more detailed information press 'i', or any other "
+               "char to skip"
             << '\n';
   input = validate_char();
   if (input == 'i') {
@@ -272,7 +278,7 @@
   std::cout << '\n';
 }
 
- std::string news_paper()
+std::string news_paper()
 {
   std::string b;
   std::string name;
@@ -280,60 +286,59 @@
   std::default_random_engine generator1{r1()};
   std::uniform_int_distribution<int> distr(0, 3);
   int a = distr(r1);
-  switch(a){
+  switch (a) {
     case 0:
       b = "'Republic'";
       break;
     case 1:
-    b = "'Sun 24 h'";
-    break;
+      b = "'Sun 24 h'";
+      break;
     case 2:
-    b = "'The Print'";
-    break;
+      b = "'The Print'";
+      break;
     case 3:
-    b = "'The Messanger'";
-    break;
+      b = "'The Messanger'";
+      break;
   }
- return b;
+  return b;
 }
- std::string variant()
+std::string variant()
 {
   std::string name;
   std::random_device r1;
   std::default_random_engine generator1{r1()};
   std::uniform_int_distribution<int> distr(0, 5);
   int a = distr(r1);
-  switch (a){
+  switch (a) {
     case 0:
-    name = "'Alpha Variant'";
-    break;
+      name = "'Alpha Variant'";
+      break;
     case 1:
-    name = "'Beta Varaint'";
-    break;
+      name = "'Beta Varaint'";
+      break;
     case 2:
-    name = "'Gamma Variant'";
-    break;
-    case 3: 
-    name = "'Delta Variant'";
-    break;
+      name = "'Gamma Variant'";
+      break;
+    case 3:
+      name = "'Delta Variant'";
+      break;
     case 4:
-    name = "'Epsilon Variant'";
-    break;
+      name = "'Epsilon Variant'";
+      break;
     case 5:
-    name = "'Omega Variant'";
-    break;
-
+      name = "'Omega Variant'";
+      break;
   }
-  
+
   return name;
 }
- std::string groups(City const& playground)
+std::string groups(City const& playground)
 {
   state_function alpha = playground.Get_status();
   std::string a = "Groups of so called 'no masks' ";
-  
+
   if (!alpha.restaurants) {
-   a += ", restaurateurs";
+    a += ", restaurateurs";
   }
   if (!alpha.schools) {
     a += ", students";
@@ -347,7 +352,7 @@
   return a;
 }
 
- void print_vir_opt()
+void print_vir_opt()
 {
   std::cout << "Select a virus." << '\n';
   std::cout << "Type 1 for Flu. Contagious but not extremly deadly." << '\n';
@@ -357,7 +362,7 @@
   std::cout << "Type 3 for Ebola. Lowest recovery rate and highest letality."
             << '\n';
 }
- void print_city_opt()
+void print_city_opt()
 {
   std::cout << "Select a City." << '\n';
   std::cout

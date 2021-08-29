@@ -1,10 +1,9 @@
 #include <iostream>
 #include "events.hpp"
-#include "yae.hpp"
 #include "interface.hpp"
 #include "presets.hpp"
 #include "useful_func.hpp"
-
+#include "yae.hpp"
 
 int main()
 {
@@ -15,7 +14,7 @@ int main()
     print_vir_opt();
     char choice;
     choice = validate_char();
-    switch(choice){
+    switch (choice) {
       case '1':
         vir = Flu();
         std::cout << '\n';
@@ -34,14 +33,12 @@ int main()
     }
     break;
 
-
-
   }               // end of vir selection loop
   while (true) {  // city selection loop
     print_city_opt();
     char choice_2;
     choice_2 = validate_char();
-        switch(choice_2){
+    switch (choice_2) {
       case '1':
         playground = Matera(vir);
         std::cout << '\n';
@@ -60,24 +57,24 @@ int main()
     }
     break;
   }  // end of city selection loop
- 
-  Deltas delta; //includes various deltas i.e. number of new infected this week
-  int omega = 0;    // exit condition
 
-  while (true) {    // mother game loop
+  Deltas delta;  // includes various deltas i.e. number of new infected this
+                 // week
+  int omega = 0;  // exit condition
+
+  while (true) {  // mother game loop
     if (playground.knowledge() >= 50) {
       state_function Pfizer = playground.Get_status();
       Pfizer.vaccines = true;
       playground.Set_status(Pfizer);
       std::cout << "The vaccine is ready for rollout!" << '\n';
     }
-    
 
     if (playground.Get_turns() != 0) {
       rnd_events(playground);
     }
 
-    if (delta.D_ovrfl > 0) { //hospital crisis, lowers morale
+    if (delta.D_ovrfl > 0) {  // hospital crisis, lowers morale
       no_beds(playground);
     }
 
@@ -91,15 +88,16 @@ int main()
         std::cout << '\n';
         break;
       }
-      
-      if (input == '#') {  
+
+      if (input == '#') {
         std::cout << "How many weeks would you like to skip?" << '\n';
         int n_weeks;
         while (true) {
           n_weeks = validate_int();
-          if (n_weeks<0) {
-          std::cerr << "ERROR: value must be >=0, please retry\n";
-          } else break;
+          if (n_weeks < 0) {
+            std::cerr << "ERROR: value must be >=0, please retry\n";
+          } else
+            break;
         }
 
         for (int i = 0; i < n_weeks - 1; ++i) {
@@ -108,11 +106,11 @@ int main()
           playground.next_treasury();
           rnd_events(playground);
           playground.next_turn();
-          
+
           if (delta.D_ovrfl > 0) {
             no_beds(playground);
           }
-           omega = playground.N() * (playground.total_per_infected() +
+          omega = playground.N() * (playground.total_per_infected() +
 
                                     playground.total_per_hosp());
           if (omega == 0) {
@@ -144,7 +142,8 @@ int main()
   int d_y = playground.N() * playground.Young().ded * playground.Y_per();
   int d_a = playground.N() * playground.Adults().ded * playground.A_per();
   int d_e = playground.N() * playground.Elders().ded * playground.E_per();
-  std::cout << "The pandemic lasted: " << playground.Get_turns() << " weeks" << '\n';
+  std::cout << "The pandemic lasted: " << playground.Get_turns() << " weeks"
+            << '\n';
   std::cout << "Total deaths: " << d_total << '\n';
   std::cout << "Number of Young/Adults/Elders who died: " << d_y << " / " << d_a
             << " / " << d_e << '\n';

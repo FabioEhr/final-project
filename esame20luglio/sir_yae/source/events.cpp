@@ -1,8 +1,8 @@
 #include "events.hpp"
-#include "interface.hpp"
+#include <iostream>
 #include <random>
 #include <string>
-#include <iostream>
+#include "interface.hpp"
 
 void mutate_contagiousness(
     City& playground)  // mutations occur when there are a lot of infected
@@ -12,7 +12,7 @@ void mutate_contagiousness(
   plague.b += amount;
   if (plague.b > 1.) {
     plague.b = 1.;
-  }  
+  }
   playground.Set_virus(plague);
   playground.add_know(-2);
   std::cout << "On the local newspaper " << news_paper()
@@ -37,7 +37,7 @@ void mutate_recovery(City& playground)
                "virus increases recovery time.'"
             << '\n';
 }
- void mutate_deadliness(City& playground)
+void mutate_deadliness(City& playground)
 {
   double amount = 0.005;
   Virus plague = playground.Get_virus();
@@ -95,7 +95,7 @@ void illegal_parties(City& playground)
                "the leading cause of death this year."
             << '\n';
 }
- void eureka(City& playground)
+void eureka(City& playground)
 {
   playground.add_know(3);
   std::cout << "On the local newspaper " << news_paper()
@@ -106,7 +106,7 @@ void illegal_parties(City& playground)
                "this gene may reveal a new way to produce a vaccine."
             << '\n';
 }
- void panic(City& playground)
+void panic(City& playground)
 {
   playground.add_mob(-0.3, -0.3, -0.4, -0.2, -0.2, -0.2);
   Age other_young = playground.Young();
@@ -125,7 +125,7 @@ void illegal_parties(City& playground)
          "and essential goods, leaving supermarkets as empty as wastelands."
       << '\n';
 }
- void no_beds(City& playground)
+void no_beds(City& playground)
 {
   Age other_young = playground.Young();
   other_young.morale += -6;
@@ -141,7 +141,7 @@ void illegal_parties(City& playground)
                "government to provide hospital beds. "
             << '\n';
 }
- void rnd_events(City& playground)
+void rnd_events(City& playground)
 {
   state_function current = playground.Get_status();
   std::random_device r1;
@@ -152,19 +152,19 @@ void illegal_parties(City& playground)
   if (unlucky > lucky) {
     std::uniform_int_distribution<int> three(0, 2);
     int which_one = three(generator1);
-    switch(which_one){
+    switch (which_one) {
       case 0:
-     mutate_contagiousness(playground);
-     panic(playground);
-     break;
-     case 1:
-     mutate_recovery(playground);
-     panic(playground);
-     break;
-     case 2:
-     mutate_deadliness(playground);
-     panic(playground);
-     break;
+        mutate_contagiousness(playground);
+        panic(playground);
+        break;
+      case 1:
+        mutate_recovery(playground);
+        panic(playground);
+        break;
+      case 2:
+        mutate_deadliness(playground);
+        panic(playground);
+        break;
     }
     /*if (which_one == 0) {
       mutate_contagiousness(playground);

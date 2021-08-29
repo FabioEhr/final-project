@@ -1,8 +1,8 @@
+#include "decisions.hpp"
 #include <iostream>
 #include <string>
-#include "yae.hpp"
 #include "useful_func.hpp"
-#include "decisions.hpp"
+#include "yae.hpp"
 void buy_masks(City& playground)
 {  // lowers mobility by the same ammount for all
   int quantity;
@@ -10,7 +10,7 @@ void buy_masks(City& playground)
             << '\n';
   while (true) {
     quantity = validate_int();
-    if (quantity<0) {
+    if (quantity < 0) {
       std::cerr << "ERROR: value must be >=0, retry";
     } else {
       std::cin.clear();
@@ -20,8 +20,10 @@ void buy_masks(City& playground)
   }
   int cost = 5;
   std::cout << "trying to buy" << quantity << "masks, ";
-  std::cout << "The cost is: " << quantity * cost << ". "
-            << "Do you want to proceed? (press y for yes, any other char for no)" << '\n';
+  std::cout
+      << "The cost is: " << quantity * cost << ". "
+      << "Do you want to proceed? (press y for yes, any other char for no)"
+      << '\n';
   char decision;
   decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
@@ -45,7 +47,7 @@ void buy_masks(City& playground)
   }
 }
 
- void close_restaurants(City& playground)
+void close_restaurants(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += -5;
@@ -67,7 +69,7 @@ void buy_masks(City& playground)
   std::cout << "Decision registered! Restaurants have been closed." << '\n';
 }
 
- void close_theatres(City& playground)  // different from close_restaurants,
+void close_theatres(City& playground)  // different from close_restaurants,
                                        // lesser economic impact but people are
                                        // sadder. affects "mixed" encounters
 {
@@ -90,7 +92,7 @@ void buy_masks(City& playground)
   std::cout << "Decision registered! Theatres have been closed." << '\n';
 }
 
- void close_schools(
+void close_schools(
     City& playground)  // affects young greatly and elders(because they have to
                        // stay with their kids)
 {
@@ -113,7 +115,7 @@ void buy_masks(City& playground)
   std::cout << "Decision registered! Schools have been closed." << '\n';
 }
 
- void close_churches(City& playground)
+void close_churches(City& playground)
 {
   Age other_young = playground.Young();
 
@@ -132,18 +134,19 @@ void buy_masks(City& playground)
   std::cout << "Decision registered! Churches have been closed." << '\n';
 }
 
- void curfew(City& playground)
+void curfew(City& playground)
 {
   std::cout << "By how many hours would you like to increase the curfew? "
                "(Insert a positive value)"
             << '\n';
   int hours;
-  
+
   while (true) {
     hours = validate_int();
-    if (hours<0) {
+    if (hours < 0) {
       std::cerr << "ERROR: value must be >=0, please retry\n";
-    } else break;
+    } else
+      break;
   }
 
   state_function replacer = playground.Get_status();
@@ -168,7 +171,7 @@ void buy_masks(City& playground)
             << replacer.curfew_hours << " hours." << '\n';
 }
 
- void lockdown(City& playground)
+void lockdown(City& playground)
 {
   std::cout << "Decision registered! Lockdown will be enforced immediatly."
             << '\n';
@@ -178,7 +181,7 @@ void buy_masks(City& playground)
   close_churches(playground);
 }
 // Open functions
- void open_restaurants(City& playground)
+void open_restaurants(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += 3;
@@ -199,7 +202,7 @@ void buy_masks(City& playground)
   playground.Set_status(replacer);
   std::cout << "Decision registered! Restaurants have been reopend." << '\n';
 }
- void open_theatres(City& playground)
+void open_theatres(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += 1;
@@ -220,7 +223,7 @@ void buy_masks(City& playground)
   playground.Set_status(replacer);
   std::cout << "Decision registered! Theaters have been reopend." << '\n';
 }
- void open_schools(City& playground)
+void open_schools(City& playground)
 {
   Age other_young = playground.Young();
   other_young.income += 1;
@@ -240,7 +243,7 @@ void buy_masks(City& playground)
   playground.Set_status(replacer);
   std::cout << "Decision registered! Schools have been reopend." << '\n';
 }
- void open_churches(City& playground)
+void open_churches(City& playground)
 {
   Age other_young = playground.Young();
 
@@ -260,7 +263,7 @@ void buy_masks(City& playground)
   std::cout << "Decision registered! Churches have been reopend." << '\n';
 }
 
- void alleviate_curfew(City& playground)
+void alleviate_curfew(City& playground)
 {
   std::cout << "By how many hours would you like to decrease the curfew? "
                "(Insert a positive value)"
@@ -268,9 +271,10 @@ void buy_masks(City& playground)
   int hours;
   while (true) {
     hours = validate_int();
-    if (hours<0) {
+    if (hours < 0) {
       std::cerr << "ERROR: value must be >=0, please retry\n";
-    } else break;
+    } else
+      break;
   }
 
   state_function replacer = playground.Get_status();
@@ -295,7 +299,7 @@ void buy_masks(City& playground)
             << replacer.curfew_hours << " hours." << '\n';
 }
 
- void invest_in_research(City& playground)
+void invest_in_research(City& playground)
 {
   int scale_factor = playground.knowledge();
   if (scale_factor < 0) {
@@ -303,7 +307,8 @@ void buy_masks(City& playground)
   }
   int cost = -50000 * scale_factor - 5000;
   std::cout << "The cost of investment is: " << -cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
 
@@ -321,12 +326,13 @@ void buy_masks(City& playground)
   }
 }
 
- void invest_in_digital(City& playground)
+void invest_in_digital(City& playground)
 {  // helps people transition to remote working
 
   int cost = -5000;
   std::cout << "The cost of investment is: " << -cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
 
@@ -355,7 +361,7 @@ void buy_masks(City& playground)
   }
 }
 
- void terrorize_with_media(
+void terrorize_with_media(
     City& playground)  // changes perception of the dangerousness of the virus
 {
   Age other_young = playground.Young();
@@ -376,7 +382,7 @@ void buy_masks(City& playground)
             << '\n';
 }
 
- void tranquillize_with_media(City& playground)  // shouldn't be a good option
+void tranquillize_with_media(City& playground)  // shouldn't be a good option
 {
   Age other_young = playground.Young();
   other_young.morale += 1;
@@ -396,13 +402,14 @@ void buy_masks(City& playground)
             << '\n';
 }
 
- void modernize_hospitals(City& playground)
+void modernize_hospitals(City& playground)
 {
   int upgrade_cost = (playground.Get_hospitals()).n_beds *
                      (playground.Get_hospitals()).level * 1000;
 
   std::cout << "The cost of investment is: " << upgrade_cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
 
@@ -426,25 +433,27 @@ void buy_masks(City& playground)
   }
 }
 
- void build_beds(City& playground)
+void build_beds(City& playground)
 {
   int amount;
-  
+
   std::cout << "How many new hospital beds would you like to buy? (Insert a "
                "natural number)"
             << '\n';
-  
+
   while (true) {
     amount = validate_int();
-    if (amount<0) {
+    if (amount < 0) {
       std::cerr << "ERROR: value must be >=0, retry";
-    } else break;
+    } else
+      break;
   }
 
   int build_cost = (playground.Get_hospitals()).level * amount * 1000;
 
   std::cout << "The cost of investment is: " << build_cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
@@ -466,21 +475,22 @@ void buy_masks(City& playground)
   }
 }
 
- void vaccinate_young(City& playground)
+void vaccinate_young(City& playground)
 {
   int price = 1000;
   int vaccines;
-  
+
   int n_young = playground.Young().sus * playground.N() * playground.Y_per();
   std::cout << "There are " << n_young
             << " Young people who still need a vaccine. The cost is " << price
             << " per person. How many should we vaccinate?" << '\n';
-  
+
   while (true) {
     vaccines = validate_int();
-    if (vaccines<0) {
+    if (vaccines < 0) {
       std::cerr << "ERROR: value must be >=0, retry";
-    } else break;
+    } else
+      break;
   }
   if (vaccines > n_young) {
     vaccines = n_young;
@@ -488,7 +498,8 @@ void buy_masks(City& playground)
 
   int cost = price * vaccines;
   std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
@@ -511,7 +522,7 @@ void buy_masks(City& playground)
   }
 }
 
- void vaccinate_adults(City& playground)
+void vaccinate_adults(City& playground)
 {
   int price = 1000;
   int vaccines;
@@ -521,9 +532,10 @@ void buy_masks(City& playground)
             << " per person. How many should we vaccinate?" << '\n';
   while (true) {
     vaccines = validate_int();
-    if (vaccines<0) {
+    if (vaccines < 0) {
       std::cerr << "ERROR: value must be >=0, retry";
-    } else break;
+    } else
+      break;
   }
   if (vaccines > n_adults) {
     vaccines = n_adults;
@@ -531,7 +543,8 @@ void buy_masks(City& playground)
 
   int cost = price * vaccines;
   std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
   if (decision == 'y' || decision == 'Y') {
@@ -553,7 +566,7 @@ void buy_masks(City& playground)
     std::cout << "You did not proceed" << '\n';
   }
 }
- void vaccinate_elders(City& playground)
+void vaccinate_elders(City& playground)
 {
   int price = 1000;
   int vaccines;
@@ -563,9 +576,10 @@ void buy_masks(City& playground)
             << " per person. How many should we vaccinate?" << '\n';
   while (true) {
     vaccines = validate_int();
-    if (vaccines<0) {
+    if (vaccines < 0) {
       std::cerr << "ERROR: value must be >=0, retry";
-    } else break;
+    } else
+      break;
   }
   if (vaccines > n_elders) {
     vaccines = n_elders;
@@ -573,7 +587,8 @@ void buy_masks(City& playground)
 
   int cost = price * vaccines;
   std::cout << "The cost of investment is: " << cost << " "
-            << "Do you want to proceed? (y for yes, any other char for no)" << '\n';
+            << "Do you want to proceed? (y for yes, any other char for no)"
+            << '\n';
   char decision;
   decision = validate_char();
   if (decision == 'y' || decision == 'Y') {

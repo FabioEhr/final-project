@@ -1,9 +1,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-#include "yae.hpp"
 #include "decisions.hpp"
+#include "doctest.h"
 #include "presets.hpp"
 #include "useful_func.hpp"
+#include "yae.hpp"
 
 // CHANGES VALUES IN DECISIONS.HPP MIGHT INFLUENCE THEESE RESULTS. PLEASE
 // REMEMBER TO UPDATE
@@ -208,13 +208,13 @@ TEST_CASE("Testing vaccinations")
   std::string test_1 = "100an.poe3";
   CHECK(string_to_int(test_1) == 1000000003);
   CHECK(valid_string(test_1) == false);
-  
+
   std::string test_2 = ".998";
   std::string test_3 = "0.998";
-  
+
   CHECK(valid_string(test_2)==true)
   CHECK(valid_string(test_3)==true)
   CHECK(double_compare(string_to_decimal(test_2), 0.998));
   CHECK(double_compare(string_to_decimal(test_3), 0.998));
-  
+
 }*/
