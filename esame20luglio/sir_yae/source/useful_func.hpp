@@ -29,14 +29,14 @@ inline int validate_int() {
 }
 
 
-inline double validate_d() {
+inline double validate_double() {
 
   double N;
 
   while (true) {
     std::cin>> N;
     if (std::cin.fail()) { 
-      std::cerr << "INPUT ERROR: Not an double, please retry\n";
+      std::cerr << "INPUT ERROR: Not a double, please retry\n";
       std::cin.clear();
       std::cin.ignore(1000, '\n');
     } else break;

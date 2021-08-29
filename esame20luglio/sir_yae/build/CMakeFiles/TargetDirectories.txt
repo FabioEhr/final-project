@@ -1,6 +1,0 @@
-/home/stef/progettoinfo/final-project/esame20luglio/sir_yae/build/CMakeFiles/rebuild_cache.dir
-/home/stef/progettoinfo/final-project/esame20luglio/sir_yae/build/CMakeFiles/edit_cache.dir
-/home/stef/progettoinfo/final-project/esame20luglio/sir_yae/build/CMakeFiles/test.dir
-/home/stef/progettoinfo/final-project/esame20luglio/sir_yae/build/CMakeFiles/more_tests.dir
-/home/stef/progettoinfo/final-project/esame20luglio/sir_yae/build/CMakeFiles/yae_test.dir
-/home/stef/progettoinfo/final-project/esame20luglio/sir_yae/build/CMakeFiles/play.dir
