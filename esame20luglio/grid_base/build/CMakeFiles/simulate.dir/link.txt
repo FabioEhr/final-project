@@ -1,0 +1,1 @@
+/usr/bin/c++   -fsanitize=address   CMakeFiles/simulate.dir/main.cpp.o CMakeFiles/simulate.dir/parser.cpp.o CMakeFiles/simulate.dir/world.cpp.o  -o simulate 

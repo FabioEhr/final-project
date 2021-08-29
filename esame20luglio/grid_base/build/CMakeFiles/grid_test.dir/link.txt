@@ -1,0 +1,1 @@
+/usr/bin/c++   -fsanitize=address   CMakeFiles/grid_test.dir/grid.test.cpp.o CMakeFiles/grid_test.dir/parser.cpp.o CMakeFiles/grid_test.dir/world.cpp.o  -o grid_test 

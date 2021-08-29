@@ -1,0 +1,5 @@
+/home/esselunga10/programs/final-project/esame20luglio/grid_base/build/CMakeFiles/edit_cache.dir
+/home/esselunga10/programs/final-project/esame20luglio/grid_base/build/CMakeFiles/test.dir
+/home/esselunga10/programs/final-project/esame20luglio/grid_base/build/CMakeFiles/rebuild_cache.dir
+/home/esselunga10/programs/final-project/esame20luglio/grid_base/build/CMakeFiles/grid_test.dir
+/home/esselunga10/programs/final-project/esame20luglio/grid_base/build/CMakeFiles/simulate.dir

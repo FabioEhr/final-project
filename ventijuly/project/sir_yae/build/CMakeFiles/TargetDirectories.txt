@@ -1,0 +1,6 @@
+/home/esselunga10/programs/final-project/ventijuly/project/sir_yae/build/CMakeFiles/rebuild_cache.dir
+/home/esselunga10/programs/final-project/ventijuly/project/sir_yae/build/CMakeFiles/edit_cache.dir
+/home/esselunga10/programs/final-project/ventijuly/project/sir_yae/build/CMakeFiles/test.dir
+/home/esselunga10/programs/final-project/ventijuly/project/sir_yae/build/CMakeFiles/more_tests.dir
+/home/esselunga10/programs/final-project/ventijuly/project/sir_yae/build/CMakeFiles/yae_test.dir
+/home/esselunga10/programs/final-project/ventijuly/project/sir_yae/build/CMakeFiles/play.dir
