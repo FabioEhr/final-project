@@ -75,14 +75,14 @@ int main()
                         window.draw(recovered[i]);
                     }
                 }
+                
+                sf::Text num_days;
+                num_days.setFont(font);
+                num_days.setString("Day " +std::to_string(j));
+                num_days.setCharacterSize(20);
+                num_days.setPosition(/*height+50*/, /*widht+20*/));
+                window.draw(num_days);
             }
-
-            sf::Text num_days;
-            num_days.setFont(font);
-            num_days.setString("Day " +std::to_string(j));
-            num_days.setCharacterSize(20);
-            num_days.setPosition(/*height+50*/, /*widht+20*/));
-            window.draw(num_days);
 
             window.display();
             window.clear();
