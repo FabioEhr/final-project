@@ -6,7 +6,8 @@
 
 namespace grid_base {
 
-Virus createVirus() {
+Virus createVirus()
+{
   std::cout << "write the contagiousness of the virus, it has to be a number "
                "between 0 and 1: ";
   double contagiousness = validate_double();
@@ -16,9 +17,10 @@ Virus createVirus() {
   Virus virus{contagiousness, recovery_rate};
   return virus;
 }
-void insertGrid(World& world, int const inf, int const rec) {
+void insertGrid(World& world, int const inf, int const rec)
+{
   World next{world.getSide_length()};
-  //creo un vettore di soli suscettibili
+  // creo un vettore di soli suscettibili
   world = next;
   Cell infec = Cell::Infected;
   Cell recov = Cell::Recovered;
@@ -27,7 +29,8 @@ void insertGrid(World& world, int const inf, int const rec) {
   std::fill_n(world.setGrid().begin() + inf, rec, recov);
   std::random_shuffle(world.setGrid().begin(), world.setGrid().end());
 }
-World initializeGrid() {
+World initializeGrid()
+{
   std::cout
       << "write the length of the grid, it has to be a positive number : ";
   int length = validate_int();
@@ -48,11 +51,13 @@ World initializeGrid() {
   insertGrid(world, n_infected, n_recovered);
   return world;
 }
-void printGrid(World const& world) {
+void printGrid(World const& world)
+{
   int sum = 0;
-// for_each che stampa la griglia
+  // for_each che stampa la griglia
   std::for_each(
-      world.getGrid().begin(), world.getGrid().begin() + world.getGrid().size(),
+      world.getGrid().begin(),
+      world.getGrid().begin() + world.getGrid().size(),
       [&](const Cell& actual) {
         if (sum % world.getSide_length() == 0) std::cout << '\n';
         switch (actual) {
