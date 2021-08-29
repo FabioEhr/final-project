@@ -6,6 +6,7 @@
 #include <random>
 #include <set>
 #include <string>
+#include "termcolor.hpp"
 
 namespace grid {
 
@@ -470,6 +471,7 @@ class Grid
     char cluster = map[position_in_map];
 
     switch (cluster) {
+      
       case '-':  // if the space is empty, it is overwritten by the condition
 
         switch (a_person.Get_Condition()) {
@@ -512,7 +514,7 @@ class Grid
           map[position_in_map] =
               '!';  // risky encounter, it means that there is at least an
         }           // infected who didn't manage to infect a susceptible
-        break;
+      break;
 
       case 'R':
 
@@ -529,7 +531,7 @@ class Grid
           default : 
             break;
         }
-        break;
+      break;
 
       case 'F':
         if (a_person.Get_Condition() == PersonState::Susceptible) {
@@ -538,15 +540,16 @@ class Grid
         if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] = 'I';
         }  // infected are higher priority
-        break;
+      break;
 
       case '!':
-        break;  // highest priority
+      break;  // highest priority
 
       case '#':
         if (a_person.Get_Condition() == PersonState::Infected) {
           map[position_in_map] = '!';
         }  // infected-sus is more important than inf-inc
+      break;
 
     }  // closes switch
   }    // closes for
@@ -562,7 +565,30 @@ class Grid
     if (i % width == 0) {
       std::cout << '\n';
     }
-    std::cout << map[i] << " ";
+
+    switch (map[i]) {
+      case 'S' :
+      std::cout << termcolor::bright_blue;
+      break;
+      case 'I' :
+      std::cout << termcolor::bright_red;
+      break;
+      case 'R' :
+      std::cout << termcolor::bright_green;
+      break;
+      case 'F' :
+      std::cout << termcolor::yellow;
+      break;
+      case '#' : 
+      std::cout << termcolor::bright_magenta;
+      break;
+      case '!' :
+      std::cout << termcolor::on_red;
+      break;
+    }
+
+    std::cout << map[i] << termcolor::reset <<  " ";
+    
   }
 }
 
