@@ -98,16 +98,16 @@ TEST_CASE("Testing effectiveness of speed")
 TEST_CASE("Testing get_map")
 {
   grid::Grid test = {1, 1, 1, 1, 0};
-  std::vector<char> t = grid::get_map(test);
+  std::vector<char> t = test.get_map();
   CHECK(t.size() == 1);
   CHECK(t[0] == '!');
 
   grid::Grid test_2 = {1, 1, 1, 0, 1};
-  t = grid::get_map(test_2);
+  t = test_2.get_map();
   CHECK(t[0] == 'S');
 
   grid::Grid test_3 = {1, 1, 0, 1, 8};
-  t = grid::get_map(test_3);
+  t = test_3.get_map();
   CHECK(t[0] == 'I');
 
   grid::Grid test_4 = {1, 1, 1, 1, 0};
@@ -119,7 +119,7 @@ TEST_CASE("Testing get_map")
   // // sus
   // test_4.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));
   // // inc
-  t = grid::get_map(test_4);
+  t = test_4.get_map();
   CHECK(t[0] == '#');
 
   grid::Grid test_5 = {1, 1, 0, 1, 1};
@@ -131,10 +131,10 @@ TEST_CASE("Testing get_map")
   // // inf
   // test_5.Get_People_Ref()[1].Set_Condition(static_cast<grid::PersonState>(1));
   // // inc
-  t = grid::get_map(test_5);
+  t = test_5.get_map();
   CHECK(t[0] == 'I');
 
   grid::Grid test_6 = {1, 1, 0, 0, 8};
-  t = grid::get_map(test_6);
+  t = test_6.get_map();
   CHECK(t[0] == 'R');
 }
