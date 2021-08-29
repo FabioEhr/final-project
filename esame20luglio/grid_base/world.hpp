@@ -14,6 +14,12 @@ enum class Cell { Suscettible, Infected, Recovered };
 struct Virus {
   double contagiousness = 0.;
   double recovery_rate = 0.;
+  Virus(double cont, double rec): contagiousness{cont}, recovery_rate{rec}{
+    if(!d_comp(contagiousness, 0., 1.))
+      throw std::runtime_error{"contagiousness has to be set to a value between 0 and 1"};
+    if(!d_comp(recovery_rate, 0., 1.))
+      throw std::runtime_error{"contagiousness has to be set to a value between 0 and 1"};
+  }
 };
 
 class World {
@@ -24,6 +30,8 @@ class World {
 
  public:
   World(int const len) : side_length{len} {
+    if(side_length<1)
+      throw std::runtime_error{"the length of the side has to be a positive value"};
     Grid temporary(side_length * side_length, Cell::Suscettible);
     m_grid = temporary;
   }
