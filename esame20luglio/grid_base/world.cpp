@@ -1,9 +1,6 @@
 #include "world.hpp"
 namespace grid_base {
-bool operator==(World const& lhs, World const& rhs) {
-  return (lhs.getGrid() == rhs.getGrid());
-}
-bool operator!=(World const& lhs, World const& rhs) { return !(lhs == rhs); }
+
 World evolve(World const& current, Virus const& virus) {
   int sum = 0;
   std::default_random_engine gen{std::random_device{}()};
@@ -15,7 +12,6 @@ World evolve(World const& current, Virus const& virus) {
         switch (current.cell(sum)) {
           case Cell::Suscettible:
             for (int c = -1; c < 2; ++c) {
-              // prova a sostituire con un algoritmo
               for (int r = -1; r < 2; ++r) {
                 if (current.cell((sum - (sum % current.getSide_length())) /
                                          current.getSide_length() +
@@ -46,5 +42,4 @@ World evolve(World const& current, Virus const& virus) {
       });
   return next;
 }
-
 }  // namespace grid_base
